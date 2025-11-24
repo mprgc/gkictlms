@@ -1,0 +1,49 @@
+/* ===== IMAGE SLIDER ===== */
+.slider{
+  position:relative;
+  width:100%;
+  height:230px;
+  border-radius:16px;
+  overflow:hidden;
+  background:#ddd;
+}
+
+.slides{
+  position:absolute;
+  width:100%;
+  height:100%;
+  opacity:0;
+  transition:opacity 1s ease-in-out;
+}
+
+.slides img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.active-slide{
+  opacity:1 !important;
+}
+
+/* Dots */
+.dots{
+  position:absolute;
+  bottom:10px;
+  width:100%;
+  text-align:center;
+}
+
+.dot{
+  height:12px;
+  width:12px;
+  margin:0 4px;
+  display:inline-block;
+  border-radius:50%;
+  background:#bbb;
+  cursor:pointer;
+}
+
+.dot.active{
+  background:#1E88E5;
+}
