@@ -6,6 +6,7 @@
   <link rel="icon" type="image/png" href="LMS Icon.png">
   <title>GK ICT School LMS — Template</title>
   <meta name="description" content="GK ICT School LMS template — Grades 6-11, Sinhala & English. Modern blue + white responsive layout." />
+  <link rel="stylesheet" href="sliderstyle.css" />
   <style>
     /* ====== Reset & base ====== */
     :root{
@@ -56,6 +57,10 @@
     .card p{margin:0;color:var(--muted);font-size:13px}
     .card .cta{margin-top:8px;padding:8px 12px;border-radius:10px;background:var(--blue);color:white;display:inline-block}
 
+    .cta1 {margin-top:8px;padding:8px 12px;border-radius:10px;background:#6200ee;color:white;display:inline-block}
+    .cta2 {margin-top:8px;padding:8px 12px;border-radius:10px;background:#12a948;color:white;display:inline-block}
+    .cta3 {margin-top:8px;padding:8px 12px;border-radius:10px;background:#B00020;color:white;display:inline-block}
+
     /* ====== Sections ====== */
     .section{margin-top:18px}
     .section h3{margin:0 0 12px}
@@ -88,7 +93,7 @@
     }
 
     /* small helpers */
-    .tag{background:var(--light-blue);color:#19d231;padding:6px 8px;border-radius:8px;font-weight:600;font-size:12px}
+    .tag{background:var(--light-blue);color:#0767f7;padding:6px 8px;border-radius:8px;font-weight:600;font-size:12px}
     .small{font-size:13px;color:var(--muted)}
     .lang-toggle{display:flex;gap:8px}
     .lang-toggle button{padding:8px 12px;border-radius:10px;border:1px solid rgba(255,30,60,0.06);background:white}
@@ -153,8 +158,47 @@
 
       <section class="hero" id="home">
         <div class="hero-card">
-          <h1>GK ICT School LMS 🎓</h1>
-          <p class="small">Modern learning portal for Grade 6–11 ICT. Use this template to prepare your Google Site — paste content from sections into Google Sites pages.</p>
+          <!--h1>GK ICT School LMS 🎓</h1>
+          <p class="small">Modern learning portal for Grade 6–11 ICT. Use this template to prepare your Google Site — paste content from sections into Google Sites pages.</p-->
+
+
+            <!-- IMAGE SLIDER START -->
+<div class="slider">
+  <div class="slides fade">
+    <img src="img/SLIDER1.jpg" style="width:100%">
+  </div>
+
+  <div class="slides fade">
+    <img src="img/SLIDER2.jpg" style="width:100%">
+  </div>
+
+    <div class="slides fade">
+    <img src="img/SLIDER1.jpg" style="width:100%">
+  </div>
+
+  <div class="slides fade">
+    <img src="img/SLIDER4.jpg" style="width:100%">
+  </div>
+
+  <!-- Dots -->
+  <div class="dots">
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+  </div>
+</div>
+<!-- IMAGE SLIDER END -->
+
+
+
+
+
+
+
+
+
+
 
           <div style="height:16px"></div>
 
@@ -162,22 +206,22 @@
             <div class="card">
               <h3>📄 Past Papers</h3>
               <p class="small">Upload PDF past papers and let students download or preview.</p>
-              <a class="cta" href="https://sites.google.com/view/gkictschoollms/home?authuser=0">Open</a>
+              <a class="cta1" href="https://sites.google.com/view/gkictschoollms/home?authuser=0">Open</a>
             </div>
             <div class="card">
               <h3> 📋 Assignments</h3>
               <p class="small">Printable assignments + submission forms (Google Forms)</p>
-              <a class="cta" href="#assignments">Open</a>
+              <a class="cta2" href="#assignments">Open</a>
             </div>
             <div class="card">
               <h3>🎞️ Video Lessons</h3>
               <p class="small">Embed YouTube playlists for Sinhala & English lessons.</p>
-              <a class="cta" href="#videos">Open</a>
+              <a class="cta3" href="#videos">Open</a>
             </div>
           </div>
         </div>
 
-        <aside style="padding:12px;background:linear-gradient(180deg,#eaf4ff,white);border-radius:12px">
+        <aside style="padding:12px;background:linear-gradient(180deg,#e9eb51ad,white);border-radius:12px">
           <h4 style="margin:0">🔔 Announcements</h4>
           <p class="small">New quiz uploaded: Quiz 1 — Computer Basics</p>
           <p class="small">Grade 10: Term test papers added</p>
@@ -412,10 +456,9 @@
       });
     });
   </script>
+   <script src="sliderJS.js"></script>
 </body>
 </html>
-
-
 
 
 
