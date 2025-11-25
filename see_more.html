@@ -36,12 +36,12 @@
     <!-- Main Container Mimicking the Template Structure -->
     <div class="max-w-6xl mx-auto p-4 md:p-8">
 
-        <!-- Header / Main Title Section -->
-        <header class="bg-white shadow-xl rounded-2xl p-6 mb-8 border-t-4 border-indigo-600">
+        <!-- Header / Main Title Section - Updated border and text color to rgb(59 130 246) using Tailwind arbitrary values -->
+        <header class="bg-white shadow-xl rounded-2xl p-6 mb-8 border-t-4 border-[#3b82f6]">
             <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 text-center">
                 GK ICT School LMS
             </h1>
-            <p class="text-center text-indigo-600 mt-2 text-lg font-medium">
+            <p class="text-center text-[#3b82f6] mt-2 text-lg font-medium">
                 ගයාන් කරුණාතිලක පරිගණක පාසලේ ඉගෙනුම් කළමනාකරණ පද්ධතිය .
             </p>
         </header>
@@ -93,11 +93,13 @@
 
     </div>
 
-    <!-- Modal Structure for "නිවේදනයයි" popup -->
-    <div id="notice-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 transition-opacity duration-300 hidden">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-11/12 m-4 p-6 transform transition-all duration-300 scale-95 md:scale-100">
+    <!-- Modal Structure for "නිවේදනයයි" popup - Added animation classes -->
+    <!-- Initial state: opacity-0 and pointer-events-none for animated transition -->
+    <div id="notice-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 transition-opacity duration-500 opacity-0 pointer-events-none">
+        <!-- Inner modal element is scaled down initially, transitioning to scale-100 -->
+        <div id="modal-content" class="bg-white rounded-2xl shadow-2xl max-w-lg w-11/12 m-4 p-6 transform transition-all duration-500 scale-90">
             <div class="flex justify-between items-start border-b pb-3 mb-4">
-                <h2 class="text-3xl font-extrabold text-indigo-600">
+                <h2 class="text-3xl font-extrabold text-[#3b82f6]">
                     🔔 නිවේදනයයි...!
                 </h2>
                 <button onclick="hideModal()" class="text-gray-400 hover:text-gray-600 text-2xl font-semibold leading-none focus:outline-none">
@@ -111,7 +113,8 @@
                 </p>
             </div>
             <div class="mt-6 flex justify-end">
-                <button onclick="hideModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-xl transition duration-150 shadow-md">
+                <!-- Changed button color to match the header -->
+                <button onclick="hideModal()" class="bg-[#3b82f6] hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-xl transition duration-150 shadow-md">
                     තේරුණා
                 </button>
             </div>
@@ -120,20 +123,39 @@
     
     <!-- JavaScript for Modal functionality -->
     <script>
+        const modal = document.getElementById('notice-modal');
+        const modalContent = document.getElementById('modal-content');
+        const DURATION = 500; // Match CSS transition duration for smooth hiding
+
         /**
          * වෙබ් පිටුව load වූ වහාම නිවේදන Modal එක පෙන්වයි.
          */
         function showModal() {
-            const modal = document.getElementById('notice-modal');
-            modal.classList.remove('hidden');
+            // 1. Make it visible and clickable
+            modal.classList.remove('pointer-events-none');
+            
+            // 2. Use requestAnimationFrame to ensure CSS transition is triggered
+            requestAnimationFrame(() => {
+                // Apply the final state classes (opacity: 1 and scale: 100)
+                modal.classList.add('opacity-100');
+                modalContent.classList.remove('scale-90');
+                modalContent.classList.add('scale-100');
+            });
         }
 
         /**
          * නිවේදන Modal එක සඟවයි.
          */
         function hideModal() {
-            const modal = document.getElementById('notice-modal');
-            modal.classList.add('hidden');
+            // 1. Start hiding animation (opacity: 0 and scale: 90)
+            modal.classList.remove('opacity-100');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-90');
+
+            // 2. After transition completes (DURATION ms), make it unclickable
+            setTimeout(() => {
+                modal.classList.add('pointer-events-none');
+            }, DURATION);
         }
 
         // DOMContentLoaded event එකේදී Modal එක පෙන්වීමට කටයුතු කරයි.
