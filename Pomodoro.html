@@ -125,7 +125,7 @@
             width: 100%;
         }
 
-        /* --- Settings View (Mobile optimization) --- */
+        /* --- Settings View (Mobile optimization - Height Reduced) --- */
         .settings-heading {
             text-align: center;
             font-size: 16px;
@@ -134,17 +134,18 @@
             color: #546e7a;
         }
 
+        /* Reduced vertical spacing for a more compact view */
         .slider-group {
-            margin-bottom: 15px; /* Reduced margin */
-            padding: 8px 0; /* Reduced padding */
+            margin-bottom: 10px; /* Reduced from 15px */
+            padding: 5px 0; /* Reduced from 8px 0 */
             border-bottom: 1px solid #eceff1;
         }
 
         .slider-group label {
             display: block;
-            font-size: 15px; /* Slightly smaller font */
+            font-size: 15px;
             font-weight: 500;
-            margin-bottom: 8px;
+            margin-bottom: 4px; /* Reduced from 8px */
         }
 
         /* Custom Slider Styling to match the image */
@@ -170,14 +171,14 @@
         .range-labels {
             display: flex;
             justify-content: space-between;
-            font-size: 11px; /* Smaller labels */
+            font-size: 11px;
             color: #78909c;
         }
 
         .current-value {
             font-weight: 700;
             color: #1e88e5;
-            margin-top: 5px;
+            margin-top: 3px; /* Reduced from 5px */
             text-align: center;
         }
         
@@ -581,7 +582,7 @@
             // Update UI elements for the new phase
             document.getElementById('current-phase').textContent = phaseName;
             
-            // Update cycle info display (FIXED)
+            // Update cycle info display
             if (currentPhaseType === 'W') {
                  document.getElementById('cycle-info').textContent = `Pomodoro ${currentCycle} of ${totalCycles}`; 
             } else {
