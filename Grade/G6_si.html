@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6 ශ්‍රේණිය - ඉගෙනුම් සම්පත්</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* සිංහල භාෂාවට ගැලපෙන පරිදි Inter font එක යොදමු */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fc; /* සුළු අළු පැහැති පසුබිමක් */
+        }
+        /* ප්‍රධාන කාඩ්පත සඳහා අලංකරණය */
+        .resource-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        }
+        .resource-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <div class="max-w-6xl mx-auto">
+
+        <!-- ශීර්ෂය (Header) -->
+        <header class="text-center mb-10 bg-white p-6 rounded-lg shadow-md border-b-4 border-blue-500">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-2">
+                6 ශ්‍රේණිය - ඉගෙනුම් සම්පත්
+            </h1>
+            <p class="text-lg text-gray-500">
+                ඔබගේ අධ්‍යාපන කටයුතු සඳහා අවශ්‍ය සියලු සම්පත් මෙතනින් ලබා ගන්න.
+            </p>
+        </header>
+
+        <!-- නිවේදන කොටස (Announcements Section) -->
+        <div class="mb-10 p-4 bg-yellow-50 border-l-4 border-yellow-500 rounded-lg shadow-inner">
+            <h2 class="text-xl font-bold text-yellow-800 flex items-center mb-2">
+                <span class="mr-2">🔔</span> 6 ශ්‍රේණිය නිවේදන
+            </h2>
+            <ul class="list-disc list-inside text-gray-700 space-y-1 text-sm">
+                <li>නව වීඩියෝ පාඩම් සියල්ල මේ සතියේදී නිකුත් කෙරේ.</li>
+                <li>පසුගිය විභාග පත්‍රවල පිළිතුරු සැපයීමේ සැසිය (Live Session) ලබන සිකුරාදා.</li>
+                <li>පාසල් පෙළ පොතේ නව සංස්කරණය PDF ලෙස දැන් බාගත කිරීම සඳහා ඇත.</li>
+            </ul>
+        </div>
+
+        <!-- සම්පත් ජාලකය (Resources Grid) -->
+        <!-- දැන් සම්පත් කාඩ්පත් 7ක්, තීරු 3ක ස්ථාවරව පෙන්වනු ඇත. -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- 1. Past Papers / පසුගිය විභාග පත්‍ර -->
+            <div class="resource-card bg-white p-6 rounded-xl border border-gray-200">
+                <div class="flex items-center mb-4">
+                    <span class="text-3xl mr-3 p-2 bg-blue-100 rounded-full">📄</span>
+                    <h2 class="text-xl font-bold text-gray-700">පසුගිය විභාග පත්‍ර</h2>
+                </div>
+                <p class="text-gray-500 mb-4 text-sm">
+                    සියලු විෂයන් සඳහා වූ පෙර වසරවල විභාග ප්‍රශ්න පත්‍ර සහ ආදර්ශ පත්‍ර.
+                </p>
+                <a href="#" onclick="alert('බාගත කිරීමේ සබැඳිය - පසුගිය විභාග පත්‍ර')" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                    බාගත කරන්න
+                    <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                </a>
+            </div>
+
+            <!-- 2. Assignments / පරීක්ෂණ වැඩ -->
+            <div class="resource-card bg-white p-6 rounded-xl border border-gray-200">
+                <div class="flex items-center mb-4">
+                    <span class="text-3xl mr-3 p-2 bg-green-100 rounded-full">📝</span>
+                    <h2 class="text-xl font-bold text-gray-700">පරීක්ෂණ වැඩ (Assignments)</h2>
+                </div>
+                <p class="text-gray-500 mb-4 text-sm">
+                    සෑම ඒකකයක් සඳහාම නිවසේදී කළ යුතු පරීක්ෂණ සහ ව්‍යාපෘති වැඩ.
+                </p>
+                <a href="#" onclick="alert('බාගත කිරීමේ සබැඳිය - පරීක්ෂණ වැඩ')" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300">
+                    බාගත කරන්න
+                    <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                </a>
+            </div>
+
+            <!-- 3. Lecture Notes / පන්ති සටහන් -->
+            <div class="resource-card bg-white p-6 rounded-xl border border-gray-200">
+                <div class="flex items-center mb-4">
+                    <span class="text-3xl mr-3 p-2 bg-yellow-100 rounded-full">📚</span>
+                    <h2 class="text-xl font-bold text-gray-700">පන්ති සටහන් (Lecture Notes)</h2>
+                </div>
+                <p class="text-gray-500 mb-4 text-sm">
+                    විෂය නිර්දේශයේ සියලුම පාඩම් සඳහා සවිස්තරාත්මක සාරාංශ සහ සටහන්.
+                </p>
+                <a href="#" onclick="alert('බාගත කිරීමේ සබැඳිය - පන්ති සටහන්')" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-yellow-600 rounded-lg hover:bg-yellow-700 focus:outline-none focus:ring-4 focus:ring-yellow-300">
+                    බාගත කරන්න
+                    <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                </a>
+            </div>
+
+            <!-- 4. Quizzes / ප්‍රශ්නාවලිය -->
+            <div class="resource-card bg-white p-6 rounded-xl border border-gray-200">
+                <div class="flex items-center mb-4">
+                    <span class="text-3xl mr-3 p-2 bg-red-100 rounded-full">❓</span>
+                    <h2 class="text-xl font-bold text-gray-700">ප්‍රශ්නාවලිය (Quizzes)</h2>
+                </div>
+                <p class="text-gray-500 mb-4 text-sm">
+                    ඔබගේ දැනුම පරීක්ෂා කර බැලීමට අන්තර්ක්‍රියාකාරී කෙටි ප්‍රශ්නාවලිය.
+                </p>
+                <a href="#" onclick="alert('ප්‍රශ්නාවලිය ආරම්භ කිරීමේ සබැඳිය')" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300">
+                    අරඹන්න
+                    <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8M6 16V8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H8a2 2 0 01-2-2z"></path></svg>
+                </a>
+            </div>
+            
+            <!-- 5. Audio Classes / ශ්‍රව්‍ය පාඩම් (නව) -->
+            <div class="resource-card bg-white p-6 rounded-xl border border-gray-200">
+                <div class="flex items-center mb-4">
+                    <span class="text-3xl mr-3 p-2 bg-pink-100 rounded-full">🎧</span>
+                    <h2 class="text-xl font-bold text-gray-700">ශ්‍රව්‍ය පාඩම් (Audio Classes)</h2>
+                </div>
+                <p class="text-gray-500 mb-4 text-sm">
+                    ගමනේ දී පවා සවන් දීමට පහසු, සෑම පාඩමක් සඳහාම උසස් තත්ත්වයේ ශ්‍රව්‍ය සටහන්.
+                </p>
+                <a href="#" onclick="alert('ශ්‍රව්‍ය පාඩම් බාගත කිරීමේ සබැඳිය')" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-pink-600 rounded-lg hover:bg-pink-700 focus:outline-none focus:ring-4 focus:ring-pink-300">
+                    බාගත කරන්න
+                    <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6a2 2 0 00-2-2H5a2 2 0 00-2 2v13a2 2 0 002 2h4a2 2 0 002-2zm0 0l4-4m4 4V6a2 2 0 00-2-2h-2a2 2 0 00-2 2v13a2 2 0 002 2h4a2 2 0 002-2zm-8-2h4m-4 0v-4m4 4v-4"></path></svg>
+                </a>
+            </div>
+            
+            <!-- 6. Video Lessons / වීඩියෝ පාඩම් (නව) -->
+            <div class="resource-card bg-white p-6 rounded-xl border border-gray-200">
+                <div class="flex items-center mb-4">
+                    <span class="text-3xl mr-3 p-2 bg-indigo-100 rounded-full">🎬</span>
+                    <h2 class="text-xl font-bold text-gray-700">වීඩියෝ පාඩම් (Video Lessons)</h2>
+                </div>
+                <p class="text-gray-500 mb-4 text-sm">
+                    පැහැදිලිව පැහැදිලි කරන ලද සංකීර්ණ සංකල්ප සහිත සජීවීකරණ වීඩියෝ පාඩම්.
+                </p>
+                <a href="#" onclick="alert('වීඩියෝ පාඩම් නරඹන්න')" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300">
+                    නරඹන්න
+                    <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </a>
+            </div>
+
+            <!-- 7. Textbook PDF / පෙළ පොත PDF (දැන් තනි තීරුවකි) -->
+            <div class="resource-card bg-white p-6 rounded-xl border border-gray-200">
+                <div class="flex items-center mb-4">
+                    <span class="text-3xl mr-3 p-2 bg-purple-100 rounded-full">📘</span>
+                    <h2 class="text-xl font-bold text-gray-700">පාසල් පෙළ පොත PDF</h2>
+                </div>
+                <p class="text-gray-500 mb-4 text-sm">
+                    6 ශ්‍රේණියට අදාළ නිල රජයේ පාසල් පෙළ පොතේ PDF පිටපත.
+                </p>
+                <a href="#" onclick="alert('පාසල් පෙළ පොත PDF බාගත කිරීමේ සබැඳිය')" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-300">
+                    PDF බාගත කරන්න
+                    <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                </a>
+            </div>
+
+        </div>
+
+        <!-- යාවත්කාලීන දායකත්ව කොටස ඉවත් කර ඇත -->
+
+    </div>
+
+</body>
+</html>
