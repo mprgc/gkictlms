@@ -57,10 +57,10 @@
         }
 
 
-        /* --- Main Content Area --- */
+        /* --- Main Content Area (Mobile Size Adjusted) --- */
         .app-container {
             width: 90%;
-            max-width: 450px;
+            max-width: 350px; /* Reduced max-width for better mobile fit */
             background-color: #ffffff;
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -125,7 +125,7 @@
             width: 100%;
         }
 
-        /* --- Settings View (Image 1) --- */
+        /* --- Settings View (Mobile optimization) --- */
         .settings-heading {
             text-align: center;
             font-size: 16px;
@@ -135,16 +135,16 @@
         }
 
         .slider-group {
-            margin-bottom: 25px;
-            padding: 10px 0;
+            margin-bottom: 15px; /* Reduced margin */
+            padding: 8px 0; /* Reduced padding */
             border-bottom: 1px solid #eceff1;
         }
 
         .slider-group label {
             display: block;
-            font-size: 16px;
+            font-size: 15px; /* Slightly smaller font */
             font-weight: 500;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         /* Custom Slider Styling to match the image */
@@ -154,7 +154,7 @@
             height: 8px;
             background: #e0e0e0;
             border-radius: 5px;
-            margin: 10px 0;
+            margin: 8px 0;
         }
 
         input[type=range]::-webkit-slider-thumb {
@@ -170,7 +170,7 @@
         .range-labels {
             display: flex;
             justify-content: space-between;
-            font-size: 12px;
+            font-size: 11px; /* Smaller labels */
             color: #78909c;
         }
 
@@ -183,7 +183,7 @@
         
         .info-link {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 15px;
             font-size: 14px;
         }
         
@@ -217,6 +217,7 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
+            /* Adjust clip to fit 250px container */
             clip: rect(0, 250px, 250px, 125px); 
         }
         
@@ -373,7 +374,7 @@
                 <div class="current-value"><span id="cycles-value">4</span></div>
             </div>
 
-            <button class="btn-primary btn-start" onclick="startTimer()">Start</button>
+            <button class="btn-primary btn-start" onclick="startTimer()">ආරම්භ කරන්න</button>
 
             <div class="info-link">
                 <span onclick="showAction('භාවිතා කරන ආකාරය පිළිබඳ උපදෙස්')">ℹ️ භාවිතා කරන ආකාරය</span>
@@ -400,7 +401,7 @@
                 </div>
 
                 <div id="current-phase" class="current-phase">වැඩ කරන වේලාව</div>
-                <div id="cycle-info" class="cycle-info">Cycle 1 of 4</div>
+                <div id="cycle-info" class="cycle-info">Pomodoro 1 of 4</div>
                 
                 <button id="pause-resume-btn" class="btn-pause-resume" onclick="pauseResumeTimer()">නවත්තන්න</button>
                 
@@ -417,8 +418,8 @@
         // --- Global State Variables ---
         let timerInterval = null;
         let isRunning = false;
-        let totalSeconds = 0;
-        let secondsRemaining = 0;
+        let totalSeconds = 0; // Total seconds for the current phase
+        let secondsRemaining = 0; // Seconds left (used for pause/resume)
 
         // Default Settings (will be updated by sliders on load)
         let workTimeMinutes = 25;
@@ -481,15 +482,14 @@
 
         /**
          * Updates the displayed value next to the corresponding slider and updates global variables.
-         * FIX: Correctly maps slider types to HTML element IDs.
          * @param {string} type - 'work', 'short', 'long', or 'cycles'.
          */
         function updateSliderValue(type) {
             let sliderId;
             // Correctly map type to actual HTML ID
             if (type === 'work') sliderId = 'work-time';
-            else if (type === 'short') sliderId = 'short-break'; // **FIXED ID**
-            else if (type === 'long') sliderId = 'long-break';   // **FIXED ID**
+            else if (type === 'short') sliderId = 'short-break'; 
+            else if (type === 'long') sliderId = 'long-break';   
             else if (type === 'cycles') sliderId = 'cycles';
             else return; 
 
@@ -530,14 +530,13 @@
             } catch (e) {
                 console.error("Audio playback failed:", e);
                 // Fallback for environments where AudioContext might be restricted
-                // Using an alert as a last resort, as per previous instructions to avoid alert()
-                // In a real scenario, this would be a custom modal.
                 console.log("Time's up sound skipped."); 
             }
         }
 
         /**
          * Calculates the duration, updates the UI text, and sets the body background color for the current phase.
+         * This function ONLY runs when transitioning to a NEW phase.
          */
         function setupPhase() {
             if (currentPhaseIndex >= phaseSequence.length) {
@@ -552,8 +551,9 @@
             let bgColor = "";
             
             // Calculate the current Pomodoro cycle number
+            // Count completed work phases (W) before the current index
             const workPhasesDone = phaseSequence.slice(0, currentPhaseIndex).filter(p => p === 'W').length;
-            currentCycle = workPhasesDone + 1;
+            currentCycle = workPhasesDone + 1; // This is the Pomodoro we are currently in or preparing for
 
             // Determine duration, name, color based on the current phase type
             if (currentPhaseType === 'W') {
@@ -573,18 +573,20 @@
                 bgColor = '#e8f5e9'; // Light Green
             }
 
-            secondsRemaining = durationMinutes * 60;
-            totalSeconds = secondsRemaining;
+            // Set total duration for this phase
+            totalSeconds = durationMinutes * 60;
+            // Set seconds remaining to total seconds only when starting a NEW phase
+            secondsRemaining = totalSeconds;
             
             // Update UI elements for the new phase
             document.getElementById('current-phase').textContent = phaseName;
             
-            // Update cycle info display
+            // Update cycle info display (FIXED)
             if (currentPhaseType === 'W') {
-                 document.getElementById('cycle-info').textContent = `Cycle ${currentCycle} of ${totalCycles}`;
+                 document.getElementById('cycle-info').textContent = `Pomodoro ${currentCycle} of ${totalCycles}`; 
             } else {
-                 // For breaks, show progress towards the total cycle count
-                 document.getElementById('cycle-info').textContent = `Getting ready for Pomodoro ${currentCycle}`;
+                 // For breaks, show the break type and which Pomodoro session it is preparing for
+                 document.getElementById('cycle-info').textContent = `${currentPhaseType === 'S' ? 'කෙටි' : 'දීර්ඝ'} විවේකය (Pomodoro ${currentCycle} ට පෙර)`;
             }
            
             // Update Colors
@@ -605,36 +607,66 @@
             if (viewId === 'settings') {
                 document.body.style.backgroundColor = '#e8f5e9'; // Light Mint Green
             } else {
-                 setupPhase(); // Re-run setup to apply phase-specific colors
+                 // The phase colors are handled by setupPhase when a new phase starts.
             }
         }
 
         /**
-         * Starts or continues the timer.
+         * Starts a brand new timer session from the Settings View. 
+         * This ensures all current slider settings are applied and the state is clean.
+         * (This is the function called by the 'ආරම්භ කරන්න' button on the settings page).
          */
         function startTimer() {
-            // Prevent multiple intervals from running
+             // 1. Force a clean state based on current slider values (Implicit Reset)
+            if (timerInterval !== null) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+
+            // Reset state variables
+            isRunning = false; 
+            currentPhaseIndex = 0;
+            currentCycle = 1;
+            secondsRemaining = 0; 
+
+            // Re-read settings for clean start
+            updateSliderValue('work');
+            updateSliderValue('short');
+            updateSliderValue('long');
+            updateSliderValue('cycles');
+
+            // Re-initialize sequence and set up the first phase to get totalSeconds
+            initializePhaseSequence();
+            setupPhase();
+            
+            // Ensure the pause/resume button is set up for a new run
+            document.getElementById('pause-resume-btn').textContent = 'නවත්තන්න';
+            document.getElementById('pause-resume-btn').onclick = pauseResumeTimer;
+            
+            // 2. Start the timer immediately
+            _continueTimer(); 
+        }
+
+        /**
+         * Starts the timer from the current secondsRemaining. Handles continuous ticking and phase transitions.
+         * This is used for both 'Resume' and automatic transition to the next phase.
+         * Renamed from 'startTimer' to '_continueTimer' for clarity.
+         */
+        function _continueTimer() {
+            // If already running, do nothing
             if (isRunning) return;
             
-            // 1. Initial Setup on first run (or after Reset)
-            if (timerInterval === null && currentPhaseIndex === 0) {
-                initializePhaseSequence();
-                setupPhase();
-            }
-
             // Check if all cycles are complete
             if (currentPhaseIndex >= phaseSequence.length) {
-                // If timer finished, reset to restart
-                resetTimer(); 
-                startTimer();
+                showAction('සියලුම අධ්‍යයන වාරයන් අවසන් කර ඇත! Reset ඔබා නැවත ආරම්භ කරන්න.');
                 return;
             }
-
-            // 2. Play sound and transition view
+            
+            // 1. Play sound and transition view
             playSound();
             showView('timer');
             
-            // 3. Start timer
+            // 2. Start timer
             isRunning = true;
             document.getElementById('pause-resume-btn').textContent = 'නවත්තන්න';
             
@@ -655,34 +687,40 @@
                     
                     if (currentPhaseIndex < phaseSequence.length) {
                         // Start next phase automatically
-                        setupPhase();
-                        startTimer();
+                        setupPhase(); // This recalculates currentCycle and updates UI
+                        _continueTimer(); // Use the internal continue function
                     } else {
                         // All cycles complete
                         document.getElementById('current-phase').textContent = '✅ සම්පූර්ණයි!';
                         document.getElementById('cycle-info').textContent = 'සියලු වාර සම්පූර්ණයි.';
                         document.getElementById('pause-resume-btn').textContent = 'Reset'; // Suggest Reset
                         document.getElementById('pause-resume-btn').onclick = resetTimer;
-                        // Use a custom alert message
                         showAction('සියලුම අධ්‍යයන වාරයන් අවසන් කර ඇත! Reset ඔබා නැවත ආරම්භ කරන්න.');
                     }
                 }
             }, 1000); // Ticks every second
         }
 
+
         /**
          * Pauses or Resumes the timer.
          */
         function pauseResumeTimer() {
+            const pauseResumeBtn = document.getElementById('pause-resume-btn');
+            
             if (isRunning) {
                 // Pause
                 clearInterval(timerInterval);
                 timerInterval = null;
                 isRunning = false;
-                document.getElementById('pause-resume-btn').textContent = 'ආරම්භ කරන්න';
+                pauseResumeBtn.textContent = 'ආරම්භ කරන්න';
+                // secondsRemaining holds the current time, ready for resume
             } else {
                 // Resume
-                startTimer();
+                // We resume from the current secondsRemaining
+                if (secondsRemaining > 0) {
+                    _continueTimer(); // Use the internal continue function to resume
+                }
             }
         }
 
@@ -697,6 +735,7 @@
             // Reset state variables
             currentPhaseIndex = 0;
             currentCycle = 1;
+            secondsRemaining = 0; // Ensures setupPhase() runs on next start
 
             // Re-read settings for clean start
             updateSliderValue('work');
@@ -704,11 +743,12 @@
             updateSliderValue('long');
             updateSliderValue('cycles');
             
+            // Re-initialize sequence and set up the first phase to get totalSeconds
             initializePhaseSequence();
-            setupPhase(); // Initialize the first phase (Work)
+            setupPhase(); 
             
             document.getElementById('pause-resume-btn').textContent = 'ආරම්භ කරන්න';
-            document.getElementById('pause-resume-btn').onclick = startTimer;
+            document.getElementById('pause-resume-btn').onclick = pauseResumeTimer; // Set back to main function
             
             showView('settings'); // Go back to settings view
         }
@@ -717,8 +757,10 @@
          * Updates the time remaining display (MM:SS).
          */
         function updateDisplay() {
-            const minutes = Math.floor(secondsRemaining / 60);
-            const seconds = secondsRemaining % 60;
+            // Ensure time doesn't go negative on display right at the end
+            const actualSeconds = Math.max(0, secondsRemaining); 
+            const minutes = Math.floor(actualSeconds / 60);
+            const seconds = actualSeconds % 60;
             const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             document.getElementById('time-remaining').textContent = display;
         }
@@ -755,7 +797,6 @@
         function showAction(message) {
             // Using console.log instead of alert for better user experience in the environment
             console.log(`Action/Instruction: ${message}`); 
-            // If you wish to show a UI message, replace this with a custom modal function.
             const customAlert = document.getElementById('custom-alert') || document.createElement('div');
             customAlert.id = 'custom-alert';
             customAlert.textContent = message;
@@ -764,6 +805,7 @@
                 background: #4caf50; color: white; padding: 15px; 
                 border-radius: 8px; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
                 opacity: 1; transition: opacity 0.5s;
+                max-width: 80%;
             `;
             document.body.appendChild(customAlert);
             setTimeout(() => {
@@ -776,7 +818,7 @@
 
         // --- Initial Setup ---
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. Initialize slider values on load (FIXED the bug here)
+            // 1. Initialize slider values on load
             updateSliderValue('work');
             updateSliderValue('short');
             updateSliderValue('long');
