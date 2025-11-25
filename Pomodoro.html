@@ -46,6 +46,16 @@
             color: #1e88e5;
             font-size: 14px;
         }
+        
+        /* Simple Back Arrow Styling */
+        .header .back-btn {
+            font-size: 24px;
+            cursor: pointer;
+            visibility: hidden; /* Hidden by default in settings view */
+            color: #1e88e5;
+            text-decoration: none;
+        }
+
 
         /* --- Main Content Area --- */
         .app-container {
@@ -182,50 +192,71 @@
             cursor: pointer;
         }
 
-        /* --- Timer View (Image 2) --- */
+        /* --- Timer View (Image 2) - Circular Progress Bar --- */
         .timer-display {
             text-align: center;
         }
-
+        
+        /* The container for the circular progress */
         .circular-timer {
             position: relative;
             width: 250px;
             height: 250px;
             margin: 30px auto;
             border-radius: 50%;
-            background-color: #e3f2fd; /* Light blue background for the ring */
-            overflow: hidden;
+            background: #e0e0e0; /* Gray border background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
         }
-        
-        /* Inner blue circle that acts as the progress fill */
-        .timer-progress {
+
+        /* The actual progress fill container */
+        .timer-fill {
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background-color: #1e88e5; /* Solid Blue fill */
-            /* Initial state: Fully filled (0% remaining) */
-            clip-path: polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%);
-            transform: rotate(0deg); 
-            transition: clip-path 0.5s linear; /* Smooth transition */
-            will-change: transform;
+            clip: rect(0, 250px, 250px, 125px); 
+        }
+        
+        /* The right half of the progress bar */
+        .timer-right, .timer-left {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #1e88e5; /* Default fill color (Blue) */
+            transition: background 0.5s ease;
+        }
+        
+        /* The right half (always visible up to 50%) */
+        .timer-right {
+            clip: rect(0, 125px, 250px, 0);
+            transform: rotate(0deg);
         }
 
-        /* White mask over the progress fill */
+        /* The left half (visible after 50%) */
+        .timer-left {
+            clip: rect(0, 250px, 250px, 125px);
+            transform: rotate(0deg);
+            visibility: hidden; /* Hide left half initially */
+        }
+
+        /* The white mask that covers the fill to create the hollow effect */
         .timer-mask {
             position: absolute;
-            top: 10px;
-            left: 10px;
-            width: 230px;
-            height: 230px;
+            top: 15px;
+            left: 15px;
+            width: 220px;
+            height: 220px;
             border-radius: 50%;
             background-color: #ffffff;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            z-index: 2; /* Place mask above the fills */
         }
 
         .time-remaining {
@@ -268,7 +299,7 @@
 </head>
 <body>
     <div class="header">
-        <span onclick="showView('timer')" style="cursor: pointer;">&#8592;</span> <!-- Back Arrow -->
+        <a href="#" class="back-btn" onclick="showView('settings')">&#8592;</a> <!-- Back Arrow -->
         <h1>Pomodoro Timer</h1>
         <a href="#" onclick="showAction('භාවිතා කරන ආකාරය')">How to Use</a>
     </div>
@@ -284,20 +315,20 @@
 
             <!-- 1. Work Time Slider -->
             <div class="slider-group">
-                <label for="work-time">වැඩ කරන වේලාව:</label>
-                <input type="range" id="work-time" min="15" max="60" step="1" value="23" oninput="updateSliderValue('work')">
+                <label for="work-time">වැඩ කරන වේලාව (Pomodoro):</label>
+                <input type="range" id="work-time" min="15" max="60" step="1" value="25" oninput="updateSliderValue('work')">
                 <div class="range-labels">
                     <span>15</span>
                     <span>30</span>
                     <span>45</span>
                     <span>60</span>
                 </div>
-                <div class="current-value"><span id="work-value">23</span> min</div>
+                <div class="current-value"><span id="work-value">25</span> min</div>
             </div>
 
             <!-- 2. Short Break Slider -->
             <div class="slider-group">
-                <label for="short-break">විවේක වේලාව:</label>
+                <label for="short-break">කෙටි විවේක වේලාව:</label>
                 <input type="range" id="short-break" min="1" max="15" step="1" value="5" oninput="updateSliderValue('short')">
                 <div class="range-labels">
                     <span>1</span>
@@ -325,7 +356,7 @@
 
             <!-- 4. Cycles Slider -->
             <div class="slider-group">
-                <label for="cycles">වාර ගණන:</label>
+                <label for="cycles">වාර ගණන (Pomodoros):</label>
                 <input type="range" id="cycles" min="1" max="10" step="1" value="4" oninput="updateSliderValue('cycles')">
                 <div class="range-labels">
                     <span>1</span>
@@ -357,8 +388,12 @@
             <div class="timer-display">
                 
                 <div class="circular-timer">
-                    <!-- Timer Progress Display (Blue Fill) -->
-                    <div id="timer-progress" class="timer-progress"></div> 
+                    <!-- Progress Bar Components -->
+                    <div id="timer-fill" class="timer-fill">
+                        <div id="timer-right" class="timer-right"></div>
+                        <div id="timer-left" class="timer-left"></div>
+                    </div>
+                    
                     <div class="timer-mask">
                         <span id="time-remaining" class="time-remaining">00:00</span>
                     </div>
@@ -385,37 +420,38 @@
         let totalSeconds = 0;
         let secondsRemaining = 0;
 
-        // Settings (loaded from sliders)
-        let workTimeMinutes = 23;
+        // Default Settings (will be updated by sliders on load)
+        let workTimeMinutes = 25;
         let shortBreakMinutes = 5;
         let longBreakMinutes = 15;
         let totalCycles = 4;
         
         // Timer Logic State
-        let currentPhaseIndex = 0; // 0: Work, 1: Short Break, 2: Work, 3: Short Break, 4: Work, 5: Short Break, 6: Work, 7: Long Break
+        let currentPhaseIndex = 0; // Tracks position in the phaseSequence array
         let currentCycle = 1;
 
         // Sequence of phases (W=Work, S=Short Break, L=Long Break)
-        // Pomodoro standard: W, S, W, S, W, S, W, L
         const phaseSequence = []; 
 
         /**
-         * Initializes the phase sequence based on user settings.
+         * Initializes the phase sequence (e.g., W, S, W, S, W, S, W, L) based on user cycles.
          */
         function initializePhaseSequence() {
-            phaseSequence.length = 0; // Clear existing sequence
-            for (let i = 0; i < totalCycles; i++) {
-                phaseSequence.push('W'); // Work
-                if (i < totalCycles - 1) {
-                    phaseSequence.push('S'); // Short Break
-                } else if (totalCycles > 1) {
-                    phaseSequence.push('L'); // Long Break after the last work cycle
+            phaseSequence.length = 0;
+            const cycles = totalCycles; // Use the globally updated variable
+            
+            for (let i = 0; i < cycles; i++) {
+                phaseSequence.push('W'); // Add Work Session
+
+                if (i < cycles - 1) {
+                    // Not the last work session: Add Short Break
+                    phaseSequence.push('S');
+                } else if (cycles > 1) {
+                    // Last work session (and total cycles > 1): Add Long Break
+                    phaseSequence.push('L');
                 }
             }
-            // If totalCycles is 1, it's just one 'W'
-            if (totalCycles === 1 && phaseSequence.length === 0) {
-                 phaseSequence.push('W');
-            }
+            console.log("Initialized Phase Sequence:", phaseSequence.join(', '));
         }
         
         /**
@@ -427,36 +463,48 @@
             document.getElementById('timer-view').classList.remove('active');
             document.getElementById(viewId + '-view').classList.add('active');
             
-            // Update the back arrow visibility (simple implementation)
-            const headerArrow = document.querySelector('.header span');
+            // Update the back arrow visibility
+            const headerArrow = document.querySelector('.header .back-btn');
             if (viewId === 'settings') {
                 headerArrow.style.visibility = 'hidden';
+                // If user goes back to settings while running, pause the timer
+                if (isRunning) { 
+                     pauseResumeTimer(); 
+                }
             } else {
                  headerArrow.style.visibility = 'visible';
             }
             
-            // Reset the body background color based on the view/phase
-            if (viewId === 'settings') {
-                document.body.style.backgroundColor = '#e8f5e9';
-            } else {
-                 updateBodyBackground();
-            }
+            // Update the body background color based on the view/phase
+            updateBodyBackground(viewId);
         }
 
         /**
-         * Updates the displayed value next to the corresponding slider.
+         * Updates the displayed value next to the corresponding slider and updates global variables.
+         * FIX: Correctly maps slider types to HTML element IDs.
          * @param {string} type - 'work', 'short', 'long', or 'cycles'.
          */
         function updateSliderValue(type) {
-            const slider = document.getElementById(`${type}-time` || `${type}`);
+            let sliderId;
+            // Correctly map type to actual HTML ID
+            if (type === 'work') sliderId = 'work-time';
+            else if (type === 'short') sliderId = 'short-break'; // **FIXED ID**
+            else if (type === 'long') sliderId = 'long-break';   // **FIXED ID**
+            else if (type === 'cycles') sliderId = 'cycles';
+            else return; 
+
+            const slider = document.getElementById(sliderId);
             const valueSpan = document.getElementById(`${type}-value`);
+            
             if (slider && valueSpan) {
-                valueSpan.textContent = slider.value;
-                // Update global settings variables immediately
-                if (type === 'work') workTimeMinutes = parseInt(slider.value);
-                if (type === 'short') shortBreakMinutes = parseInt(slider.value);
-                if (type === 'long') longBreakMinutes = parseInt(slider.value);
-                if (type === 'cycles') totalCycles = parseInt(slider.value);
+                const value = parseInt(slider.value);
+                valueSpan.textContent = value;
+                
+                // Update global settings variables
+                if (type === 'work') workTimeMinutes = value;
+                if (type === 'short') shortBreakMinutes = value;
+                if (type === 'long') longBreakMinutes = value;
+                if (type === 'cycles') totalCycles = value;
             }
         }
 
@@ -481,33 +529,47 @@
                 oscillator.stop(audioContext.currentTime + 0.15); 
             } catch (e) {
                 console.error("Audio playback failed:", e);
+                // Fallback for environments where AudioContext might be restricted
+                // Using an alert as a last resort, as per previous instructions to avoid alert()
+                // In a real scenario, this would be a custom modal.
+                console.log("Time's up sound skipped."); 
             }
         }
 
         /**
-         * Calculates the duration, updates the UI text, and sets the body background color.
+         * Calculates the duration, updates the UI text, and sets the body background color for the current phase.
          */
         function setupPhase() {
-            const currentPhase = phaseSequence[currentPhaseIndex];
+            if (currentPhaseIndex >= phaseSequence.length) {
+                console.log("All phases completed.");
+                return;
+            }
+
+            const currentPhaseType = phaseSequence[currentPhaseIndex];
             let durationMinutes = 0;
             let phaseName = "";
+            let progressColor = "";
             let bgColor = "";
             
-            const workCyclesDone = Math.floor(currentPhaseIndex / 2);
-            currentCycle = workCyclesDone + 1;
-            
-            // Determine duration, name, and color based on the current phase type
-            if (currentPhase === 'W') {
+            // Calculate the current Pomodoro cycle number
+            const workPhasesDone = phaseSequence.slice(0, currentPhaseIndex).filter(p => p === 'W').length;
+            currentCycle = workPhasesDone + 1;
+
+            // Determine duration, name, color based on the current phase type
+            if (currentPhaseType === 'W') {
                 durationMinutes = workTimeMinutes;
-                phaseName = "වැඩ කරන වේලාව"; // Work Time
+                phaseName = "වැඩ කරන වේලාව (Pomodoro)"; 
+                progressColor = '#1e88e5'; // Blue
                 bgColor = '#e3f2fd'; // Light Blue
-            } else if (currentPhase === 'S') {
+            } else if (currentPhaseType === 'S') {
                 durationMinutes = shortBreakMinutes;
-                phaseName = "විවේක වේලාව (Short Break)"; // Short Break Time
+                phaseName = "කෙටි විවේක වේලාව"; 
+                progressColor = '#ff9800'; // Orange
                 bgColor = '#fff3e0'; // Light Orange/Yellow
-            } else if (currentPhase === 'L') {
+            } else if (currentPhaseType === 'L') {
                 durationMinutes = longBreakMinutes;
-                phaseName = "දීර්ඝ විවේක වේලාව (Long Break)"; // Long Break Time
+                phaseName = "දීර්ඝ විවේක වේලාව"; 
+                progressColor = '#4caf50'; // Green
                 bgColor = '#e8f5e9'; // Light Green
             }
 
@@ -516,40 +578,56 @@
             
             // Update UI elements for the new phase
             document.getElementById('current-phase').textContent = phaseName;
-            document.getElementById('cycle-info').textContent = `Cycle ${currentCycle} of ${totalCycles}`;
+            
+            // Update cycle info display
+            if (currentPhaseType === 'W') {
+                 document.getElementById('cycle-info').textContent = `Cycle ${currentCycle} of ${totalCycles}`;
+            } else {
+                 // For breaks, show progress towards the total cycle count
+                 document.getElementById('cycle-info').textContent = `Getting ready for Pomodoro ${currentCycle}`;
+            }
+           
+            // Update Colors
             document.body.style.backgroundColor = bgColor;
+            document.getElementById('timer-right').style.background = progressColor;
+            document.getElementById('timer-left').style.background = progressColor;
+            document.querySelector('.time-remaining').style.color = progressColor;
+
             
             updateDisplay();
             updateProgress(1); // Start progress bar at 100% (1 remaining)
         }
         
         /**
-         * Updates the body background color based on the current phase.
+         * Updates the body background color based on the current view.
          */
-        function updateBodyBackground() {
-            const currentPhase = phaseSequence[currentPhaseIndex];
-             let bgColor = '#e3f2fd'; 
-            if (currentPhase === 'W') {
-                bgColor = '#e3f2fd';
-            } else if (currentPhase === 'S') {
-                bgColor = '#fff3e0';
-            } else if (currentPhase === 'L') {
-                bgColor = '#e8f5e9';
+        function updateBodyBackground(viewId) {
+            if (viewId === 'settings') {
+                document.body.style.backgroundColor = '#e8f5e9'; // Light Mint Green
+            } else {
+                 setupPhase(); // Re-run setup to apply phase-specific colors
             }
-            document.body.style.backgroundColor = bgColor;
         }
 
         /**
          * Starts or continues the timer.
          */
         function startTimer() {
+            // Prevent multiple intervals from running
             if (isRunning) return;
             
-            // 1. Setup
-            if (timerInterval === null) {
+            // 1. Initial Setup on first run (or after Reset)
+            if (timerInterval === null && currentPhaseIndex === 0) {
                 initializePhaseSequence();
-                currentPhaseIndex = 0;
                 setupPhase();
+            }
+
+            // Check if all cycles are complete
+            if (currentPhaseIndex >= phaseSequence.length) {
+                // If timer finished, reset to restart
+                resetTimer(); 
+                startTimer();
+                return;
             }
 
             // 2. Play sound and transition view
@@ -573,7 +651,7 @@
                     isRunning = false;
                     playSound(); // Play sound for phase completion
                     
-                    currentPhaseIndex++;
+                    currentPhaseIndex++; // Move to the next phase
                     
                     if (currentPhaseIndex < phaseSequence.length) {
                         // Start next phase automatically
@@ -583,9 +661,10 @@
                         // All cycles complete
                         document.getElementById('current-phase').textContent = '✅ සම්පූර්ණයි!';
                         document.getElementById('cycle-info').textContent = 'සියලු වාර සම්පූර්ණයි.';
-                        document.getElementById('pause-resume-btn').textContent = 'ආරම්භ කරන්න';
-                        document.getElementById('pause-resume-btn').onclick = startTimer;
-                        alert('සියලුම අධ්‍යයන වාරයන් අවසන් කර ඇත!');
+                        document.getElementById('pause-resume-btn').textContent = 'Reset'; // Suggest Reset
+                        document.getElementById('pause-resume-btn').onclick = resetTimer;
+                        // Use a custom alert message
+                        showAction('සියලුම අධ්‍යයන වාරයන් අවසන් කර ඇත! Reset ඔබා නැවත ආරම්භ කරන්න.');
                     }
                 }
             }, 1000); // Ticks every second
@@ -608,7 +687,7 @@
         }
 
         /**
-         * Resets the timer to the initial state.
+         * Resets the timer to the initial state (Settings View).
          */
         function resetTimer() {
             clearInterval(timerInterval);
@@ -627,9 +706,11 @@
             
             initializePhaseSequence();
             setupPhase(); // Initialize the first phase (Work)
-
+            
             document.getElementById('pause-resume-btn').textContent = 'ආරම්භ කරන්න';
             document.getElementById('pause-resume-btn').onclick = startTimer;
+            
+            showView('settings'); // Go back to settings view
         }
 
         /**
@@ -643,67 +724,69 @@
         }
 
         /**
-         * Updates the circular progress bar using CSS clip-path to show remaining time.
+         * Updates the circular progress bar rotation.
          * @param {number} percentage - The percentage of time remaining (0.0 to 1.0).
          */
         function updateProgress(percentage) {
-            const progressElement = document.getElementById('timer-progress');
-            if (percentage < 0) percentage = 0;
-            
-            // Calculate angle for the first half (0 to 50%)
-            const angle = 360 * percentage; 
+            // Angle of completion (0 to 360)
+            const angle = 360 * (1 - percentage); 
+            const rightHalf = document.getElementById('timer-right');
+            const leftHalf = document.getElementById('timer-left');
 
-            // The clip-path is a simplified way to create the fill effect.
-            // Using conic gradient or complex SVG arc is more accurate, but for solid fill mimicry:
+            // The timer works by rotating two half-circles:
+            // 1. Right Half rotates from 0 to 180 degrees (0% to 50% completion)
+            // 2. Left Half rotates from 0 to 180 degrees (50% to 100% completion)
+
             if (angle <= 180) {
-                // First half: 0% to 50% progress (180 deg)
-                 progressElement.style.clipPath = `polygon(50% 50%, 50% 0%, ${50 + 50 * Math.tan(angle * Math.PI / 180)}% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%)`;
-                 progressElement.style.transform = `rotate(${angle}deg)`;
+                // First half completion
+                rightHalf.style.transform = `rotate(${angle}deg)`;
+                leftHalf.style.visibility = 'hidden';
             } else {
-                // Second half: 50% to 100% progress (180 to 360 deg)
-                 progressElement.style.clipPath = `polygon(50% 50%, 50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%)`; // Always fill the full circle
-                 progressElement.style.transform = `rotate(${angle}deg)`;
+                // Second half completion
+                rightHalf.style.transform = `rotate(180deg)`; // Right side is fully covered
+                leftHalf.style.transform = `rotate(${angle - 180}deg)`;
+                leftHalf.style.visibility = 'visible';
             }
-
-            // Using transform: rotate(Xdeg) on the solid blue circle:
-            // The blue circle is solid. We rotate it, and the white mask covers it.
-            // The key is the 'clip-path' should cut away the part that has been completed.
-            // A simpler visual trick: just rotate the solid blue element that is clipped to a half-circle mask.
-            // For simplicity and stability, we'll stick to the transform rotation on the fully-clipped circle.
-            progressElement.style.transform = `rotate(${angle}deg)`;
-
-            // A simpler, more reliable way for solid fill: adjust the background color of the whole circle
-            // and use a border radius, but since the image shows a blue fill with time counting down, 
-            // the rotation/clip-path approach is the standard, though visually complex.
-            // Let's use a simplified approach that just uses the percentage to fill the blue circle
-            // from the top down, which is easier with clip-path (but doesn't rotate).
-
-            const heightRemaining = percentage * 100;
-             progressElement.style.clipPath = `polygon(0% ${100 - heightRemaining}%, 100% ${100 - heightRemaining}%, 100% 100%, 0% 100%)`;
-            // Reverting to the simplest approach: updating text only, as complex CSS progress is unreliable across browsers.
-            // The above clip-path logic attempts to fill the circle from bottom up proportional to time remaining.
         }
 
         /**
-         * Shows a simulated action alert for instructional links.
+         * Shows a simulated action alert for instructional links or end message.
          */
-        function showAction(action) {
-            alert(action);
+        function showAction(message) {
+            // Using console.log instead of alert for better user experience in the environment
+            console.log(`Action/Instruction: ${message}`); 
+            // If you wish to show a UI message, replace this with a custom modal function.
+            const customAlert = document.getElementById('custom-alert') || document.createElement('div');
+            customAlert.id = 'custom-alert';
+            customAlert.textContent = message;
+            customAlert.style = `
+                position: fixed; top: 10px; right: 10px; 
+                background: #4caf50; color: white; padding: 15px; 
+                border-radius: 8px; z-index: 1000; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                opacity: 1; transition: opacity 0.5s;
+            `;
+            document.body.appendChild(customAlert);
+            setTimeout(() => {
+                customAlert.style.opacity = 0;
+            }, 3000);
+            setTimeout(() => {
+                 customAlert.remove();
+            }, 3500);
         }
 
         // --- Initial Setup ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize slider values on load
+            // 1. Initialize slider values on load (FIXED the bug here)
             updateSliderValue('work');
             updateSliderValue('short');
             updateSliderValue('long');
             updateSliderValue('cycles');
             
-            // Set initial timer view (00:00, Work Time)
+            // 2. Set initial timer state
             initializePhaseSequence();
             setupPhase();
             
-            // Start the view on settings
+            // 3. Start the view on settings
             showView('settings');
         });
 
