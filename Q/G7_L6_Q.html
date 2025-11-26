@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>තොරතුරු තාක්ෂණ ප්‍රශ්නාවලිය</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for Sinhala font and background */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .quiz-card {
+            max-width: 600px;
+            width: 100%;
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .option-button {
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        .option-button:hover:not(.disabled) {
+            background-color: #e0f2f1; /* Light cyan on hover */
+        }
+        /* Specific colors for feedback */
+        .correct-answer {
+            background-color: #84cc16 !important; /* Lime 500 - Kolapata (Correct) */
+            color: white !important;
+            border-color: #65a30d !important;
+        }
+        .incorrect-answer {
+            background-color: #ef4444 !important; /* Red 500 - Rathupata (Incorrect) */
+            color: white !important;
+            border-color: #dc2626 !important;
+        }
+        .disabled {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+        /* Timer bar style */
+        #timer-progress {
+            transition: width 1s linear;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-card">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">තොරතුරු තාක්ෂණ ප්‍රශ්නාවලිය</h1>
+
+    <!-- 1. START SCREEN -->
+    <div id="start-screen" class="text-center p-8 bg-blue-50 rounded-lg shadow-inner">
+        <h2 class="text-2xl font-extrabold mb-6 text-blue-800">ප්‍රශ්නාවලිය ආරම්භ කිරීමට සූදානම්ද?</h2>
+        <p class="text-gray-600 mb-8">සෑම ප්‍රශ්නයකටම පිළිතුරු දීමට ඔබට තත්පර 30ක් ලැබේ.
+        ප්‍රශ්න අනුපිළිවෙල සෑම විටම වෙනස් වේ.</p>
+        <button onclick="startQuiz()" class="w-full bg-blue-600 text-white py-4 text-xl rounded-lg hover:bg-blue-700 transition duration-300 shadow-xl transform hover:scale-105">
+            ප්‍රශ්නාවලිය ආරම්භ කරන්න (Start Quiz)
+        </button>
+    </div>
+
+    <!-- 2. TIMER DISPLAY -->
+    <div id="timer-display" class="mb-4 text-center hidden">
+        <div id="timer-bar" class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+            <!-- Timer progress bar is initially set to 100% -->
+            <div id="timer-progress" class="h-2 bg-red-500 transition-all duration-1000 ease-linear" style="width: 100%;"></div>
+        </div>
+        <p class="mt-1 text-sm text-gray-600 font-medium"><span id="time-left">30</span> තත්පර ඉතිරිව ඇත (Time Left)</p>
+    </div>
+    
+    <!-- 3. QUIZ CONTAINER -->
+    <div id="quiz-container" class="hidden">
+        <!-- Question and options will be rendered here -->
+    </div>
+    
+    <!-- 4. RESULTS CONTAINER -->
+    <div id="results-container" class="hidden">
+        <h2 class="text-2xl font-semibold text-center mb-4 text-gray-800">ප්‍රතිඵල</h2>
+        <p id="final-score" class="text-xl font-bold text-center mb-6"></p>
+        <button onclick="startQuiz()" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300">
+            නැවත පටන් ගන්න (Restart)
+        </button>
+    </div>
+</div>
+
+<script>
+    // Constants for the quiz
+    const TIME_LIMIT = 30; // Time in seconds for each question
+    
+    // Global variables
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let isQuestionLocked = false;
+    let timeRemaining = TIME_LIMIT;
+    let timerInterval;
+
+    // DOM elements
+    const startScreen = document.getElementById('start-screen');
+    const quizContainer = document.getElementById('quiz-container');
+    const resultsContainer = document.getElementById('results-container');
+    const finalScoreElement = document.getElementById('final-score');
+    const timerDisplay = document.getElementById('timer-display');
+
+
+    // ----------------------------------------------------------------------
+    // [ප්‍රශ්නාවලියේ දත්ත / QUIZ DATA SECTION]
+    // ----------------------------------------------------------------------
+    const quizData = [
+        {
+            question: "www යන්නෙන් අදහස් කරන්නේ කුමක්ද?",
+            correct: "ලෝක ව්‍යාප්ත ජාලය (world wide web).",
+            distractors: [
+                "ව්‍යාපාරික වෙබ් අඩවි ජාලය (World Wide Websites)",
+                "පුළුල් ප්‍රදේශ ජාලය (Wide Area Network)",
+                "රැහැන් රහිත ජාල සම්බන්ධතා (Wireless Web)."
+            ]
+        },
+        {
+            question: "URL යන්නෙහි දිගු ස්වරූපය කුමක්ද?",
+            correct: "Uniform Resource Locator.",
+            distractors: [
+                "Universal Record Linkage.",
+                "Uniform Redirect Language.",
+                "Unidentified Remote Location."
+
+            ]
+        },
+        {
+            question: "වීඩියෝ සම්මන්ත්‍රණ (video conferencing) සඳහා භාවිතා කරන මෘදුකාංග සඳහා උදාහරණ දෙකක් දෙන්න.",
+            correct: "Zoom, Skype, GoToMeeting, Webex.",
+            distractors: [
+                "Microsoft Word, Excel.",
+                "Adobe Photoshop, Illustrator.",
+                "Chrome, Firefox."
+            ]
+        },
+        {
+            question: "විද්‍යුත් තැපෑලක (e-mail) ලැබුණු පණිවිඩයක් වෙනත් අයෙකුට යැවීම හැඳින්වෙන්නේ කුමන නමකින්ද?",
+            correct: "Forward කිරීම.",
+            distractors: [
+                "Reply කිරීම.",
+                "Cc කිරීම.",
+                "Attach කිරීම."
+            ]
+        },
+        {
+            question: "විද්‍යුත් තැපෑලක් සමඟ ගොනු (files) යැවීමේ ක්‍රියාවලිය කුමක්ද?",
+            correct: "Attach කිරීම.",
+            distractors: [
+                "Download කිරීම.",
+                "Upload කිරීම.",
+                "Link කිරීම."
+            ]
+        },
+
+    ];
+
+    // Array Shuffle Function (Fisher-Yates) - ප්‍රශ්න සහ පිළිතුරු අහඹු ලෙස පෙළගැස්වීම සඳහා
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // Handles the quiz when the time for a question runs out
+    function handleTimeout() {
+        if (isQuestionLocked) return; // Prevent double trigger
+        isQuestionLocked = true;
+
+        const optionsList = document.getElementById('options-list');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const nextButton = document.getElementById('next-button');
+        const currentQ = quizData[currentQuestionIndex];
+        
+        // Show the correct answer (color it green)
+        if (optionsList) {
+            Array.from(optionsList.children).forEach(button => {
+                const answer = button.getAttribute('data-answer');
+                if (answer === currentQ.correct) {
+                    button.classList.add('correct-answer');
+                } else {
+                    button.classList.add('disabled', 'opacity-50');
+                }
+            });
+        }
+        
+        // Show feedback message for timeout
+        if (feedbackMessage) {
+            feedbackMessage.textContent = 'කාලය අවසන්! පිළිතුරක් තේරුවේ නැත. (Time\'s up! No answer selected.)';
+            feedbackMessage.classList.remove('hidden', 'text-lime-600');
+            feedbackMessage.classList.add('text-red-500');
+        }
+        
+        // Enable Next button
+        if (nextButton) {
+            nextButton.disabled = false;
+            nextButton.classList.remove('bg-gray-400', 'disabled');
+            nextButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
+        }
+    }
+
+    // Starts the timer for the current question
+    function startTimer() {
+        // Clear any existing timer
+        if (timerInterval) {
+            clearInterval(timerInterval);
+        }
+
+        timeRemaining = TIME_LIMIT;
+        const timeLeftElement = document.getElementById('time-left');
+        const timerProgressElement = document.getElementById('timer-progress');
+
+        // Update display immediately and set bar to 100%
+        if (timeLeftElement) timeLeftElement.textContent = timeRemaining;
+        if (timerProgressElement) {
+            timerProgressElement.style.width = '100%';
+            timerProgressElement.classList.remove('bg-red-700');
+            timerProgressElement.classList.add('bg-red-500');
+        }
+        
+        // Start countdown
+        timerInterval = setInterval(() => {
+            timeRemaining--;
+
+            // Update time display
+            if (timeLeftElement) timeLeftElement.textContent = timeRemaining;
+            
+            // Update progress bar
+            const progress = (timeRemaining / TIME_LIMIT) * 100;
+            if (timerProgressElement) timerProgressElement.style.width = `${progress}%`;
+
+            // Change bar color when time is low
+            if (timeRemaining <= 5 && timerProgressElement) {
+                // Flash effect for low time (optional)
+                timerProgressElement.classList.toggle('bg-red-700');
+            }
+
+            if (timeRemaining <= 0) {
+                clearInterval(timerInterval);
+                handleTimeout();
+            }
+        }, 1000);
+    }
+
+    // ප්‍රශ්නය සහ පිළිතුරු විදැහුම් කිරීමේ කාර්යය
+    function renderQuestion() {
+        if (currentQuestionIndex >= quizData.length) {
+            showResults();
+            return;
+        }
+
+        isQuestionLocked = false;
+        const currentQ = quizData[currentQuestionIndex];
+        
+        // නිවැරදි පිළිතුර සහ වැරදි පිළිතුරු 3 එකතු කර අහඹු ලෙස පෙළගැස්වීම
+        // මෙහිදී පිළිතුරු වල අනුපිළිවෙලද සෑම විටම වෙනස් වේ.
+        const options = shuffleArray([
+            currentQ.correct, 
+            ...currentQ.distractors.slice(0, 3) 
+        ]);
+
+        const questionNumber = currentQuestionIndex + 1;
+        const totalQuestions = quizData.length;
+
+        quizContainer.innerHTML = `
+            <div class="mb-6">
+                <p class="text-lg font-semibold text-blue-600 mb-2">ප්‍රශ්නය ${questionNumber} / ${totalQuestions}</p>
+                <h2 class="text-xl font-bold text-gray-700">${currentQ.question}</h2>
+            </div>
+            <div id="options-list" class="space-y-3">
+                ${options.map((option, index) => `
+                    <button 
+                        class="option-button w-full text-left p-4 border border-gray-300 rounded-lg text-gray-700 shadow-sm transition duration-150 ease-in-out bg-gray-50"
+                        data-answer="${option}"
+                        onclick="checkAnswer(this, '${currentQ.correct.replace(/'/g, "\\'")}')"
+                    >
+                        ${option}
+                    </button>
+                `).join('')}
+            </div>
+            <div id="feedback-message" class="mt-4 text-center text-lg font-medium hidden"></div>
+            <button id="next-button" onclick="nextQuestion()" class="mt-6 w-full bg-gray-400 text-white py-3 rounded-lg disabled transition duration-300" disabled>
+                ඊළඟ ප්‍රශ්නය (Next Question)
+            </button>
+        `;
+        
+        // Start the timer for the new question
+        startTimer();
+    }
+
+    // පිළිතුර පරීක්ෂා කිරීමේ කාර්යය
+    function checkAnswer(selectedButton, correctAnswer) {
+        if (isQuestionLocked) return;
+        
+        // Stop the timer immediately
+        if (timerInterval) {
+            clearInterval(timerInterval);
+        }
+
+        isQuestionLocked = true;
+
+        const selectedAnswer = selectedButton.getAttribute('data-answer');
+        const optionsList = document.getElementById('options-list').children;
+        const feedbackMessage = document.getElementById('feedback-message');
+        const nextButton = document.getElementById('next-button');
+        let isCorrect = false;
+
+        // සියලුම බොත්තම් disable කිරීම
+        Array.from(optionsList).forEach(button => {
+            button.classList.add('disabled');
+        });
+        
+        // නිවැරදි පිළිතුර සොයාගෙන වර්ණ ගැන්වීම
+        Array.from(optionsList).forEach(button => {
+            const answer = button.getAttribute('data-answer');
+            if (answer === correctAnswer) {
+                button.classList.add('correct-answer');
+                if (button === selectedButton) {
+                    isCorrect = true;
+                }
+            }
+        });
+
+        if (isCorrect) {
+            score++;
+            selectedButton.classList.add('correct-answer'); // කොළ පාට
+            feedbackMessage.textContent = 'නිවැරදියි! (Correct!)';
+            feedbackMessage.classList.remove('text-red-500', 'hidden');
+            feedbackMessage.classList.add('text-lime-600');
+        } else {
+            selectedButton.classList.add('incorrect-answer'); // රතු පාට
+            feedbackMessage.textContent = 'වැරදියි! නිවැරදි පිළිතුර කොළ පැහැයෙන් දක්වා ඇත. (Incorrect!)';
+            feedbackMessage.classList.remove('text-lime-600', 'hidden');
+            feedbackMessage.classList.add('text-red-500');
+        }
+
+        // Next බොත්තම සක්‍රිය කිරීම
+        nextButton.disabled = false;
+        nextButton.classList.remove('bg-gray-400', 'disabled');
+        nextButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
+    }
+
+    // ඊළඟ ප්‍රශ්නයට යාමේ කාර්යය
+    function nextQuestion() {
+        currentQuestionIndex++;
+        renderQuestion();
+    }
+
+    // ප්‍රතිඵල පෙන්වීමේ කාර්යය
+    function showResults() {
+        // Clear the timer when results are shown
+        if (timerInterval) {
+            clearInterval(timerInterval);
+        }
+        timerDisplay.classList.add('hidden'); // Hide timer on results page
+        quizContainer.classList.add('hidden');
+        resultsContainer.classList.remove('hidden');
+        
+        finalScoreElement.textContent = `ඔබ ලබාගත් නිවැරදි පිළිතුරු: ${score} / ${quizData.length}`;
+        finalScoreElement.classList.remove('text-red-500', 'text-orange-500', 'text-lime-600');
+
+        // ලකුණු අනුව වර්ණය තීරණය කිරීම
+        const percentage = (score / quizData.length) * 100;
+        if (percentage >= 70) {
+            finalScoreElement.classList.add('text-lime-600');
+        } else if (percentage >= 40) {
+            finalScoreElement.classList.add('text-orange-500');
+        } else {
+            finalScoreElement.classList.add('text-red-500');
+        }
+    }
+    
+    // ප්‍රශ්නාවලිය ආරම්භ කිරීමේ/නැවත ආරම්භ කිරීමේ කාර්යය (මෙහි ප්‍රශ්න අහඹු ලෙස පෙළගැස්වීම සිදු කෙරේ)
+    function startQuiz() {
+        // Clear timer if restarting
+        if (timerInterval) {
+            clearInterval(timerInterval);
+        }
+
+        // ප්‍රශ්නාවලිය ආරම්භ කිරීමට පෙර ප්‍රශ්න අහඹු ලෙස පෙළගැස්වීම
+        shuffleArray(quizData); 
+        
+        // Hide start screen and results, show quiz elements
+        startScreen.classList.add('hidden');
+        resultsContainer.classList.add('hidden');
+        quizContainer.classList.remove('hidden');
+        timerDisplay.classList.remove('hidden');
+        
+        currentQuestionIndex = 0;
+        score = 0;
+        isQuestionLocked = false;
+        
+        renderQuestion();
+    }
+
+
+
+</script>
+
+
+</body>
+</html>
