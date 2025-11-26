@@ -20,11 +20,11 @@
             padding: 20px;
             box-sizing: border-box;
             
-            /* --- 1. COPY PREVENTION (පාඨ පිටපත් කිරීම වැළැක්වීම) --- */
-            -webkit-user-select: none; /* Safari */
-            -moz-user-select: none; /* Firefox */
-            -ms-user-select: none; /* IE10+ */
-            user-select: none; /* Standard CSS property */
+            /* --- COPY PREVENTION (පාඨ පිටපත් කිරීම වැළැක්වීම) --- */
+            -webkit-user-select: none; 
+            -moz-user-select: none; 
+            -ms-user-select: none; 
+            user-select: none; 
         }
         .quiz-card {
             max-width: 600px;
@@ -38,10 +38,10 @@
         
         @media (max-width: 640px) {
             .quiz-card h1 {
-                font-size: 1.5rem; /* 24px */
+                font-size: 1.5rem; 
             }
             .question-text {
-                font-size: 1.125rem; /* 18px */
+                font-size: 1.125rem; 
             }
         }
 
@@ -71,6 +71,20 @@
         #timer-progress {
             transition: width 1s linear;
         }
+        
+        /* ------------------------------------------- */
+        /* Modal Animation Styles (Popup Menu සඳහා) */
+        /* ------------------------------------------- */
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-enter-animation {
+            /* Cubic-bezier provides a nice "smooth" acceleration/deceleration effect */
+            animation: modalFadeIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
     </style>
 </head>
 <body>
@@ -79,18 +93,14 @@
     <h1 class="text-3xl font-bold text-gray-800 mb-2 text-center">තොරතුරු තාක්ෂණ ප්‍රශ්නාවලිය</h1>
     <p class="text-center text-md text-blue-700 mb-6 font-semibold">GK ICT School විභාග ලියන අලුත් විදිහ.</p>
 
-    <!-- 1. START SCREEN -->
+    <!-- 1. START SCREEN (උපදෙස් දැන් Modal එකක් හරහා පෙන්වයි) -->
     <div id="start-screen" class="text-center p-6 bg-blue-50 rounded-lg shadow-inner">
         <h2 class="text-2xl font-extrabold mb-6 text-blue-800">ප්‍රශ්නාවලිය ආරම්භ කිරීමට සූදානම්ද?</h2>
         
-        <p class="text-lg font-semibold text-gray-700 mb-3 underline">Start Quiz කිරීමට පෙර උපදෙස් කියවන්න</p>
-        
-        <ul class="text-left text-gray-600 mb-8 list-disc list-inside space-y-2 px-4 sm:px-0">
-            <li>සියලුම ප්‍රශ්න සඳහා පිළිතුරු දියයුතුය.</li>
-            <li>සෑම ප්‍රශ්නයක් සඳහාම පිළිතුරු දීමට ඔබට තත්පර 40ක කාලයක් ලැබේ.</li>
-            <li>නියමිත කාලය තුළ පිළිතුරු ලබා දීමට නොහැකි වුවහොත් එය අවසන් ලකුණු වලට එකතු වන්නේ නැත.</li>
-            <li>**වැදගත්:** වෙනත් Tab එකකට හෝ Window එකකට මාරු වුවහොත් ප්‍රශ්නාවලිය **නැවත මුල සිටම ආරම්භ වේ** (ආරම්භක තිරයෙන්).</li>
-        </ul>
+        <!-- UPDATED INSTRUCTION BUTTON (smaller size and less dominant color) -->
+        <button onclick="showInstructions()" class="w-full bg-gray-200 text-gray-700 py-1.5 text-base rounded-lg hover:bg-gray-300 transition duration-300 mb-4 shadow-sm">
+            "Start Quiz" කිරීමට පෙර උපදෙස් කියවන්න
+        </button>
         
         <button onclick="startQuiz()" class="w-full bg-blue-600 text-white py-4 text-2xl rounded-lg hover:bg-blue-700 transition duration-300 shadow-xl transform hover:scale-105">
             Start Quiz
@@ -100,7 +110,6 @@
     <!-- 2. TIMER DISPLAY -->
     <div id="timer-display" class="mb-4 text-center hidden">
         <div id="timer-bar" class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-            <!-- Timer progress bar is initially set to 100% -->
             <div id="timer-progress" class="h-2 bg-red-500 transition-all duration-1000 ease-linear" style="width: 100%;"></div>
         </div>
         <p class="mt-1 text-sm text-gray-600 font-medium"><span id="time-left">40</span> තත්පර ඉතිරිව ඇත (Time Left)</p>
@@ -117,6 +126,30 @@
         <p id="final-score" class="text-xl font-bold text-center mb-6"></p>
         <button onclick="startQuiz()" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300">
             නැවත පටන් ගන්න (Restart)
+        </button>
+    </div>
+</div>
+
+<!-- 5. INSTRUCTION MODAL (POPUP MENU) - Added ID for content -->
+<div id="instruction-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 z-50 flex items-center justify-center hidden">
+    <div id="modal-content" class="bg-white rounded-xl shadow-2xl p-6 m-4 max-w-sm sm:max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <h3 class="text-2xl font-bold text-blue-700 mb-4 border-b pb-2">ප්‍රශ්නාවලියේ උපදෙස්</h3>
+        
+        <ul class="text-left text-gray-700 space-y-3 list-disc list-inside mb-6 text-base">
+            <li>සියලුම ප්‍රශ්න සඳහා පිළිතුරු දියයුතුය.</li>
+            <li>සෑම ප්‍රශ්නයක් සඳහාම පිළිතුරු දීමට ඔබට තත්පර 40ක කාලයක් ලැබේ.</li>
+            <li>නියමිත කාලය තුළ පිළිතුරු ලබා දීමට නොහැකි වුවහොත් එය අවසන් ලකුණු වලට එකතු වන්නේ නැත.</li>
+            <li>👮 ආරක්ෂක නීති (Security Rules):
+                <ul class="list-disc list-inside ml-5 mt-1 space-y-1 text-sm text-red-600 font-medium">
+                    <li>Text පිටපත් ගැනීම අවහිර කර ඇත.</li>
+                    <li>වෙනත් Tab එකකට හෝ Window එකකට මාරු වුවහොත් ප්‍රශ්නාවලිය නැවත මුල සිටම ආරම්භ වේ.</li>
+                    <li>Developer Tools විවෘත කිරීමේ කෙටිමං අවහිර කර ඇත.</li>
+                </ul>
+            </li>
+        </ul>
+        
+        <button onclick="hideInstructions()" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300 shadow-lg">
+            තේරුම් ගත්තා (Got It)
         </button>
     </div>
 </div>
@@ -177,9 +210,25 @@
     const startScreen = document.getElementById('start-screen');
     const quizContainer = document.getElementById('quiz-container');
     const resultsContainer = document.getElementById('results-container');
-    const finalScoreElement = document.getElementById('final-score');
     const timerDisplay = document.getElementById('timer-display');
+    const instructionModal = document.getElementById('instruction-modal'); // MODAL CONTAINER
+    const modalContent = document.getElementById('modal-content'); // MODAL CONTENT DIV (for animation)
 
+    // ----------------------------------------------------------------------
+    // [MODAL FUNCTIONS - Popup Menu ක්‍රියාකාරීත්වය]
+    // ----------------------------------------------------------------------
+
+    function showInstructions() {
+        instructionModal.classList.remove('hidden');
+        // Add animation class when showing the modal
+        modalContent.classList.add('modal-enter-animation');
+    }
+
+    function hideInstructions() {
+        // Remove animation class and hide the modal
+        instructionModal.classList.add('hidden');
+        modalContent.classList.remove('modal-enter-animation');
+    }
 
     // ----------------------------------------------------------------------
     // [ප්‍රශ්නාවලියේ දත්ත / QUIZ DATA SECTION]
@@ -205,7 +254,6 @@
         { question: "www යන්නෙන් අදහස් කරන්නේ කුමක්ද?", correct: "ලෝක ව්‍යාප්ත ජාලය (world wide web).", distractors: ["ව්‍යාපාරික වෙබ් අඩවි ජාලය (World Wide Websites)", "පුළුල් ප්‍රදේශ ජාලය (Wide Area Network)"] },
         // Q10
         { question: "පුද්ගලයෙකුට අන්තර්ජාලය ඔස්සේ අපහාස කිරීම, තර්ජනය කිරීම හෝ අපහසුතාවයට පත් කිරීම හඳුන්වන්නේ කෙසේද?", correct: "සයිබර් හිරිහැර කිරීම (cyberbullying).", distractors: ["ෆිෂින් (phishing).", "හැකින් (hacking)."] },
-        
     ];
 
     // Array Shuffle Function (Fisher-Yates) - ප්‍රශ්න සහ පිළිතුරු අහඹු ලෙස පෙළගැස්වීම සඳහා
@@ -222,7 +270,7 @@
         if (timerInterval) {
             clearInterval(timerInterval);
         }
-        if (isQuestionLocked) return; // Prevent double trigger
+        if (isQuestionLocked) return; 
         isQuestionLocked = true;
 
         const optionsList = document.getElementById('options-list');
@@ -311,7 +359,6 @@
         const currentQ = quizData[currentQuestionIndex];
         
         // නිවැරදි පිළිතුර සහ වැරදි පිළිතුරු එකතු කර අහඹු ලෙස පෙළගැස්වීම
-        // මෙහිදී පිළිතුරු වල අනුපිළිවෙලද සෑම විටම වෙනස් වේ.
         const options = shuffleArray([
             currentQ.correct, 
             ...currentQ.distractors.slice(0, 3) 
@@ -323,7 +370,6 @@
         quizContainer.innerHTML = `
             <div class="mb-6">
                 <p class="text-lg font-semibold text-blue-600 mb-2">ප්‍රශ්නය ${questionNumber} / ${totalQuestions}</p>
-                <!-- Added question-text class for mobile font sizing -->
                 <h2 class="question-text text-xl font-bold text-gray-700">${currentQ.question}</h2>
             </div>
             <div id="options-list" class="space-y-3">
@@ -337,7 +383,6 @@
                     </button>
                 `).join('')}
             </div>
-            <!-- Updated: Changed 'text-lg' to 'text-sm' to make the feedback text smaller -->
             <div id="feedback-message" class="mt-4 text-center text-sm font-medium hidden"></div>
             <button id="next-button" onclick="nextQuestion()" class="mt-6 w-full bg-gray-400 text-white py-3 rounded-lg disabled transition duration-300" disabled>
                 ඊළඟ ප්‍රශ්නය (Next Question)
@@ -416,6 +461,7 @@
         quizContainer.classList.add('hidden');
         resultsContainer.classList.remove('hidden');
         
+        const finalScoreElement = document.getElementById('final-score');
         finalScoreElement.textContent = `ඔබ ලබාගත් නිවැරදි පිළිතුරු: ${score} / ${quizData.length}`;
         finalScoreElement.classList.remove('text-red-500', 'text-orange-500', 'text-lime-600');
 
@@ -430,8 +476,7 @@
         }
     }
     
-    // --- NEW FUNCTION: Reset Quiz State and Show Start Screen ---
-    // සම්පූර්ණ තත්වය reset කර ආරම්භක තිරය පෙන්වයි.
+    // --- Reset Quiz State and Show Start Screen ---
     function resetQuizState() {
         // Stop any running timer
         if (timerInterval) {
@@ -444,14 +489,15 @@
         isQuestionLocked = false;
         timeRemaining = TIME_LIMIT;
 
-        // Show the Start Screen and hide quiz/results
+        // Show the Start Screen and hide quiz/results/timer
         startScreen.classList.remove('hidden');
         quizContainer.classList.add('hidden');
         resultsContainer.classList.add('hidden');
         timerDisplay.classList.add('hidden');
         
-        // Optional: Notify user (if allowed) that the quiz was reset.
-        // console.warn("Quiz state reset due to security event (tab change)."); 
+        // Ensure modal is also hidden and animation class removed
+        instructionModal.classList.add('hidden');
+        modalContent.classList.remove('modal-enter-animation');
     }
 
     // ප්‍රශ්නාවලිය ආරම්භ කිරීමේ/නැවත ආරම්භ කිරීමේ කාර්යය
@@ -475,14 +521,11 @@
     document.addEventListener("visibilitychange", function() {
         // When the document is hidden (user switched to another tab/window)
         if (document.hidden) {
-            // Only reset if the user is currently on the quiz page (not results/start)
-            // A safer check is to see if the quiz has started (currentQuestionIndex > 0)
-            // Or just check if the start screen is hidden, meaning the quiz is running
+            // Only reset if the start screen is hidden, meaning the quiz is currently running or showing results
             if (startScreen.classList.contains('hidden')) {
                  resetQuizState();
             }
         }
-        // Note: No need for the 'else' block anymore, as resetQuizState() handles everything.
     });
 
 </script>
