@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>තොරතුරු තාක්ෂණ ප්‍රශ්නාවලිය (ප්‍රශ්න 15)</title>
+    <title>තොරතුරු තාක්ෂණ ප්‍රශ්නාවලිය</title>
     <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -74,17 +74,28 @@
 <body>
 
 <div class="quiz-card">
-    <h1 class="text-3xl font-bold text-gray-800 mb-2 text-center">තොරතුරු තාක්ෂණ ප්‍රශ්නාවලිය (ප්‍රශ්න 15)</h1>
+    <h1 class="text-3xl font-bold text-gray-800 mb-2 text-center">තොරතුරු තාක්ෂණ ප්‍රශ්නාවලිය</h1>
     <!-- Fixed: Subtitle added here for correct display -->
     <p class="text-center text-md text-blue-700 mb-6 font-semibold">GK ICT School විභාග ලියන අලුත් විදිහ.</p>
 
     <!-- 1. START SCREEN -->
     <div id="start-screen" class="text-center p-6 bg-blue-50 rounded-lg shadow-inner">
         <h2 class="text-2xl font-extrabold mb-6 text-blue-800">ප්‍රශ්නාවලිය ආරම්භ කිරීමට සූදානම්ද?</h2>
-        <!-- Updated: Question count changed to 15 -->
-        <p class="text-gray-600 mb-8">සෑම ප්‍රශ්නයකටම පිළිතුරු දීමට ඔබට තත්පර 30ක් ලැබේ. ප්‍රශ්න 15ක් අඩංගු වන අතර, අනුපිළිවෙල සෑම විටම වෙනස් වේ.</p>
-        <button onclick="startQuiz()" class="w-full bg-blue-600 text-white py-4 text-xl rounded-lg hover:bg-blue-700 transition duration-300 shadow-xl transform hover:scale-105">
-            ප්‍රශ්නාවලිය ආරම්භ කරන්න (Start Quiz)
+        
+        <!-- START OF USER REQUESTED ADDITION: Instruction heading -->
+        <p class="text-lg font-semibold text-gray-700 mb-3"><u>Start Quiz කිරීමට පෙර උපදෙස් කියවන්න</u></p>
+        <!-- END OF USER REQUESTED ADDITION -->
+        
+        <!-- Updated: Instructions converted to a bulleted list for better readability -->
+        <ul class="text-left text-gray-600 mb-8 list-disc list-inside space-y-2 px-4 sm:px-0">
+            <li>සියලුම ප්‍රශ්න සඳහා පිළිතුරු දියයුතුය.</li>
+            <li>සෑම ප්‍රශ්නයක් සඳහාම පිළිතුරු දීමට ඔබට තත්පර 40ක කාලයක් ලැබේ.</li>
+            <li>කාලය තුළ පිළිතුරු ලබා දීමට නොහැකි වුවහොත් ස්වයංක්‍රීයවම නිවැරැදි පිළිතුර පෙන්වනු ලැබේ.</li>
+            <li>එසේ ස්වයංක්‍රීයවම නිවැරැදි පිළිතුර පෙන්වීම සිදුකලත් එය අවසන් ලකුණු වලට එකතු වන්නේ නැත.</li>
+        </ul>
+        <!-- Updated: Increased font size to text-2xl -->
+        <button onclick="startQuiz()" class="w-full bg-blue-600 text-white py-4 text-2xl rounded-lg hover:bg-blue-700 transition duration-300 shadow-xl transform hover:scale-105">
+            Start Quiz
         </button>
     </div>
 
@@ -94,7 +105,7 @@
             <!-- Timer progress bar is initially set to 100% -->
             <div id="timer-progress" class="h-2 bg-red-500 transition-all duration-1000 ease-linear" style="width: 100%;"></div>
         </div>
-        <p class="mt-1 text-sm text-gray-600 font-medium"><span id="time-left">30</span> තත්පර ඉතිරිව ඇත (Time Left)</p>
+        <p class="mt-1 text-sm text-gray-600 font-medium"><span id="time-left">40</span> තත්පර ඉතිරිව ඇත (Time Left)</p>
     </div>
     
     <!-- 3. QUIZ CONTAINER -->
@@ -114,7 +125,7 @@
 
 <script>
     // Constants for the quiz
-    const TIME_LIMIT = 30; // Time in seconds for each question
+    const TIME_LIMIT = 40; // Time in seconds for each question
     
     // Global variables
     let currentQuestionIndex = 0;
@@ -133,7 +144,7 @@
 
     // ----------------------------------------------------------------------
     // [ප්‍රශ්නාවලියේ දත්ත / QUIZ DATA SECTION]
-    // ප්‍රශ්න ගණන 15ක් ලෙස සීමා කර ඇත.
+    // ප්‍රශ්න ගණන 15ක් ලෙස සීමා කර ඇත. (දැනට ඇත්තේ 10කි)
     // ----------------------------------------------------------------------
     const quizData = [
         // Q1
@@ -156,16 +167,7 @@
         { question: "www යන්නෙන් අදහස් කරන්නේ කුමක්ද?", correct: "ලෝක ව්‍යාප්ත ජාලය (world wide web).", distractors: ["ව්‍යාපාරික වෙබ් අඩවි ජාලය (World Wide Websites)", "පුළුල් ප්‍රදේශ ජාලය (Wide Area Network)"] },
         // Q10
         { question: "පුද්ගලයෙකුට අන්තර්ජාලය ඔස්සේ අපහාස කිරීම, තර්ජනය කිරීම හෝ අපහසුතාවයට පත් කිරීම හඳුන්වන්නේ කෙසේද?", correct: "සයිබර් හිරිහැර කිරීම (cyberbullying).", distractors: ["ෆිෂින් (phishing).", "හැකින් (hacking)."] },
-        // Q11 (Added to reach 15)
-        { question: "SMS යන්නෙහි දිගු ස්වරූපය කුමක්ද?", correct: "Short Message Service.", distractors: ["System Main Server.", "Secure Mail System."] },
-        // Q12 (Added to reach 15)
-        { question: "පරිශීලකයාගේ සංවේදී තොරතුරු (මුරපද, ක්‍රෙඩිට් කාඩ්පත් අංක) සොරකම් කිරීමට යොදාගන්නා වංචනික ක්‍රමය කුමක්ද?", correct: "ෆිෂින් (phishing).", distractors: ["සයිබර් හිරිහැර කිරීම (cyberbullying).", "Spyware."] },
-        // Q13 (Added to reach 15)
-        { question: "ආරක්ෂාව සඳහා භාවිතා කළ යුතු ශක්තිමත් මුරපදයක (strong password) අඩංගු විය යුතු අංග මොනවාද?", correct: "ඉංග්‍රීසි ලොකු අකුරු, කුඩා අකුරු, ඉලක්කම් සහ $, *, #, @ වැනි විශේෂ සංකේත.", distractors: ["ඉලක්කම් 8ක් පමණක්.", "තමන්ගේ නම සහ උපන් දිනය පමණක්."] },
-        // Q14 (Added to reach 15)
-        { question: "අන්තර්ජාලයේ සැරිසරන විට හදිසියේ මතුවන අනවශ්‍ය වෙළඳ දැන්වීම් හෝ පණිවිඩ හඳුන්වන්නේ කෙසේද?", correct: "Pop-ups.", distractors: ["Phishing.", "Spamming."] },
-        // Q15 (Added to reach 15)
-        { question: "මෙහෙයුම් පද්ධතියක ආරක්ෂාව තහවුරු කිරීමට නිරතුරුවම කළ යුතු වැදගත් දෙයක් නම් කරන්න.", correct: "ස්වයංක්‍රීය යාවත්කාලීන කිරීම් ක්‍රියාත්මක කර තැබීම (turn on automatic updates).", distractors: ["සියලුම ගොනු මකා දැමීම.", "අන්තර්ජාල සම්බන්ධතාවය විසන්ධි කිරීම."] }
+        
     ];
 
     // Array Shuffle Function (Fisher-Yates) - ප්‍රශ්න සහ පිළිතුරු අහඹු ලෙස පෙළගැස්වීම සඳහා
@@ -179,6 +181,9 @@
 
     // Handles the quiz when the time for a question runs out
     function handleTimeout() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+        }
         if (isQuestionLocked) return; // Prevent double trigger
         isQuestionLocked = true;
 
@@ -294,7 +299,8 @@
                     </button>
                 `).join('')}
             </div>
-            <div id="feedback-message" class="mt-4 text-center text-lg font-medium hidden"></div>
+            <!-- Updated: Changed 'text-lg' to 'text-sm' to make the feedback text smaller -->
+            <div id="feedback-message" class="mt-4 text-center text-sm font-medium hidden"></div>
             <button id="next-button" onclick="nextQuestion()" class="mt-6 w-full bg-gray-400 text-white py-3 rounded-lg disabled transition duration-300" disabled>
                 ඊළඟ ප්‍රශ්නය (Next Question)
             </button>
