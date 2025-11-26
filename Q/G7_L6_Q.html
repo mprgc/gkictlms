@@ -89,7 +89,7 @@
             <li>සියලුම ප්‍රශ්න සඳහා පිළිතුරු දියයුතුය.</li>
             <li>සෑම ප්‍රශ්නයක් සඳහාම පිළිතුරු දීමට ඔබට තත්පර 40ක කාලයක් ලැබේ.</li>
             <li>නියමිත කාලය තුළ පිළිතුරු ලබා දීමට නොහැකි වුවහොත් එය අවසන් ලකුණු වලට එකතු වන්නේ නැත.</li>
-            <li>**වැදගත්:** වෙනත් Tab එකකට හෝ Window එකකට මාරු වුවහොත් ප්‍රශ්නාවලිය නැවත පටන් ගනී.</li>
+            <li>**වැදගත්:** වෙනත් Tab එකකට හෝ Window එකකට මාරු වුවහොත් ප්‍රශ්නාවලිය **නැවත මුල සිටම ආරම්භ වේ** (ආරම්භක තිරයෙන්).</li>
         </ul>
         
         <button onclick="startQuiz()" class="w-full bg-blue-600 text-white py-4 text-2xl rounded-lg hover:bg-blue-700 transition duration-300 shadow-xl transform hover:scale-105">
@@ -155,43 +155,10 @@
     });
 
     // --- 3. RIGHT CLICK AND LONG PRESS PREVENTION (Right Click සහ Long Press වැළැක්වීම) ---
-    // contextmenu event එක disable කිරීම මගින් mobile වල long press කිරීමත් වළක්වයි.
     document.addEventListener('contextmenu', function (e) {
         e.preventDefault();
     });
-
-    // --- 4. TAB CHANGE / WINDOW BLUR DETECTION (වෙනත් Tab එකකට ගියහොත් Refresh කිරීම) ---
-    document.addEventListener("visibilitychange", function() {
-        // When the document is hidden (user switched to another tab/window)
-        if (document.hidden) {
-            // Immediately stop the timer and reset the quiz
-            if (timerInterval) {
-                clearInterval(timerInterval);
-            }
-            // Reset state and show a warning, then restart the quiz
-            // A simple way to restart and reset the score is to call startQuiz()
-            // We can also use location.reload() but calling startQuiz() is cleaner for this app structure
-            // Optionally, you can add an alert/modal here before restarting
-            
-            // Note: Since 'alert()' is not allowed in this environment, we just silently restart.
-            // console.warn("User left the tab. Restarting quiz."); 
-            
-            // Call startQuiz to reset score and questions
-            startQuiz();
-        } else {
-            // When the document becomes visible again (user returned to this tab)
-            // If the quiz was active, the timer will be restarted by startQuiz()
-            // If we are in the middle of a question (currentQuestionIndex > 0) AND not on the results screen
-            if (currentQuestionIndex > 0 && quizContainer.classList.contains('hidden') === false) {
-                 // Restart the timer only if the question is NOT locked (i.e., user hasn't answered yet)
-                 if (!isQuestionLocked) {
-                    startTimer();
-                 }
-            }
-        }
-    });
-
-
+    
     // ----------------------------------------------------------------------
     // [QUIZ LOGIC - ප්‍රශ්නාවලියේ කේතය]
     // ----------------------------------------------------------------------
@@ -463,28 +430,60 @@
         }
     }
     
-    // ප්‍රශ්නාවලිය ආරම්භ කිරීමේ/නැවත ආරම්භ කිරීමේ කාර්යය (මෙහි ප්‍රශ්න අහඹු ලෙස පෙළගැස්වීම සිදු කෙරේ)
-    function startQuiz() {
-        // Clear timer if restarting
+    // --- NEW FUNCTION: Reset Quiz State and Show Start Screen ---
+    // සම්පූර්ණ තත්වය reset කර ආරම්භක තිරය පෙන්වයි.
+    function resetQuizState() {
+        // Stop any running timer
         if (timerInterval) {
             clearInterval(timerInterval);
         }
+        
+        // Reset state variables
+        currentQuestionIndex = 0;
+        score = 0;
+        isQuestionLocked = false;
+        timeRemaining = TIME_LIMIT;
+
+        // Show the Start Screen and hide quiz/results
+        startScreen.classList.remove('hidden');
+        quizContainer.classList.add('hidden');
+        resultsContainer.classList.add('hidden');
+        timerDisplay.classList.add('hidden');
+        
+        // Optional: Notify user (if allowed) that the quiz was reset.
+        // console.warn("Quiz state reset due to security event (tab change)."); 
+    }
+
+    // ප්‍රශ්නාවලිය ආරම්භ කිරීමේ/නැවත ආරම්භ කිරීමේ කාර්යය
+    function startQuiz() {
+        // Reset the state and UI to ensure a clean start
+        resetQuizState(); 
 
         // ප්‍රශ්නාවලිය ආරම්භ කිරීමට පෙර ප්‍රශ්න අහඹු ලෙස පෙළගැස්වීම
         shuffleArray(quizData); 
         
-        // Hide start screen and results, show quiz elements
+        // Transition from Start Screen to Quiz Container
         startScreen.classList.add('hidden');
-        resultsContainer.classList.add('hidden');
         quizContainer.classList.remove('hidden');
         timerDisplay.classList.remove('hidden');
         
-        currentQuestionIndex = 0;
-        score = 0;
-        isQuestionLocked = false;
-        
+        // Render the first question (Question 1)
         renderQuestion();
     }
+    
+    // --- 4. TAB CHANGE / WINDOW BLUR DETECTION (වෙනත් Tab එකකට ගියහොත් Reset කිරීම) ---
+    document.addEventListener("visibilitychange", function() {
+        // When the document is hidden (user switched to another tab/window)
+        if (document.hidden) {
+            // Only reset if the user is currently on the quiz page (not results/start)
+            // A safer check is to see if the quiz has started (currentQuestionIndex > 0)
+            // Or just check if the start screen is hidden, meaning the quiz is running
+            if (startScreen.classList.contains('hidden')) {
+                 resetQuizState();
+            }
+        }
+        // Note: No need for the 'else' block anymore, as resetQuizState() handles everything.
+    });
 
 </script>
 
