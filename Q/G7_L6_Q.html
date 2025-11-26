@@ -6,6 +6,10 @@
     <title>තොරතුරු තාක්ෂණ ප්‍රශ්නාවලිය</title>
     <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- html2canvas CDN for converting HTML to JPEG -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
     <style>
         /* Custom styles for Sinhala font and background */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
@@ -72,32 +76,37 @@
             transition: width 1s linear;
         }
         
-        /* ------------------------------------------- */
-        /* Modal Animation Styles (Popup Menu සඳහා) */
-        /* ------------------------------------------- */
+        /* Modal Animation Styles */
         @keyframes modalFadeIn {
             from { opacity: 0; transform: translateY(20px) scale(0.95); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .modal-enter-animation {
-            /* Cubic-bezier provides a nice "smooth" acceleration/deceleration effect */
             animation: modalFadeIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
-
+        
+        /* Styles for the Capture Card */
+        #result-card-to-capture {
+            background-color: #e0f7fa; /* Light cyan background for the certificate look */
+            border: 4px solid #00bcd4; /* Cyan border */
+        }
+        .logo-placeholder {
+            border-radius: 50%;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
 
 <div class="quiz-card">
     <h1 class="text-3xl font-bold text-gray-800 mb-2 text-center">තොරතුරු තාක්ෂණ ප්‍රශ්නාවලිය</h1>
-    <p class="text-center text-md text-blue-700 mb-6 font-semibold">GK ICT School විභාග ලියන අලුත් විදිහ.</p>
+    <p class="text-center text-md text-blue-700 mb-6 font-semibold">GK ICT School අපි විභාග ලියන අලුත් විදිහ.</p>
 
     <!-- 1. START SCREEN (උපදෙස් දැන් Modal එකක් හරහා පෙන්වයි) -->
     <div id="start-screen" class="text-center p-6 bg-blue-50 rounded-lg shadow-inner">
         <h2 class="text-2xl font-extrabold mb-6 text-blue-800">ප්‍රශ්නාවලිය ආරම්භ කිරීමට සූදානම්ද?</h2>
         
-        <!-- UPDATED INSTRUCTION BUTTON (smaller size and less dominant color) -->
         <button onclick="showInstructions()" class="w-full bg-gray-200 text-gray-700 py-1.5 text-base rounded-lg hover:bg-gray-300 transition duration-300 mb-4 shadow-sm">
             උපදෙස් කියවන්න (Read Instructions)
         </button>
@@ -120,23 +129,42 @@
         <!-- Question and options will be rendered here -->
     </div>
     
-    <!-- 4. RESULTS CONTAINER -->
+    <!-- 4. RESULTS CONTAINER (Container for all elements including capture card) -->
     <div id="results-container" class="hidden">
-        <h2 class="text-2xl font-semibold text-center mb-4 text-gray-800">ප්‍රතිඵල</h2>
-        <p id="final-score" class="text-xl font-bold text-center mb-6"></p>
         
-        <!-- NEW FEATURE: Download Results Button -->
-        <button onclick="downloadResults()" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition duration-300 mb-4 shadow-md transform hover:scale-[1.02]">
-            ප්‍රතිඵල බාගත කරන්න (.txt)
+        <!-- Result Card to be captured by html2canvas -->
+        <div id="result-card-to-capture" class="p-8 rounded-lg mb-6 shadow-xl">
+            <img 
+                src="01.jpg-9a334895-d755-48ba-84c9-f10789dd12ee" 
+                onerror="this.onerror=null;this.src='01.png'" 
+                alt="GK ICT Logo" 
+                class="logo-placeholder w-20 h-20 mx-auto mb-4"
+            >
+            <h2 class="text-3xl font-extrabold text-center mb-2 text-blue-900">ප්‍රශ්නාවලියේ අවසන් ප්‍රතිඵලය</h2>
+            <p class="text-center text-lg text-gray-700 mb-6 border-b pb-4 border-blue-400">GK ICT School - තොරතුරු තාක්ෂණ ප්‍රශ්නාවලිය</p>
+            
+            <!-- ADDED: Detailed Score and Percentage Display -->
+            <p id="correct-answers-count" class="text-xl font-bold text-center mb-2 text-gray-700"></p>
+            <p id="final-percentage" class="text-2xl font-black text-center mb-4"></p>
+
+            <!-- Original final score is still used for color logic but now updated to show percentage -->
+            <p id="final-score" class="text-4xl font-black text-center mb-4 hidden"></p> 
+            <p id="result-date" class="text-sm text-center text-gray-600">දිනය සහ වේලාව: --</p>
+        </div>
+        
+        <!-- Action Buttons (outside the capture area) -->
+        <button onclick="captureResultsAsImage()" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition duration-300 mb-4 shadow-md transform hover:scale-[1.02]">
+            ප්‍රතිඵල සටහන බාගත කරන්න 
         </button>
         
-        <button onclick="startQuiz()" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300">
-            නැවත පටන් ගන්න (Restart)
+        <!-- UPDATED: This button now calls resetQuizState() to go back to the start screen -->
+        <button onclick="resetQuizState()" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300">
+            නැවත මුලට යන්න (Go to Start)
         </button>
     </div>
 </div>
 
-<!-- 5. INSTRUCTION MODAL (POPUP MENU) - Added ID for content -->
+<!-- 5. INSTRUCTION MODAL (POPUP MENU) -->
 <div id="instruction-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 z-50 flex items-center justify-center hidden">
     <div id="modal-content" class="bg-white rounded-xl shadow-2xl p-6 m-4 max-w-sm sm:max-w-md w-full max-h-[90vh] overflow-y-auto">
         <h3 class="text-2xl font-bold text-blue-700 mb-4 border-b pb-2">ප්‍රශ්නාවලියේ උපදෙස්</h3>
@@ -260,12 +288,14 @@
         { question: "www යන්නෙන් අදහස් කරන්නේ කුමක්ද?", correct: "ලෝක ව්‍යාප්ත ජාලය (world wide web).", distractors: ["ව්‍යාපාරික වෙබ් අඩවි ජාලය (World Wide Websites)", "පුළුල් ප්‍රදේශ ජාලය (Wide Area Network)"] },
         // Q10
         { question: "පුද්ගලයෙකුට අන්තර්ජාලය ඔස්සේ අපහාස කිරීම, තර්ජනය කිරීම හෝ අපහසුතාවයට පත් කිරීම හඳුන්වන්නේ කෙසේද?", correct: "සයිබර් හිරිහැර කිරීම (cyberbullying).", distractors: ["ෆිෂින් (phishing).", "හැකින් (hacking)."] },
+        
     ];
 
     // Array Shuffle Function (Fisher-Yates) - ප්‍රශ්න සහ පිළිතුරු අහඹු ලෙස පෙළගැස්වීම සඳහා
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
+            // Correct destructuring swap
             [array[i], array[j]] = [array[j], array[i]];
         }
         return array;
@@ -375,7 +405,8 @@
 
         quizContainer.innerHTML = `
             <div class="mb-6">
-                <p class="text-lg font-semibold text-blue-600 mb-2">ප්‍රශ්නය ${questionNumber} / ${totalQuestions}</p>
+                <!-- Changed text-blue-600 to text-cyan-700 for better visibility and less ambiguity with orange -->
+                <p class="text-lg font-semibold text-cyan-700 mb-2">ප්‍රශ්නය ${questionNumber} / ${totalQuestions}</p>
                 <h2 class="question-text text-xl font-bold text-gray-700">${currentQ.question}</h2>
             </div>
             <div id="options-list" class="space-y-3">
@@ -457,41 +488,34 @@
         renderQuestion();
     }
 
-    // ප්‍රතිඵල බාගත කිරීමේ කාර්යය (NEW FUNCTION)
-    function downloadResults() {
-        const totalQuestions = quizData.length;
-        const date = new Date().toLocaleDateString('si-LK');
-        const time = new Date().toLocaleTimeString('si-LK', { hour: '2-digit', minute: '2-digit' });
+    // ප්‍රතිඵල රූපයක් ලෙස බාගත කිරීමේ කාර්යය
+    function captureResultsAsImage() {
+        const card = document.getElementById('result-card-to-capture');
         
-        const resultText = `
---------------------------------------------------
-   GK ICT School - ප්‍රශ්නාවලියේ ප්‍රතිඵල
---------------------------------------------------
-ප්‍රශ්නාවලියේ මාතෘකාව: තොරතුරු තාක්ෂණ ප්‍රශ්නාවලිය
-දිනය: ${date}
-වේලාව: ${time}
---------------------------------------------------
-ඔබ ලබාගත් නිවැරදි පිළිතුරු: ${score} / ${totalQuestions}
-සාමාන්‍යය: ${((score / totalQuestions) * 100).toFixed(2)}%
-
-සටහන: මෙම ගොනුව ඔබගේ අවසන් ලකුණු වාර්තාවයි.
---------------------------------------------------
-        `.trim();
-
-        // Create a Blob containing the text data
-        const blob = new Blob([resultText], { type: 'text/plain;charset=utf-8' });
-        
-        // Create a link element, set the download properties, and simulate a click
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `ICT_Quiz_Result_${date}.txt`;
-        
-        // Append to the body, click it, and remove it
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        // Use html2canvas to capture the content
+        html2canvas(card, {
+            scale: 2, // Increase scale for higher resolution
+            allowTaint: true, 
+            useCORS: true 
+        }).then(canvas => {
+            // Convert canvas to JPEG Data URL
+            const imageUrl = canvas.toDataURL('image/jpeg', 0.9); // 0.9 quality
+            
+            // Create a temporary link element for download
+            const link = document.createElement('a');
+            const date = new Date().toLocaleDateString('si-LK');
+            link.download = `ICT_Quiz_Scorecard_${date}.jpeg`;
+            link.href = imageUrl;
+            
+            // Trigger the download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }).catch(error => {
+            console.error('HTML to Canvas conversion failed:', error);
+            // Error handling
+        });
     }
-
 
     // ප්‍රතිඵල පෙන්වීමේ කාර්යය
     function showResults() {
@@ -504,18 +528,35 @@
         resultsContainer.classList.remove('hidden');
         
         const finalScoreElement = document.getElementById('final-score');
-        finalScoreElement.textContent = `ඔබ ලබාගත් නිවැරදි පිළිතුරු: ${score} / ${quizData.length}`;
-        finalScoreElement.classList.remove('text-red-500', 'text-orange-500', 'text-lime-600');
+        const correctAnswersCountElement = document.getElementById('correct-answers-count');
+        const finalPercentageElement = document.getElementById('final-percentage');
 
-        // ලකුණු අනුව වර්ණය තීරණය කිරීම
-        const percentage = (score / quizData.length) * 100;
+        const totalQuestions = quizData.length;
+        const percentage = Math.round((score / totalQuestions) * 100);
+        
+        // Update the detailed score elements
+        correctAnswersCountElement.textContent = `ඔබ ලබාගත් නිවැරදි පිළිතුරු: ${score} / ${totalQuestions}`;
+        finalPercentageElement.textContent = `ලකුණු: ${percentage}%`;
+
+        // Reset and set color class based on percentage for the percentage display
+        finalPercentageElement.classList.remove('text-red-500', 'text-orange-500', 'text-lime-600', 'text-gray-700');
+
+        // ලකුණු අනුව වර්ණය තීරණය කිරීම (Color determination based on score)
         if (percentage >= 70) {
-            finalScoreElement.classList.add('text-lime-600');
+            finalPercentageElement.classList.add('text-lime-600');
         } else if (percentage >= 40) {
-            finalScoreElement.classList.add('text-orange-500');
+            finalPercentageElement.classList.add('text-orange-500');
         } else {
-            finalScoreElement.classList.add('text-red-500');
+            finalPercentageElement.classList.add('text-red-500');
         }
+        
+        // Update date/time for the captured card
+        const date = new Date().toLocaleDateString('si-LK');
+        const time = new Date().toLocaleTimeString('si-LK', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('result-date').textContent = `දිනය සහ වේලාව: ${date} | ${time}`;
+        
+        // Ensure the original final-score element is hidden (it was only used for simplicity before)
+        finalScoreElement.classList.add('hidden'); 
     }
     
     // --- Reset Quiz State and Show Start Screen ---
@@ -544,14 +585,14 @@
 
     // ප්‍රශ්නාවලිය ආරම්භ කිරීමේ/නැවත ආරම්භ කිරීමේ කාර්යය
     function startQuiz() {
-        // Reset the state and UI to ensure a clean start
+        // Reset the state to ensure a clean start, but keep the start screen hidden for now
         resetQuizState(); 
-
+        startScreen.classList.add('hidden'); // Hide the start screen explicitly
+        
         // ප්‍රශ්නාවලිය ආරම්භ කිරීමට පෙර ප්‍රශ්න අහඹු ලෙස පෙළගැස්වීම
         shuffleArray(quizData); 
         
         // Transition from Start Screen to Quiz Container
-        startScreen.classList.add('hidden');
         quizContainer.classList.remove('hidden');
         timerDisplay.classList.remove('hidden');
         
