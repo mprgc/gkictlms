@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>තොරතුරු තාක්ෂණ ප්‍රශ්නාවලිය</title>
+    <title>තොරතුරු තාක්ෂණ ප්‍රශ්නාවලිය (ප්‍රශ්න 15)</title>
     <!-- Tailwind CSS CDN for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -12,20 +12,37 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f7f7f7;
+            /* **RESPONSIVE IMPROVEMENT:** Allowing content to scroll if it exceeds screen height on mobile */
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: flex-start; /* Content starts from the top */
             align-items: center;
             min-height: 100vh;
             padding: 20px;
+            box-sizing: border-box;
         }
         .quiz-card {
             max-width: 600px;
             width: 100%;
             background-color: white;
-            padding: 2.5rem;
+            /* **RESPONSIVE IMPROVEMENT:** Reduced padding for better mobile fit */
+            padding: 1.5rem; 
             border-radius: 1rem;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            /* Add margin bottom for better scrolling experience on mobile */
+            margin-bottom: 20px;
         }
+        
+        /* **RESPONSIVE IMPROVEMENT:** Reduce font size for small screens on the question text */
+        @media (max-width: 640px) {
+            .quiz-card h1 {
+                font-size: 1.5rem; /* 24px */
+            }
+            .question-text {
+                font-size: 1.125rem; /* 18px */
+            }
+        }
+
         .option-button {
             transition: all 0.2s ease-in-out;
             cursor: pointer;
@@ -57,13 +74,15 @@
 <body>
 
 <div class="quiz-card">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">තොරතුරු තාක්ෂණ ප්‍රශ්නාවලිය</h1>
+    <h1 class="text-3xl font-bold text-gray-800 mb-2 text-center">තොරතුරු තාක්ෂණ ප්‍රශ්නාවලිය (ප්‍රශ්න 15)</h1>
+    <!-- Fixed: Subtitle added here for correct display -->
+    <p class="text-center text-md text-blue-700 mb-6 font-semibold">GK ICT School විභාග ලියන අලුත් විදිහ.</p>
 
     <!-- 1. START SCREEN -->
-    <div id="start-screen" class="text-center p-8 bg-blue-50 rounded-lg shadow-inner">
+    <div id="start-screen" class="text-center p-6 bg-blue-50 rounded-lg shadow-inner">
         <h2 class="text-2xl font-extrabold mb-6 text-blue-800">ප්‍රශ්නාවලිය ආරම්භ කිරීමට සූදානම්ද?</h2>
-        <p class="text-gray-600 mb-8">සෑම ප්‍රශ්නයකටම පිළිතුරු දීමට ඔබට තත්පර 30ක් ලැබේ.
-        ප්‍රශ්න අනුපිළිවෙල සෑම විටම වෙනස් වේ.</p>
+        <!-- Updated: Question count changed to 15 -->
+        <p class="text-gray-600 mb-8">සෑම ප්‍රශ්නයකටම පිළිතුරු දීමට ඔබට තත්පර 30ක් ලැබේ. ප්‍රශ්න 15ක් අඩංගු වන අතර, අනුපිළිවෙල සෑම විටම වෙනස් වේ.</p>
         <button onclick="startQuiz()" class="w-full bg-blue-600 text-white py-4 text-xl rounded-lg hover:bg-blue-700 transition duration-300 shadow-xl transform hover:scale-105">
             ප්‍රශ්නාවලිය ආරම්භ කරන්න (Start Quiz)
         </button>
@@ -114,55 +133,39 @@
 
     // ----------------------------------------------------------------------
     // [ප්‍රශ්නාවලියේ දත්ත / QUIZ DATA SECTION]
+    // ප්‍රශ්න ගණන 15ක් ලෙස සීමා කර ඇත.
     // ----------------------------------------------------------------------
     const quizData = [
-        {
-            question: "www යන්නෙන් අදහස් කරන්නේ කුමක්ද?",
-            correct: "ලෝක ව්‍යාප්ත ජාලය (world wide web).",
-            distractors: [
-                "ව්‍යාපාරික වෙබ් අඩවි ජාලය (World Wide Websites)",
-                "පුළුල් ප්‍රදේශ ජාලය (Wide Area Network)",
-                "රැහැන් රහිත ජාල සම්බන්ධතා (Wireless Web)."
-            ]
-        },
-        {
-            question: "URL යන්නෙහි දිගු ස්වරූපය කුමක්ද?",
-            correct: "Uniform Resource Locator.",
-            distractors: [
-                "Universal Record Linkage.",
-                "Uniform Redirect Language.",
-                "Unidentified Remote Location."
-
-            ]
-        },
-        {
-            question: "වීඩියෝ සම්මන්ත්‍රණ (video conferencing) සඳහා භාවිතා කරන මෘදුකාංග සඳහා උදාහරණ දෙකක් දෙන්න.",
-            correct: "Zoom, Skype, GoToMeeting, Webex.",
-            distractors: [
-                "Microsoft Word, Excel.",
-                "Adobe Photoshop, Illustrator.",
-                "Chrome, Firefox."
-            ]
-        },
-        {
-            question: "විද්‍යුත් තැපෑලක (e-mail) ලැබුණු පණිවිඩයක් වෙනත් අයෙකුට යැවීම හැඳින්වෙන්නේ කුමන නමකින්ද?",
-            correct: "Forward කිරීම.",
-            distractors: [
-                "Reply කිරීම.",
-                "Cc කිරීම.",
-                "Attach කිරීම."
-            ]
-        },
-        {
-            question: "විද්‍යුත් තැපෑලක් සමඟ ගොනු (files) යැවීමේ ක්‍රියාවලිය කුමක්ද?",
-            correct: "Attach කිරීම.",
-            distractors: [
-                "Download කිරීම.",
-                "Upload කිරීම.",
-                "Link කිරීම."
-            ]
-        },
-
+        // Q1
+        { question: "URL යන්නෙහි දිගු ස්වරූපය කුමක්ද?", correct: "Uniform Resource Locator.", distractors: ["Universal Record Linkage.", "Uniform Redirect Language."] },
+        // Q2
+        { question: "වීඩියෝ සම්මන්ත්‍රණ (video conferencing) සඳහා භාවිතා කරන මෘදුකාංග සඳහා උදාහරණ දෙකක් දෙන්න.", correct: "Zoom, Skype, GoToMeeting, Webex.", distractors: ["Microsoft Word, Excel.", "Adobe Photoshop, Illustrator."] },
+        // Q3
+        { question: "විද්‍යුත් තැපෑලක (e-mail) ලැබුණු පණිවිඩයක් වෙනත් අයෙකුට යැවීම හැඳින්වෙන්නේ කුමන නමකින්ද?", correct: "Forward කිරීම.", distractors: ["Reply කිරීම.", "Cc කිරීම."] },
+        // Q4
+        { question: "විද්‍යුත් තැපෑලක් සමඟ ගොනු (files) යැවීමේ ක්‍රියාවලිය කුමක්ද?", correct: "Attach කිරීම.", distractors: ["Download කිරීම.", "Upload කිරීම."] },
+        // Q5
+        { question: "විද්‍යුත් තැපෑලක 'To' ක්ෂේත්‍රයේ යොදනු ලබන්නේ කුමක්ද?", correct: "පණිවිඩයේ ප්‍රධාන ලබන්නාගේ විද්‍යුත් තැපැල් ලිපිනය.", distractors: ["පණිවිඩයේ සාරාංශය.", "පණිවිඩයේ පිටපතක් යවන අයගේ ලිපිනය."] },
+        // Q6
+        { question: "විද්‍යුත් තැපෑලක 'Cc' යන්නෙහි තේරුම කුමක්ද?", correct: "Carbon Copy, එනම් පණිවිඩයේ පිටපතක් යවන අනෙකුත් ලබන්නන්.", distractors: ["Confidential Copy, එනම් රහස් පිටපතක්.", "Communication Center."] },
+        // Q7
+        { question: "විද්‍යුත් තැපෑලක 'Bcc' යන්නෙහි තේරුම සහ එහි විශේෂත්වය කුමක්ද?", correct: "Blind Carbon Copy, මෙහි යොදන ලබන්නන්ව 'To' හෝ 'Cc' හි සිටින අනෙක් අයට නොපෙනේ.", distractors: ["Basic Copy, සියලුම ලබන්නන්ට පෙනේ.", "Business Communication Center."] },
+        // Q8
+        { question: "විද්‍යුත් තැපෑලක 'Subject' ක්ෂේත්‍රයේ ඇතුළත් කළ යුත්තේ කුමක්ද?", correct: "පණිවිඩයේ අන්තර්ගතය පිළිබඳ සාරාංශයක්.", distractors: ["ප්‍රධාන ලබන්නාගේ ලිපිනය.", "අදාල ගොනු (Attachments) වල නම්."] },
+        // Q9
+        { question: "www යන්නෙන් අදහස් කරන්නේ කුමක්ද?", correct: "ලෝක ව්‍යාප්ත ජාලය (world wide web).", distractors: ["ව්‍යාපාරික වෙබ් අඩවි ජාලය (World Wide Websites)", "පුළුල් ප්‍රදේශ ජාලය (Wide Area Network)"] },
+        // Q10
+        { question: "පුද්ගලයෙකුට අන්තර්ජාලය ඔස්සේ අපහාස කිරීම, තර්ජනය කිරීම හෝ අපහසුතාවයට පත් කිරීම හඳුන්වන්නේ කෙසේද?", correct: "සයිබර් හිරිහැර කිරීම (cyberbullying).", distractors: ["ෆිෂින් (phishing).", "හැකින් (hacking)."] },
+        // Q11 (Added to reach 15)
+        { question: "SMS යන්නෙහි දිගු ස්වරූපය කුමක්ද?", correct: "Short Message Service.", distractors: ["System Main Server.", "Secure Mail System."] },
+        // Q12 (Added to reach 15)
+        { question: "පරිශීලකයාගේ සංවේදී තොරතුරු (මුරපද, ක්‍රෙඩිට් කාඩ්පත් අංක) සොරකම් කිරීමට යොදාගන්නා වංචනික ක්‍රමය කුමක්ද?", correct: "ෆිෂින් (phishing).", distractors: ["සයිබර් හිරිහැර කිරීම (cyberbullying).", "Spyware."] },
+        // Q13 (Added to reach 15)
+        { question: "ආරක්ෂාව සඳහා භාවිතා කළ යුතු ශක්තිමත් මුරපදයක (strong password) අඩංගු විය යුතු අංග මොනවාද?", correct: "ඉංග්‍රීසි ලොකු අකුරු, කුඩා අකුරු, ඉලක්කම් සහ $, *, #, @ වැනි විශේෂ සංකේත.", distractors: ["ඉලක්කම් 8ක් පමණක්.", "තමන්ගේ නම සහ උපන් දිනය පමණක්."] },
+        // Q14 (Added to reach 15)
+        { question: "අන්තර්ජාලයේ සැරිසරන විට හදිසියේ මතුවන අනවශ්‍ය වෙළඳ දැන්වීම් හෝ පණිවිඩ හඳුන්වන්නේ කෙසේද?", correct: "Pop-ups.", distractors: ["Phishing.", "Spamming."] },
+        // Q15 (Added to reach 15)
+        { question: "මෙහෙයුම් පද්ධතියක ආරක්ෂාව තහවුරු කිරීමට නිරතුරුවම කළ යුතු වැදගත් දෙයක් නම් කරන්න.", correct: "ස්වයංක්‍රීය යාවත්කාලීන කිරීම් ක්‍රියාත්මක කර තැබීම (turn on automatic updates).", distractors: ["සියලුම ගොනු මකා දැමීම.", "අන්තර්ජාල සම්බන්ධතාවය විසන්ධි කිරීම."] }
     ];
 
     // Array Shuffle Function (Fisher-Yates) - ප්‍රශ්න සහ පිළිතුරු අහඹු ලෙස පෙළගැස්වීම සඳහා
@@ -264,7 +267,7 @@
         isQuestionLocked = false;
         const currentQ = quizData[currentQuestionIndex];
         
-        // නිවැරදි පිළිතුර සහ වැරදි පිළිතුරු 3 එකතු කර අහඹු ලෙස පෙළගැස්වීම
+        // නිවැරදි පිළිතුර සහ වැරදි පිළිතුරු එකතු කර අහඹු ලෙස පෙළගැස්වීම
         // මෙහිදී පිළිතුරු වල අනුපිළිවෙලද සෑම විටම වෙනස් වේ.
         const options = shuffleArray([
             currentQ.correct, 
@@ -277,7 +280,8 @@
         quizContainer.innerHTML = `
             <div class="mb-6">
                 <p class="text-lg font-semibold text-blue-600 mb-2">ප්‍රශ්නය ${questionNumber} / ${totalQuestions}</p>
-                <h2 class="text-xl font-bold text-gray-700">${currentQ.question}</h2>
+                <!-- Added question-text class for mobile font sizing -->
+                <h2 class="question-text text-xl font-bold text-gray-700">${currentQ.question}</h2>
             </div>
             <div id="options-list" class="space-y-3">
                 ${options.map((option, index) => `
@@ -405,10 +409,7 @@
         renderQuestion();
     }
 
-
-
 </script>
-
 
 </body>
 </html>
