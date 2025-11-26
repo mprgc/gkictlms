@@ -99,7 +99,7 @@
         
         <!-- UPDATED INSTRUCTION BUTTON (smaller size and less dominant color) -->
         <button onclick="showInstructions()" class="w-full bg-gray-200 text-gray-700 py-1.5 text-base rounded-lg hover:bg-gray-300 transition duration-300 mb-4 shadow-sm">
-            "Start Quiz" කිරීමට පෙර උපදෙස් කියවන්න
+            උපදෙස් කියවන්න (Read Instructions)
         </button>
         
         <button onclick="startQuiz()" class="w-full bg-blue-600 text-white py-4 text-2xl rounded-lg hover:bg-blue-700 transition duration-300 shadow-xl transform hover:scale-105">
@@ -124,6 +124,12 @@
     <div id="results-container" class="hidden">
         <h2 class="text-2xl font-semibold text-center mb-4 text-gray-800">ප්‍රතිඵල</h2>
         <p id="final-score" class="text-xl font-bold text-center mb-6"></p>
+        
+        <!-- NEW FEATURE: Download Results Button -->
+        <button onclick="downloadResults()" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition duration-300 mb-4 shadow-md transform hover:scale-[1.02]">
+            ප්‍රතිඵල බාගත කරන්න (.txt)
+        </button>
+        
         <button onclick="startQuiz()" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300">
             නැවත පටන් ගන්න (Restart)
         </button>
@@ -139,10 +145,10 @@
             <li>සියලුම ප්‍රශ්න සඳහා පිළිතුරු දියයුතුය.</li>
             <li>සෑම ප්‍රශ්නයක් සඳහාම පිළිතුරු දීමට ඔබට තත්පර 40ක කාලයක් ලැබේ.</li>
             <li>නියමිත කාලය තුළ පිළිතුරු ලබා දීමට නොහැකි වුවහොත් එය අවසන් ලකුණු වලට එකතු වන්නේ නැත.</li>
-            <li>👮 ආරක්ෂක නීති (Security Rules):
+            <li>**ආරක්ෂක නීති (Security Rules):**
                 <ul class="list-disc list-inside ml-5 mt-1 space-y-1 text-sm text-red-600 font-medium">
-                    <li>Text පිටපත් ගැනීම අවහිර කර ඇත.</li>
-                    <li>වෙනත් Tab එකකට හෝ Window එකකට මාරු වුවහොත් ප්‍රශ්නාවලිය නැවත මුල සිටම ආරම්භ වේ.</li>
+                    <li>right-click කිරීම සහ mobile long press කිරීම අවහිර කර ඇත.</li>
+                    <li>වෙනත් Tab එකකට හෝ Window එකකට මාරු වුවහොත් ප්‍රශ්නාවලිය **නැවත මුල සිටම ආරම්භ වේ**.</li>
                     <li>Developer Tools විවෘත කිරීමේ කෙටිමං අවහිර කර ඇත.</li>
                 </ul>
             </li>
@@ -450,6 +456,42 @@
         currentQuestionIndex++;
         renderQuestion();
     }
+
+    // ප්‍රතිඵල බාගත කිරීමේ කාර්යය (NEW FUNCTION)
+    function downloadResults() {
+        const totalQuestions = quizData.length;
+        const date = new Date().toLocaleDateString('si-LK');
+        const time = new Date().toLocaleTimeString('si-LK', { hour: '2-digit', minute: '2-digit' });
+        
+        const resultText = `
+--------------------------------------------------
+   GK ICT School - ප්‍රශ්නාවලියේ ප්‍රතිඵල
+--------------------------------------------------
+ප්‍රශ්නාවලියේ මාතෘකාව: තොරතුරු තාක්ෂණ ප්‍රශ්නාවලිය
+දිනය: ${date}
+වේලාව: ${time}
+--------------------------------------------------
+ඔබ ලබාගත් නිවැරදි පිළිතුරු: ${score} / ${totalQuestions}
+සාමාන්‍යය: ${((score / totalQuestions) * 100).toFixed(2)}%
+
+සටහන: මෙම ගොනුව ඔබගේ අවසන් ලකුණු වාර්තාවයි.
+--------------------------------------------------
+        `.trim();
+
+        // Create a Blob containing the text data
+        const blob = new Blob([resultText], { type: 'text/plain;charset=utf-8' });
+        
+        // Create a link element, set the download properties, and simulate a click
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `ICT_Quiz_Result_${date}.txt`;
+        
+        // Append to the body, click it, and remove it
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
 
     // ප්‍රතිඵල පෙන්වීමේ කාර්යය
     function showResults() {
