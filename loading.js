@@ -22,7 +22,7 @@ style.textContent = `
         width: 60px;
         height: 60px;
         border: 6px solid #ccc;
-        border-top-color: #333;
+        border-top-color: #00a5fe;
         border-radius: 50%;
         animation: spin 1s linear infinite;
     }
@@ -88,3 +88,4 @@ window.fetch = function() {
         open.apply(this, arguments);
     };
 })(XMLHttpRequest.prototype.open);
+
