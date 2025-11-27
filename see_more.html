@@ -29,6 +29,8 @@
         .btn-9 { background-color: #22c55e; /* Green-500 */ }
         .btn-10 { background-color: #0ea5e9; /* Sky-500 */ }
         .btn-11 { background-color: #8b5cf6; /* Violet-500 */ }
+
+
     </style>
 </head>
 <body class="antialiased min-h-screen">
@@ -46,7 +48,7 @@
             </p>
         </header>
 
-        <!-- Grade Selection Section - Buttons are now taller (p-6) -->
+        <!-- Grade Selection Section - Buttons are now taller (p-8) -->
         <section class="bg-white shadow-xl rounded-2xl p-6">
             <h2 class="text-2xl font-bold text-gray-700 mb-6">
                 ඔබගේ ශ්‍රේණිය තෝරාගන්න.
@@ -54,113 +56,44 @@
 
             <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
                 
-                <!-- Grade 6 Button (Red) - Increased padding to p-6 -->
-                <a href="Grade/G6/G6_si.html" class="grade-button p-6 text-center rounded-xl shadow-lg btn-6 text-white font-bold text-xl uppercase tracking-wider">
-                    6 වසර
+                <!-- Grade 6 Button (Red) - Text split with <br/> and font size increased to text-3xl -->
+                <a href="Grade/G6/G6_si.html" class="grade-button p-8 text-center rounded-xl shadow-lg btn-6 text-white font-bold text-3xl uppercase tracking-wider">
+                    6<br/>වසර
                 </a>
 
-                <!-- Grade 7 Button (Orange) - Increased padding to p-6 -->
-                <a href="Grade/G7/G7_si.html" class="grade-button p-6 text-center rounded-xl shadow-lg btn-7 text-white font-bold text-xl uppercase tracking-wider">
-                    7 වසර
+                <!-- Grade 7 Button (Orange) - Text split with <br/> and font size increased to text-3xl -->
+                <a href="Grade/G7/G7_si.html" class="grade-button p-8 text-center rounded-xl shadow-lg btn-7 text-white font-bold text-3xl uppercase tracking-wider">
+                    7<br/>වසර
                 </a>
 
-                <!-- Grade 8 Button (Yellow) - Increased padding to p-6 -->
-                <a href="Grade/G8/G8_si.html" class="grade-button p-6 text-center rounded-xl shadow-lg btn-8 text-white font-bold text-xl uppercase tracking-wider">
-                    8 වසර
+                <!-- Grade 8 Button (Yellow) - Text split with <br/> and font size increased to text-3xl -->
+                <a href="Grade/G8/G8_si.html" class="grade-button p-8 text-center rounded-xl shadow-lg btn-8 text-white font-bold text-3xl uppercase tracking-wider">
+                    8<br/>වසර
                 </a>
 
-                <!-- Grade 9 Button (Green) - Increased padding to p-6 -->
-                <a href="Grade/G9/G9_si.html" class="grade-button p-6 text-center rounded-xl shadow-lg btn-9 text-white font-bold text-xl uppercase tracking-wider">
-                    9 වසර
+                <!-- Grade 9 Button (Green) - Text split with <br/> and font size increased to text-3xl -->
+                <a href="Grade/G9/G9_si.html" class="grade-button p-8 text-center rounded-xl shadow-lg btn-9 text-white font-bold text-3xl uppercase tracking-wider">
+                    9<br/>වසර
                 </a>
 
-                <!-- Grade 10 Button (Blue) - Increased padding to p-6 -->
-                <a href="Grade/G10/G10_si.html" class="grade-button p-6 text-center rounded-xl shadow-lg btn-10 text-white font-bold text-xl uppercase tracking-wider">
-                    10 වසර
+                <!-- Grade 10 Button (Blue) - Text split with <br/> and font size increased to text-3xl -->
+                <a href="Grade/G10/G10_si.html" class="grade-button p-8 text-center rounded-xl shadow-lg btn-10 text-white font-bold text-3xl uppercase tracking-wider">
+                    10<br/>වසර
                 </a>
 
-                <!-- Grade 11 Button (Violet) - Increased padding to p-6 -->
-                <a href="Grade/G11/G11_si.html" class="grade-button p-6 text-center rounded-xl shadow-lg btn-11 text-white font-bold text-xl uppercase tracking-wider">
-                    11 වසර
+                <!-- Grade 11 Button (Violet) - Text split with <br/> and font size increased to text-3xl -->
+                <a href="Grade/G11/G11_si.html" class="grade-button p-8 text-center rounded-xl shadow-lg btn-11 text-white font-bold text-3xl uppercase tracking-wider">
+                    11<br/>වසර
                 </a>
 
             </div>
             
-            <p class="mt-6 text-sm text-gray-400 text-center">
-                ඉහත බොත්තම් භාවිතයෙන් ඔබට අවශ්‍ය ශ්‍රේණියට පිවිසිය හැක.
-            </p>
+            <!-- The instructional paragraph/notification has been removed here. -->
         </section>
 
     </div>
 
-    <!-- Modal Structure for "නිවේදනයයි" popup - Added animation classes -->
-    <!-- Initial state: opacity-0 and pointer-events-none for animated transition -->
-    <div id="notice-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 transition-opacity duration-500 opacity-0 pointer-events-none">
-        <!-- Inner modal element is scaled down initially, transitioning to scale-100 -->
-        <div id="modal-content" class="bg-white rounded-2xl shadow-2xl max-w-lg w-11/12 m-4 p-6 transform transition-all duration-500 scale-90">
-            <div class="flex justify-between items-start border-b pb-3 mb-4">
-                <h2 class="text-3xl font-extrabold text-[#3b82f6]">
-                    🔔 නිවේදනයයි...!
-                </h2>
-                <button onclick="hideModal()" class="text-gray-400 hover:text-gray-600 text-2xl font-semibold leading-none focus:outline-none">
-                    &times;
-                </button>
-            </div>
-            <div class="text-lg text-gray-700 space-y-4">
-                <p>පළමුව ඔබ විසින් ඔබගේ ශ්‍රේණිය තෝරාගෙන ඒ හරහා ඔබට අවශ්‍ය සේවාව ලබාගන්න.</p>
-                <p class="text-sm text-gray-500 mt-4">
-                    කරුණාකර ඉහතින් ඇති ශ්‍රේණි බොත්තම් වලින් ඔබගේ ශ්‍රේණිය තෝරන්න.
-                </p>
-            </div>
-            <div class="mt-6 flex justify-end">
-                <!-- Changed button color to match the header -->
-                <button onclick="hideModal()" class="bg-[#3b82f6] hover:bg-blue-600 text-white font-bold py-2 px-6 rounded-xl transition duration-150 shadow-md">
-                    තේරුණා
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- JavaScript for Modal functionality -->
-    <script>
-        const modal = document.getElementById('notice-modal');
-        const modalContent = document.getElementById('modal-content');
-        const DURATION = 500; // Match CSS transition duration for smooth hiding
-
-        /**
-         * වෙබ් පිටුව load වූ වහාම නිවේදන Modal එක පෙන්වයි.
-         */
-        function showModal() {
-            // 1. Make it visible and clickable
-            modal.classList.remove('pointer-events-none');
-            
-            // 2. Use requestAnimationFrame to ensure CSS transition is triggered
-            requestAnimationFrame(() => {
-                // Apply the final state classes (opacity: 1 and scale: 100)
-                modal.classList.add('opacity-100');
-                modalContent.classList.remove('scale-90');
-                modalContent.classList.add('scale-100');
-            });
-        }
-
-        /**
-         * නිවේදන Modal එක සඟවයි.
-         */
-        function hideModal() {
-            // 1. Start hiding animation (opacity: 0 and scale: 90)
-            modal.classList.remove('opacity-100');
-            modalContent.classList.remove('scale-100');
-            modalContent.classList.add('scale-90');
-
-            // 2. After transition completes (DURATION ms), make it unclickable
-            setTimeout(() => {
-                modal.classList.add('pointer-events-none');
-            }, DURATION);
-        }
-
-        // DOMContentLoaded event එකේදී Modal එක පෙන්වීමට කටයුතු කරයි.
-        document.addEventListener('DOMContentLoaded', showModal);
-    </script>
+   
 
 </body>
 </html>
