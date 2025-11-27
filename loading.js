@@ -2,7 +2,7 @@
 //  FULL PAGE LOADING OVERLAY (ALL IN JS)
 // --------------------------------------
 
-// 1️⃣ CREATE CSS DYNAMICALLY
+// Add CSS
 const style = document.createElement("style");
 style.textContent = `
     #pageLoader {
@@ -11,8 +11,8 @@ style.textContent = `
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(255,255,255,0.85);
-        display: none;
+        background: rgba(255,255,255,0.75);
+        display: flex;
         justify-content: center;
         align-items: center;
         z-index: 999999;
@@ -33,54 +33,54 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-
-// 2️⃣ CREATE LOADER HTML (DYNAMIC)
+// Create loader div immediately (visible by default)
 const loader = document.createElement("div");
 loader.id = "pageLoader";
 loader.innerHTML = `<div class="spinner"></div>`;
 document.body.appendChild(loader);
 
-
-// 3️⃣ SHOW / HIDE FUNCTIONS
+// SHOW & HIDE loader
 function showLoader() {
-    document.getElementById("pageLoader").style.display = "flex";
+    loader.style.display = "flex";
+    document.body.style.overflow = "hidden";  // ❗ scroll disable
 }
 
 function hideLoader() {
-    document.getElementById("pageLoader").style.display = "none";
+    loader.style.display = "none";
+    document.body.style.overflow = "auto";    // ❗ scroll enable
 }
 
+// PAGE LOADING FIX (DOM ready + window load)
+document.addEventListener("DOMContentLoaded", () => {
+    showLoader(); 
+});
 
-// 4️⃣ PAGE LOAD AUTO START
-showLoader();
-window.addEventListener("load", hideLoader);
+// When full page loaded (images + scripts)
+window.addEventListener("load", () => {
+    setTimeout(hideLoader, 150);
+});
 
-
-// 5️⃣ LINK CLICKS → Auto Loading
+// ⭐ Link click — FIX: skip # links
 document.addEventListener("click", function(e) {
-    if (e.target.tagName === "A" && e.target.href) {
+    const target = e.target.closest("a");
+    if (target && target.getAttribute("href") && !target.getAttribute("href").startsWith("#")) {
         showLoader();
     }
 });
 
-
-// 6️⃣ FORM SUBMIT → Auto Loading
+// ⭐ Form submit
 document.addEventListener("submit", function() {
     showLoader();
 });
 
-
-// 7️⃣ FETCH REQUESTS → Auto Loading
+// ⭐ fetch
 const originalFetch = window.fetch;
 window.fetch = function() {
     showLoader();
-    return originalFetch.apply(this, arguments).finally(() => {
-        hideLoader();
-    });
+    return originalFetch.apply(this, arguments).finally(() => hideLoader());
 };
 
-
-// 8️⃣ XMLHTTPREQUEST → Auto Loading
+// ⭐ XHR
 (function(open) {
     XMLHttpRequest.prototype.open = function() {
         showLoader();
@@ -88,4 +88,3 @@ window.fetch = function() {
         open.apply(this, arguments);
     };
 })(XMLHttpRequest.prototype.open);
-
