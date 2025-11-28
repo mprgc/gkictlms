@@ -9,19 +9,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-   body { font-family: 'Inter', sans-serif; }
-   .hidden-strict {
-     display: none !important;
-   }
-   .auth-label-visible {
-     display: block !important;
-   }
-   #authForm input[type="text"], 
-   #authForm input[type="password"],
-   #authForm input[type="tel"],
-   #authForm select {
-       padding: 0.5rem;
-   }
+	 body { font-family: 'Inter', sans-serif; }
+	 .hidden-strict {
+	 	 display: none !important;
+	 }
+	 .auth-label-visible {
+	 	 display: block !important;
+	 }
+	 #authForm input[type="text"], 
+	 #authForm input[type="password"],
+	 #authForm input[type="tel"],
+	 #authForm select {
+	 	 	 padding: 0.5rem;
+	 }
 </style>
 </head>
 
@@ -29,495 +29,505 @@
 
 <div id="appContainer" class="w-full max-w-sm">
 
-   <!-- Auth Form Container -->
-   <div id="authContainer" class="bg-white p-4 rounded-xl shadow-xl border border-gray-200 w-full">
-      
-     <!-- Title -->
-     <h2 id="authTitle" class="text-lg font-bold text-gray-800 mb-2 text-center">
-       Access Account (ගිණුමට ප්‍රවේශ වන්න)
-     </h2>
+	 <!-- Auth Form Container -->
+	 <div id="authContainer" class="bg-white p-4 rounded-xl shadow-xl border border-gray-200 w-full">
+	 		
+	 	 <!-- Title -->
+	 	 <h2 id="authTitle" class="text-lg font-bold text-gray-800 mb-2 text-center">
+	 	 	 Access Account (ගිණුමට ප්‍රවේශ වන්න)
+	 	 </h2>
 
-     <!-- Tabs -->
-     <div class="tabs flex space-x-1 p-0.5 bg-gray-100 rounded-lg mb-3">
-       <button class="tab flex-1 py-1.5 px-3 rounded-lg text-sm font-semibold text-gray-600 transition duration-150" data-mode="login">Login (පිවිසෙන්න)</button>
-       <button class="tab flex-1 py-1.5 px-3 rounded-lg text-sm font-semibold text-gray-600 transition duration-150" data-mode="register">Register (ලියාපදිංචි වන්න)</button>
-     </div>
+	 	 <!-- Tabs -->
+	 	 <div class="tabs flex space-x-1 p-0.5 bg-gray-100 rounded-lg mb-3">
+	 	 	 <button class="tab flex-1 py-1.5 px-3 rounded-lg text-sm font-semibold text-gray-600 transition duration-150" data-mode="login">Login (පිවිසෙන්න)</button>
+	 	 	 <button class="tab flex-1 py-1.5 px-3 rounded-lg text-sm font-semibold text-gray-600 transition duration-150" data-mode="register">Register (ලියාපදිංචි වන්න)</button>
+	 	 </div>
 
-     <form id="authForm">
-        
-       <!-- START: Full Name Input -->
-       <label class="block hidden-strict" id="fullNameLabel">
-         <span class="text-xs font-medium text-gray-700">Full Name (සම්පූර්ණ නම)</span>
-         <input type="text" id="authFullname" class="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Enter your full name / ඔබගේ සම්පූර්ණ නම ඇතුළත් කරන්න"/>
-       </label>
-        
-       <!-- PRIMARY IDENTIFIER: WhatsApp Number Input -->
-       <label class="block mb-2">
-         <span class="text-xs font-medium text-gray-700">WhatsApp Number (WhatsApp අංකය)</span>
-         <input type="tel" id="authIdentifier" required class="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Ex: 0712345678 / උදා: 0712345678"/>
-       </label>
+	 	 <form id="authForm">
+	 	 		
+	 	 	 <!-- START: Full Name Input -->
+	 	 	 <label class="block hidden-strict" id="fullNameLabel">
+	 	 	 	 <span class="text-xs font-medium text-gray-700">Full Name (සම්පූර්ණ නම)</span>
+	 	 	 	 <input type="text" id="authFullname" class="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Enter your full name / ඔබගේ සම්පූර්ණ නම ඇතුළත් කරන්න"/>
+	 	 	 </label>
+	 	 		
+	 	 	 <!-- PRIMARY IDENTIFIER: WhatsApp Number Input -->
+	 	 	 <label class="block mb-2">
+	 	 	 	 <span class="text-xs font-medium text-gray-700">WhatsApp Number (WhatsApp අංකය)</span>
+	 	 	 	 <input type="tel" id="authIdentifier" required class="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Ex: 0712345678 / උදා: 0712345678"/>
+	 	 	 </label>
 
-       <!-- START: Registration Extra Fields Container -->
-       <div id="extraRegFields" class="hidden-strict">
-          
-           <!-- COMBINED: Grade and Institute using grid -->
-           <div class="grid grid-cols-2 gap-2 mb-2">
-              
-               <!-- Grade Input -->
-               <label class="block">
-                 <span class="text-xs font-medium text-gray-700">Grade (ශ්‍රේණිය)</span>
-                 <input type="text" id="authGrade" class="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Ex: 10 or A/L / උදා: 10 හෝ A/L"/>
-               </label>
-              
-               <!-- Institute Dropdown -->
-               <label class="block">
-                 <span class="text-xs font-medium text-gray-700">Institute (ආයතනය)</span>
-                 <select id="authClass" class="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white" required>
-                     <option value="" disabled selected>-Select- / -තෝරන්න-</option>
-                     <option value="සජීවා කොස්ගම">Sajeeva Kosgama (සජීවා කොස්ගම) </option>
-                     <option value="සිප්වන් කොට්ටාව">Sipwan Kottawa (සිප්වන් කොට්ටාව) </option>
-                     <option value="ඉරැස්මා පාදුක්ක">Iresma Padukka (ඉරැස්මා පාදුක්ක) </option>
-                     <option value="ශ්‍රී සුමන අවිස්සාවේල්ල">Sri Sumana Avissawella (ශ්‍රී සුමන අවිස්සාවේල්ල) </option>
-                   </select>
-               </label>
-           </div>
-           <!-- END COMBINED -->
+	 	 	 <!-- START: Registration Extra Fields Container -->
+	 	 	 <div id="extraRegFields" class="hidden-strict">
+	 	 	 	 	
+	 	 	 	 	 <!-- COMBINED: Grade and Institute using grid -->
+	 	 	 	 	 <div class="grid grid-cols-2 gap-2 mb-2">
+	 	 	 	 	 	 	
+	 	 	 	 	 	 	 <!-- Grade Input -->
+	 	 	 	 	 	 	 <label class="block">
+	 	 	 	 	 	 	 	 <span class="text-xs font-medium text-gray-700">Grade (ශ්‍රේණිය)</span>
+	 	 	 	 	 	 	 	 <input type="text" id="authGrade" class="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="Ex: 10 or A/L / උදා: 10 හෝ A/L"/>
+	 	 	 	 	 	 	 </label>
+	 	 	 	 	 	 	
+	 	 	 	 	 	 	 <!-- Institute Dropdown -->
+	 	 	 	 	 	 	 <label class="block">
+	 	 	 	 	 	 	 	 <span class="text-xs font-medium text-gray-700">Institute (ආයතනය)</span>
+	 	 	 	 	 	 	 	 <select id="authClass" class="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white" required>
+	 	 	 	 	 	 	 	 	 	 <option value="" disabled selected>-Select- / -තෝරන්න-</option>
+	 	 	 	 	 	 	 	 	 	 <option value="සජීවා කොස්ගම">Sajeeva Kosgama (සජීවා කොස්ගම) </option>
+	 	 	 	 	 	 	 	 	 	 <option value="සිප්වන් කොට්ටාව">Sipwan Kottawa (සිප්වන් කොට්ටාව) </option>
+	 	 	 	 	 	 	 	 	 	 <option value="ඉරැස්මා පාදුක්ක">Iresma Padukka (ඉරැස්මා පාදුක්ක) </option>
+	 	 	 	 	 	 	 	 	 	 <option value="ශ්‍රී සුමන අවිස්සාවේල්ල">Sri Sumana Avissawella (ශ්‍රී සුමන අවිස්සාවේල්ල) </option>
+	 	 	 	 	 	 	 	 	 </select>
+	 	 	 	 	 	 	 </label>
+	 	 	 	 	 </div>
+	 	 	 	 	 <!-- END COMBINED -->
 
-       </div>
-       <!-- END: Registration Extra Fields Container -->
+	 	 	 </div>
+	 	 	 <!-- END: Registration Extra Fields Container -->
 
-       <!-- Password Input -->
-       <label class="block mb-2">
-         <span class="text-xs font-medium text-gray-700">Password (මුරපදය)</span>
-         <input type="password" id="authPassword" required class="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="••••••••"/>
-       </label>
+	 	 	 <!-- Password Input -->
+	 	 	 <label class="block mb-2">
+	 	 	 	 <span class="text-xs font-medium text-gray-700">Password (මුරපදය)</span>
+	 	 	 	 <input type="password" id="authPassword" required class="mt-1 w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="••••••••"/>
+	 	 	 </label>
 
-       <!-- Submit Row -->
-       <div class="flex flex-col items-center justify-end mb-1">
-          
-         <!-- Submit Button -->
-         <button type="submit" id="authSubmit" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-blue-700 transition duration-200 shadow-lg transform hover:-translate-y-0.5 text-sm">
-           Login (පිවිසෙන්න)
-         </button>
-          
-         <!-- Clear Saved Data Link -->
-         <button type="button" id="clearSavedBtnForm" class="hidden-strict text-red-600 hover:text-red-700 text-xs font-semibold underline bg-transparent border-none p-0 mt-2">
-           Clear Saved Credentials (සුරැකි දත්ත ඉවත් කරන්න)
-         </button>
-          
-       </div>
+	 	 	 <!-- Submit Row -->
+	 	 	 <div class="flex flex-col items-center justify-end mb-1">
+	 	 	 		
+	 	 	 	 <!-- Submit Button -->
+	 	 	 	 <button type="submit" id="authSubmit" class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-xl hover:bg-blue-700 transition duration-200 shadow-lg transform hover:-translate-y-0.5 text-sm">
+	 	 	 	 	 Login (පිවිසෙන්න)
+	 	 	 	 </button>
+	 	 	 		
+	 	 	 	 <!-- Clear Saved Data Link -->
+	 	 	 	 <button type="button" id="clearSavedBtnForm" class="hidden-strict text-red-600 hover:text-red-700 text-xs font-semibold underline bg-transparent border-none p-0 mt-2">
+	 	 	 	 	 Clear Saved Credentials (සුරැකි දත්ත ඉවත් කරන්න)
+	 	 	 	 </button>
+	 	 	 		
+	 	 	 </div>
 
-       <!-- Message Area -->
-       <p id="authMessage" class="message text-center text-xs font-medium min-h-[20px] pt-2"></p>
-     </form>
-   </div>
+	 	 	 <!-- Message Area -->
+	 	 	 <p id="authMessage" class="message text-center text-xs font-medium min-h-[20px] pt-2"></p>
+	 	 </form>
+	 </div>
 </div>
 
 <script>
 (async function(){
-   // --- Utility Functions ---
-   function $id(id){ return document.getElementById(id); }
-   
-   function setMsg(txt, ok=false){
-     const el = $id('authMessage');
-     el.textContent = txt;
-     el.className = 'message text-center text-xs font-medium min-h-[20px] pt-2'; // Reset classes
-     if (txt) {
-       if(ok){
-         el.classList.add('text-green-700', 'bg-green-100', 'py-1', 'rounded-lg');
-       } else {
-         el.classList.add('text-red-700', 'bg-red-100', 'py-1', 'rounded-lg');
-       }
-     }
-   }
+	 // --- Utility Functions ---
+	 function $id(id){ return document.getElementById(id); }
+	 
+	 function setMsg(txt, ok=false){
+	 	 const el = $id('authMessage');
+	 	 el.textContent = txt;
+	 	 el.className = 'message text-center text-xs font-medium min-h-[20px] pt-2'; // Reset classes
+	 	 if (txt) {
+	 	 	 if(ok){
+	 	 	 	 el.classList.add('text-green-700', 'bg-green-100', 'py-1', 'rounded-lg');
+	 	 	 } else {
+	 	 	 	 el.classList.add('text-red-700', 'bg-red-100', 'py-1', 'rounded-lg');
+	 	 	 }
+	 	 }
+	 }
 
-   // Uses Web Crypto API for secure hashing
-   async function hashPassword(pass){
-     const data = new TextEncoder().encode(pass);
-     const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-     return Array.from(new Uint8Array(hashBuffer))
-       .map(b => b.toString(16).padStart(2,'0')).join('');
-   }
-   
-   // --- Constants and Elements ---
-   const KEY_USER = 'app_whatsapp_id'; 
-   const KEY_PASS = 'app_password_hash';
-   const KEY_LOGGED = 'app_logged';
-   const KEY_REGISTERED = 'alreadyRegistered';
-     
-   const KEY_FULL_NAME = 'reg_fullname';
-   const KEY_GRADE = 'reg_grade';
-   const KEY_CLASS = 'reg_class';
+	 // Uses Web Crypto API for secure hashing
+	 async function hashPassword(pass){
+	 	 const data = new TextEncoder().encode(pass);
+	 	 const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+	 	 return Array.from(new Uint8Array(hashBuffer))
+	 	 	 .map(b => b.toString(16).padStart(2,'0')).join('');
+	 }
+	 
+	 // --- Constants and Elements ---
+	 const KEY_USER = 'app_whatsapp_id'; 
+	 const KEY_PASS = 'app_password_hash';
+	 const KEY_LOGGED = 'app_logged';
+	 const KEY_REGISTERED = 'alreadyRegistered';
+	 	 
+	 const KEY_FULL_NAME = 'reg_fullname';
+	 const KEY_GRADE = 'reg_grade';
+	 const KEY_CLASS = 'reg_class';
 
-   const form = $id('authForm');
-   const inputIdentifier = $id('authIdentifier');
-   const inputPass = $id('authPassword');
-   
-   const inputFullname = $id('authFullname');
-   const inputGrade = $id('authGrade');
-   const inputClass = $id('authClass');
-   
-   const extraRegFieldsContainer = $id('extraRegFields');
-   const fullNameLabel = $id('fullNameLabel');
+	 const form = $id('authForm');
+	 const inputIdentifier = $id('authIdentifier');
+	 const inputPass = $id('authPassword');
+	 
+	 const inputFullname = $id('authFullname');
+	 const inputGrade = $id('authGrade');
+	 const inputClass = $id('authClass');
+	 
+	 const extraRegFieldsContainer = $id('extraRegFields');
+	 const fullNameLabel = $id('fullNameLabel');
 
-   const submitBtn = $id('authSubmit');
-   const tabs = document.querySelectorAll('.tab');
-   
-   const authContainer = $id('authContainer');
-   const clearSavedBtnForm = $id('clearSavedBtnForm'); 
-   
-   let mode = "login"; // State to track current mode
-   
-   // Variable to store the fetched authorized numbers map: { "institute": ["num1", "num2", ...] }
-   let APPROVED_NUMBERS_MAP = null;
+	 const submitBtn = $id('authSubmit');
+	 const tabs = document.querySelectorAll('.tab');
+	 
+	 const authContainer = $id('authContainer');
+	 const clearSavedBtnForm = $id('clearSavedBtnForm'); 
+	 
+	 let mode = "login"; // State to track current mode
+	 
+	 // Variable to store the fetched authorized numbers map: { "institute": ["num1", "num2", ...] }
+	 let APPROVED_NUMBERS_MAP = null;
 
-   // --- FIX: Reverting to the standard Sheet ID and the reliable gviz/tq export URL ---
-   // The main sheet ID from the original edit URL
-   const GOOGLE_SHEET_ID = '1Au-VV-kNxk6mgqtdDg7AB3C4ifckpBhL'; 
-   
-   // Use the GID provided by the user (1741838764)
-   const SHEET_GID = '1741838764'; 
-   
-   // Use the gviz/tq endpoint which is the most robust way to get CSV from a published sheet
-   const SHEET_EXPORT_URL = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:csv&gid=${SHEET_GID}`;
+	 // --- Sheet Configuration ---
+	 // The main sheet ID from the original edit URL
+	 const GOOGLE_SHEET_ID = '1Au-VV-kNxk6mgqtdDg7AB3C4ifckpBhL'; 
+	 
+	 // Use the GID provided by the user (1741838764)
+	 const SHEET_GID = '1741838764'; 
+	 
+	 // Use the gviz/tq endpoint which is the most robust way to get CSV from a published sheet
+	 const SHEET_EXPORT_URL = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEET_ID}/gviz/tq?tqx=out:csv&gid=${SHEET_GID}`;
 
-   // Function to fetch and parse approved numbers from the Google Sheet
-   async function getApprovedNumbers() {
-     if (APPROVED_NUMBERS_MAP) return APPROVED_NUMBERS_MAP; // Return cached data
+	 // Function to fetch and parse approved numbers from the Google Sheet
+	 async function getApprovedNumbers() {
+	 	 if (APPROVED_NUMBERS_MAP) return APPROVED_NUMBERS_MAP; // Return cached data
 
-     try {
-       setMsg("Loading approved numbers list... / අනුමත අංක ලැයිස්තුව පටවමින්...", true);
-       
-       const response = await fetch(SHEET_EXPORT_URL);
-       if (!response.ok) {
-         // This check catches the 400 error
-         throw new Error(`HTTP error! status: ${response.status} fetching URL: ${SHEET_EXPORT_URL}`);
-       }
-       
-       const csvText = await response.text();
-       
-       // Use PapaParse to parse the CSV data
-       const parsedData = Papa.parse(csvText, { header: false }).data;
-       
-       const numbersMap = {};
-       
-       // Assuming the data structure is: Column 0 (A) = Institute, Column 1 (B) = WhatsApp Number
-       // The sheet may contain blank rows, we filter those out.
-       for (let i = 0; i < parsedData.length; i++) {
-         const row = parsedData[i];
-         
-         // Ensure the row has at least 2 columns and the first cell is not a known header (skip row 0)
-         if (row.length < 2 || i === 0) continue; 
-         
-         const institute = row[0] ? row[0].trim() : '';
-         const number = row[1] ? row[1].trim() : '';
-         
-         // We check against the valid institute options to prevent errors from sheet typos
-         const validInstitutes = [
-           "සජීවා කොස්ගම", 
-           "සිප්වන් කොට්ටාව", 
-           "ඉරැස්මා පාදුක්ක", 
-           "ශ්‍රී සුමන අවිස්සාවේල්ල"
-         ];
-         
-         if (validInstitutes.includes(institute) && number && /^\d+$/.test(number.replace(/\s/g, ''))) {
-           if (!numbersMap[institute]) {
-             numbersMap[institute] = [];
-           }
-           numbersMap[institute].push(number);
-         }
-       }
-       
-       APPROVED_NUMBERS_MAP = numbersMap; // Cache the result
-       
-       if (Object.keys(numbersMap).length > 0) {
-         setMsg("Approved numbers loaded successfully. / අනුමත අංක සාර්ථකව පූරණය කරන ලදී.", true);
-       } else {
-         setMsg("Warning: Approved list loaded but may be empty. Check Sheet data/format. / අනතුරු ඇඟවීම: අනුමත ලැයිස්තුව පූරණය විය, නමුත් හිස් විය හැක. Sheet දත්ත/ආකෘතිය පරීක්ෂා කරන්න.", false);
-       }
-       
-       return numbersMap;
+	 	 try {
+	 	 	 setMsg("Loading approved numbers list... / අනුමත අංක ලැයිස්තුව පටවමින්...", true);
+	 	 	 
+	 	 	 const response = await fetch(SHEET_EXPORT_URL);
+	 	 	 if (!response.ok) {
+	 	 	 	 // HTTP 400 or other errors indicate a problem with the Sheet URL or publication settings
+	 	 	 	 throw new Error(`HTTP error! status: ${response.status} fetching URL: ${SHEET_EXPORT_URL}`);
+	 	 	 }
+	 	 	 
+	 	 	 const csvText = await response.text();
+	 	 	 
+	 	 	 // Use PapaParse to parse the CSV data
+	 	 	 const parsedData = Papa.parse(csvText, { header: false }).data;
+	 	 	 
+	 	 	 const numbersMap = {};
+	 	 	 
+	 	 	 // Assuming the data structure is: Column 0 (A) = Institute, Column 1 (B) = WhatsApp Number
+	 	 	 for (let i = 0; i < parsedData.length; i++) {
+	 	 	 	 const row = parsedData[i];
+	 	 	 	 
+	 	 	 	 // Ensure the row has at least 2 columns and the first cell is not a known header (skip row 0)
+	 	 	 	 if (row.length < 2 || i === 0) continue; 
+	 	 	 	 
+	 	 	 	 const institute = row[0] ? row[0].trim() : '';
+	 	 	 	 const number = row[1] ? row[1].trim() : '';
+	 	 	 	 
+	 	 	 	 // We check against the valid institute options to prevent errors from sheet typos
+	 	 	 	 const validInstitutes = [
+	 	 	 	 	 "සජීවා කොස්ගම", 
+	 	 	 	 	 "සිප්වන් කොට්ටාව", 
+	 	 	 	 	 "ඉරැස්මා පාදුක්ක", 
+	 	 	 	 	 "ශ්‍රී සුමන අවිස්සාවේල්ල"
+	 	 	 	 ];
+	 	 	 	 
+	 	 	 	 if (validInstitutes.includes(institute) && number && /^\d+$/.test(number.replace(/\s/g, ''))) {
+	 	 	 	 	 if (!numbersMap[institute]) {
+	 	 	 	 	 	 numbersMap[institute] = [];
+	 	 	 	 	 }
+	 	 	 	 	 numbersMap[institute].push(number);
+	 	 	 	 }
+	 	 	 }
+	 	 	 
+	 	 	 APPROVED_NUMBERS_MAP = numbersMap; // Cache the result
+	 	 	 
+	 	 	 if (Object.keys(numbersMap).length > 0) {
+	 	 	 	 setMsg("Approved numbers loaded successfully. / අනුමත අංක සාර්ථකව පූරණය කරන ලදී.", true);
+	 	 	 } else {
+	 	 	 	 setMsg("Warning: Approved list loaded but may be empty. Check Sheet data/format. / අනතුරු ඇඟවීම: අනුමත ලැයිස්තුව පූරණය විය, නමුත් හිස් විය හැක. Sheet දත්ත/ආකෘතිය පරීක්ෂා කරන්න.", false);
+	 	 	 }
+	 	 	 
+	 	 	 return numbersMap;
 
-     } catch (error) {
-       console.error("Error fetching or parsing approved numbers:", error);
-       // This message is critical for the user to debug the Sheet link
-       setMsg("Error loading approved list. The Google Sheet is not publicly accessible in CSV format (HTTP 400 error). / අනුමත ලැයිස්තුව පැටවීමේ දෝෂයක්. Google Sheet CSV ආකෘතියෙන් ප්‍රසිද්ධියේ ප්‍රවේශ විය නොහැක (HTTP 400 දෝෂය).", false);
-       // Return an empty map on failure to prevent registration
-       return {}; 
-     }
-   }
-
-
-   // --- Authorization Check ---
-   // Checks the entered WhatsApp number against the numbers returned by getApprovedNumbers().
-   async function checkAuthorization(identifier, institute) {
-     setMsg("Checking authorization list... / අනුමත ලැයිස්තුව පරීක්ෂා කරමින්...", true);
-     
-     // Get the approved list (live fetch or cache)
-     const approvedList = await getApprovedNumbers();
-
-     if (Object.keys(approvedList).length === 0) {
-       setMsg("Approved list is empty or failed to load. Cannot authorize. / අනුමත ලැයිස්තුව හිස් හෝ පූරණය කිරීමට අපොහොසත් විය.", false);
-       return false;
-     }
-     
-     // Normalize the user input: remove '0' prefix, remove spaces
-     const cleanIdentifier = identifier.replace(/\s/g, '');
-     // Only remove the leading '0' if it exists.
-     const normalizedIdentifier = cleanIdentifier.startsWith('0') && cleanIdentifier.length > 1 ? cleanIdentifier.substring(1) : cleanIdentifier;
-     
-     // Check if the selected institute exists in the list
-     const instituteNumbers = approvedList[institute];
-     
-     if (!instituteNumbers) {
-       setMsg(`Institute "${institute}" not found in the approved list keys. / ආයතනය approved list හි නැත.`, false);
-       return false;
-     }
-
-     // Check if any number in the institute's list includes the normalized identifier
-     const isAuthorized = instituteNumbers.some(num => {
-       // Normalize the list number as well (remove '0' prefix if present and remove spaces)
-       const cleanListNum = num.replace(/\s/g, '');
-       const normalizedListNum = cleanListNum.startsWith('0') && cleanListNum.length > 1 ? cleanListNum.substring(1) : cleanListNum;
-               
-       return normalizedListNum === normalizedIdentifier; // Compare without leading 0s
-     });
-     
-     if (isAuthorized) {
-       console.log("Authorization success based on live sheet data.");
-       return true;
-     } else {
-       console.log("Authorization failed based on live sheet data.");
-       return false;
-     }
-   }
-
-   // Function to set the current authentication mode (Login/Register)
-   function setMode(newMode) {
-     mode = newMode;
-     
-     // 1. Deactivate all tabs
-     tabs.forEach(x => {
-       x.classList.remove('bg-white', 'text-blue-600', 'shadow-md'); 
-       x.classList.add('bg-gray-100', 'text-gray-600');
-     });
-     
-     // 2. Activate the target tab
-     const activeTab = document.querySelector(`.tab[data-mode="${mode}"]`);
-     if (activeTab) {
-       activeTab.classList.add('bg-white', 'text-blue-600', 'shadow-md');
-       activeTab.classList.remove('bg-gray-100', 'text-gray-600');
-     }
-
-     // 3. Update button text and tab label 
-     const regFlag = localStorage.getItem(KEY_REGISTERED);
-     const registerTab = document.querySelector(`.tab[data-mode="register"]`);
-     
-     if (regFlag === "1") {
-       registerTab.textContent = "Reset Account (ගිණුම යළි සකසන්න)";
-     } else {
-       registerTab.textContent = "Register (ලියාපදිංචි වන්න)";
-     }
-
-     submitBtn.textContent = (mode === 'login') ? 'Login (පිවිසෙන්න)' : registerTab.textContent;
-     setMsg(''); // Clear messages on mode switch
-     
-     // 4. Show/Hide fields and the Clear link based on mode
-     if (extraRegFieldsContainer && fullNameLabel) {
-       if (mode === 'register') {
-         extraRegFieldsContainer.classList.remove('hidden-strict');
-         fullNameLabel.classList.add('auth-label-visible');
-         fullNameLabel.classList.remove('hidden-strict');
-         
-         // Show form link if data is saved (Only in Register Mode)
-         if (localStorage.getItem(KEY_USER)) {
-           clearSavedBtnForm.classList.remove('hidden-strict');
-         }
-       } else {
-         extraRegFieldsContainer.classList.add('hidden-strict');
-         fullNameLabel.classList.remove('auth-label-visible');
-         fullNameLabel.classList.add('hidden-strict');
-         
-         // Hide form link in login mode
-         clearSavedBtnForm.classList.add('hidden-strict');
-       }
-     }
-   }
-
-   // --- Clear Saved Data Handler ---
-   function handleClearSavedData() {
-     localStorage.removeItem(KEY_USER);
-     localStorage.removeItem(KEY_PASS);
-     localStorage.removeItem(KEY_LOGGED);
-     localStorage.removeItem(KEY_REGISTERED);
-         
-     localStorage.removeItem(KEY_FULL_NAME);
-     localStorage.removeItem(KEY_GRADE);
-     localStorage.removeItem(KEY_CLASS);
-     
-     // Reset inputs
-     inputIdentifier.value = ""; 
-     inputPass.value = "";
-     inputFullname.value = "";
-     inputGrade.value = "";
-     inputClass.value = ""; 
-     
-     // HIDE the form clear link immediately
-     clearSavedBtnForm.classList.add('hidden-strict');
-     
-     // Re-initialize UI to show Register mode
-     init(); 
-     setMsg("All saved credentials cleared. / සුරැකි දත්ත සියල්ල ඉවත් කරන ලදී.", true);
-   }
+	 	 } catch (error) {
+	 	 	 console.error("Error fetching or parsing approved numbers:", error);
+	 	 	 
+	 	 	 let errorMessage = "Error loading approved list. The Google Sheet is not publicly accessible or a network error occurred. / අනුමත ලැයිස්තුව පැටවීමේ දෝෂයක්. Google Sheet ප්‍රසිද්ධියේ ප්‍රවේශ විය නොහැක හෝ ජාල දෝෂයක් සිදුවී ඇත.";
+	 	 	 
+	 	 	 // Specific advice for local file execution issue
+	 	 	 if (window.location.protocol === 'file:') {
+	 	 	 	 errorMessage += " (If running locally, please use a local web server (e.g., Python: 'python -m http.server 8000') to avoid browser security restrictions. / ඔබ දේශීයව (locally) ධාවනය කරන්නේ නම්, browser ආරක්ෂක සීමා මග හැරීමට local web server එකක් භාවිතා කරන්න.)";
+	 	 	 }
+	 	 	 
+	 	 	 setMsg(errorMessage, false);
+	 	 	 
+	 	 	 // Return an empty map on failure to prevent registration
+	 	 	 return {}; 
+	 	 }
+	 }
 
 
-   // --- Event Listeners ---
+	 // --- Authorization Check ---
+	 // Checks the entered WhatsApp number against the numbers returned by getApprovedNumbers().
+	 async function checkAuthorization(identifier, institute) {
+	 	 setMsg("Checking authorization list... / අනුමත ලැයිස්තුව පරීක්ෂා කරමින්...", true);
+	 	 
+	 	 // Get the approved list (live fetch or cache)
+	 	 const approvedList = await getApprovedNumbers();
 
-   // Tab Switching Logic
-   tabs.forEach(t => t.addEventListener('click', ()=>{
-     setMode(t.dataset.mode);
-   }));
+	 	 if (Object.keys(approvedList).length === 0) {
+	 	 	 setMsg("Approved list is empty or failed to load. Cannot authorize. / අනුමත ලැයිස්තුව හිස් හෝ පූරණය කිරීමට අපොහොසත් විය.", false);
+	 	 	 return false;
+	 	 }
+	 	 
+	 	 // Normalize the user input: remove '0' prefix, remove spaces
+	 	 const cleanIdentifier = identifier.replace(/\s/g, '');
+	 	 // Only remove the leading '0' if it exists.
+	 	 const normalizedIdentifier = cleanIdentifier.startsWith('0') && cleanIdentifier.length > 1 ? cleanIdentifier.substring(1) : cleanIdentifier;
+	 	 
+	 	 // Check if the selected institute exists in the list
+	 	 const instituteNumbers = approvedList[institute];
+	 	 
+	 	 if (!instituteNumbers) {
+	 	 	 setMsg(`Institute "${institute}" not found in the approved list keys. / ආයතනය approved list හි නැත.`, false);
+	 	 	 return false;
+	 	 }
 
-   // Clear Saved Data - Attach handler
-   clearSavedBtnForm.addEventListener('click', handleClearSavedData);
+	 	 // Check if any number in the institute's list includes the normalized identifier
+	 	 const isAuthorized = instituteNumbers.some(num => {
+	 	 	 // Normalize the list number as well (remove '0' prefix if present and remove spaces)
+	 	 	 const cleanListNum = num.replace(/\s/g, '');
+	 	 	 const normalizedListNum = cleanListNum.startsWith('0') && cleanListNum.length > 1 ? cleanListNum.substring(1) : cleanListNum;
+	 	 	 	 	 	 	 
+	 	 	 return normalizedListNum === normalizedIdentifier; // Compare without leading 0s
+	 	 });
+	 	 
+	 	 if (isAuthorized) {
+	 	 	 console.log("Authorization success based on live sheet data.");
+	 	 	 return true;
+	 	 } else {
+	 	 	 console.log("Authorization failed based on live sheet data.");
+	 	 	 return false;
+	 	 }
+	 }
 
-   // Form Submission Handler
-   form.addEventListener('submit', async (ev)=>{
-     ev.preventDefault();
-     submitBtn.disabled = true;
-     submitBtn.textContent = (mode === 'login') ? 'Logging in... / පිවිසෙමින්...' : 'Registering... / ලියාපදිංචි වෙමින්...';
+	 // Function to set the current authentication mode (Login/Register)
+	 function setMode(newMode) {
+	 	 mode = newMode;
+	 	 
+	 	 // 1. Deactivate all tabs
+	 	 tabs.forEach(x => {
+	 	 	 x.classList.remove('bg-white', 'text-blue-600', 'shadow-md'); 
+	 	 	 x.classList.add('bg-gray-100', 'text-gray-600');
+	 	 });
+	 	 
+	 	 // 2. Activate the target tab
+	 	 const activeTab = document.querySelector(`.tab[data-mode="${mode}"]`);
+	 	 if (activeTab) {
+	 	 	 activeTab.classList.add('bg-white', 'text-blue-600', 'shadow-md');
+	 	 	 activeTab.classList.remove('bg-gray-100', 'text-gray-600');
+	 	 }
 
-     // u is the WhatsApp Number
-     const u = inputIdentifier.value.trim(); 
-     const p = inputPass.value;
+	 	 // 3. Update button text and tab label 
+	 	 const regFlag = localStorage.getItem(KEY_REGISTERED);
+	 	 const registerTab = document.querySelector(`.tab[data-mode="register"]`);
+	 	 
+	 	 if (regFlag === "1") {
+	 	 	 registerTab.textContent = "Reset Account (ගිණුම යළි සකසන්න)";
+	 	 } else {
+	 	 	 registerTab.textContent = "Register (ලියාපදිංචි වන්න)";
+	 	 }
 
-     if(!u || !p){
-       setMsg("Please enter both WhatsApp number and password. / කරුණාකර WhatsApp අංකය සහ මුරපදය දෙකම ඇතුළත් කරන්න.");
-       submitBtn.disabled = false;
-       submitBtn.textContent = (mode === 'login') ? 'Login (පිවිසෙන්න)' : 'Register (ලියාපදිංචි වන්න)';
-       return;
-     }
-     
-     const hash = await hashPassword(p);
+	 	 submitBtn.textContent = (mode === 'login') ? 'Login (පිවිසෙන්න)' : registerTab.textContent;
+	 	 setMsg(''); // Clear messages on mode switch
+	 	 
+	 	 // 4. Show/Hide fields and the Clear link based on mode
+	 	 if (extraRegFieldsContainer && fullNameLabel) {
+	 	 	 if (mode === 'register') {
+	 	 	 	 extraRegFieldsContainer.classList.remove('hidden-strict');
+	 	 	 	 fullNameLabel.classList.add('auth-label-visible');
+	 	 	 	 fullNameLabel.classList.remove('hidden-strict');
+	 	 	 	 
+	 	 	 	 // Show form link if data is saved (Only in Register Mode)
+	 	 	 	 if (localStorage.getItem(KEY_USER)) {
+	 	 	 	 	 clearSavedBtnForm.classList.remove('hidden-strict');
+	 	 	 	 }
+	 	 	 } else {
+	 	 	 	 extraRegFieldsContainer.classList.add('hidden-strict');
+	 	 	 	 fullNameLabel.classList.remove('auth-label-visible');
+	 	 	 	 fullNameLabel.classList.add('hidden-strict');
+	 	 	 	 
+	 	 	 	 // Hide form link in login mode
+	 	 	 	 clearSavedBtnForm.classList.add('hidden-strict');
+	 	 	 }
+	 	 }
+	 }
 
-     if(mode === "register"){
-       // Registration Logic
-       if (!inputClass.value) {
-         setMsg("Please select an Institute. / කරුණාකර ආයතනයක් තෝරන්න.");
-         submitBtn.disabled = false;
-         submitBtn.textContent = 'Register (ලියාපදිංචි වන්න)';
-         return;
-       }
-       
-       // --- Check Authorization (Now uses the async checkAuthorization function) ---
-       const isAuthorized = await checkAuthorization(u, inputClass.value);
-       
-       if (!isAuthorized) {
-         setMsg("Authorization failed. WhatsApp number is not in the approved list for the selected institute. / සත්‍යාපනය අසාර්ථකයි. මෙම WhatsApp අංකය තෝරාගත් ආයතනය සඳහා අනුමත ලැයිස්තුවේ නොමැත.", false);
-         submitBtn.disabled = false;
-         submitBtn.textContent = 'Register (ලියාපදිංචි වන්න)';
-         return;
-       }
-       // --- End Authorization Check ---
+	 // --- Clear Saved Data Handler ---
+	 function handleClearSavedData() {
+	 	 localStorage.removeItem(KEY_USER);
+	 	 localStorage.removeItem(KEY_PASS);
+	 	 localStorage.removeItem(KEY_LOGGED);
+	 	 localStorage.removeItem(KEY_REGISTERED);
+	 	 	 	 
+	 	 localStorage.removeItem(KEY_FULL_NAME);
+	 	 localStorage.removeItem(KEY_GRADE);
+	 	 localStorage.removeItem(KEY_CLASS);
+	 	 
+	 	 // Reset inputs
+	 	 inputIdentifier.value = ""; 
+	 	 inputPass.value = "";
+	 	 inputFullname.value = "";
+	 	 inputGrade.value = "";
+	 	 inputClass.value = ""; 
+	 	 
+	 	 // HIDE the form clear link immediately
+	 	 clearSavedBtnForm.classList.add('hidden-strict');
+	 	 
+	 	 // Re-initialize UI to show Register mode
+	 	 init(); 
+	 	 setMsg("All saved credentials cleared. / සුරැකි දත්ත සියල්ල ඉවත් කරන ලදී.", true);
+	 }
 
-       // If authorized, proceed with local registration
-       localStorage.setItem(KEY_USER, u);
-       localStorage.setItem(KEY_PASS, hash);
-       localStorage.setItem(KEY_REGISTERED, "1");
-       localStorage.setItem(KEY_LOGGED, "true");
-       
-       localStorage.setItem(KEY_FULL_NAME, inputFullname.value.trim());
-       localStorage.setItem(KEY_GRADE, inputGrade.value.trim());
-       localStorage.setItem(KEY_CLASS, inputClass.value.trim());
 
-       setMsg("Registration successful! Redirecting... / ලියාපදිංචිය සාර්ථකයි! යළි හරවා යවමින්...", true);
-       
-       // Immediately redirect on success
-       setTimeout(() => onLoginSuccess(u), 500);
-       
-     } else {
-       // Login Logic
-       const savedUser = localStorage.getItem(KEY_USER);
-       const savedPass = localStorage.getItem(KEY_PASS);
+	 // --- Event Listeners ---
 
-       if(!savedUser){
-         setMsg("No registered account found. Please switch to Register tab. / ලියාපදිංචි ගිණුමක් හමු නොවීය. කරුණාකර ලියාපදිංචි වන්න ටැබය වෙත මාරු වන්න.");
-         submitBtn.disabled = false;
-         submitBtn.textContent = 'Login (පිවිසෙන්න)';
-         return;
-       }
-       
-       if(savedUser === u && savedPass === hash){
-         // Success
-         localStorage.setItem(KEY_LOGGED, "true");
-         setMsg("Login successful! Redirecting... / පිවිසීම සාර්ථකයි! යළි හරවා යවමින්...", true);
-         setTimeout(() => onLoginSuccess(u), 500);
-       } else {
-         // Failure
-         setMsg("Invalid WhatsApp number or password. / වැරදි WhatsApp අංකය හෝ මුරපදය.");
-         submitBtn.disabled = false;
-         submitBtn.textContent = 'Login (පිවිසෙන්න)';
-       }
-     }
-   });
+	 // Tab Switching Logic
+	 tabs.forEach(t => t.addEventListener('click', ()=>{
+	 	 setMode(t.dataset.mode);
+	 }));
 
-   // --- Success Handler ---
-   function onLoginSuccess(identifier){
-     
-     // Clear password input after security
-     inputPass.value = '';
-     authContainer.classList.add('hidden-strict'); // Hide the form right before redirecting
-     
-     // REDIRECTION LOGIC 
-     const REDIRECT_URL = "https://mprgc.github.io/gkictlms/"; 
-     const logMessageId = localStorage.getItem(KEY_USER) || identifier; 
+	 // Clear Saved Data - Attach handler
+	 clearSavedBtnForm.addEventListener('click', handleClearSavedData);
 
-     console.log(`Login successful for ${logMessageId}. Redirecting to ${REDIRECT_URL}...`);
-     window.location.href = REDIRECT_URL;
-   }
+	 // Form Submission Handler
+	 form.addEventListener('submit', async (ev)=>{
+	 	 ev.preventDefault();
+	 	 submitBtn.disabled = true;
+	 	 submitBtn.textContent = (mode === 'login') ? 'Logging in... / පිවිසෙමින්...' : 'Registering... / ලියාපදිංචි වෙමින්...';
 
-   // --- Initialization ---
-   async function init(){
-     // First, try to load the approved numbers (this might take a moment)
-     // The message will be updated by getApprovedNumbers()
-     await getApprovedNumbers();
-     
-     const savedIdentifier = localStorage.getItem(KEY_USER);
-     const regFlag = localStorage.getItem(KEY_REGISTERED);
-     
-     authContainer.classList.remove('hidden-strict');
+	 	 // u is the WhatsApp Number
+	 	 const u = inputIdentifier.value.trim(); 
+	 	 const p = inputPass.value;
 
-     // Set initial mode based on registration status 
-     let initialMode = (regFlag === "1") ? 'login' : 'register';
-     setMode(initialMode); 
-     
-     // Pre-fill fields if saved 
-     if(savedIdentifier){
-       inputIdentifier.value = savedIdentifier;
-       inputFullname.value = localStorage.getItem(KEY_FULL_NAME) || "";
-       inputGrade.value = localStorage.getItem(KEY_GRADE) || "";
-       inputClass.value = localStorage.getItem(KEY_CLASS) || ""; 
-     } else {
-       inputIdentifier.value = "";
-       inputFullname.value = "";
-       inputGrade.value = "";
-       inputClass.value = "";
-     }
-     
-     inputPass.value = ""; // Always clear password on load
+	 	 if(!u || !p){
+	 	 	 setMsg("Please enter both WhatsApp number and password. / කරුණාකර WhatsApp අංකය සහ මුරපදය දෙකම ඇතුළත් කරන්න.");
+	 	 	 submitBtn.disabled = false;
+	 	 	 submitBtn.textContent = (mode === 'login') ? 'Login (පිවිසෙන්න)' : 'Register (ලියාපදිංචි වන්න)';
+	 	 	 return;
+	 	 }
+	 	 
+	 	 const hash = await hashPassword(p);
 
-     // Control visibility of Clear Saved Data link 
-     if (savedIdentifier && mode === 'register') {
-       clearSavedBtnForm.classList.remove('hidden-strict');
-     } else {
-       clearSavedBtnForm.classList.add('hidden-strict');
-     }
+	 	 if(mode === "register"){
+	 	 	 // Registration Logic
+	 	 	 if (!inputClass.value) {
+	 	 	 	 setMsg("Please select an Institute. / කරුණාකර ආයතනයක් තෝරන්න.");
+	 	 	 	 submitBtn.disabled = false;
+	 	 	 	 submitBtn.textContent = 'Register (ලියාපදිංචි වන්න)';
+	 	 	 	 return;
+	 	 	 }
+	 	 	 
+	 	 	 // --- Check Authorization (Now uses the async checkAuthorization function) ---
+	 	 	 const isAuthorized = await checkAuthorization(u, inputClass.value);
+	 	 	 
+	 	 	 if (!isAuthorized) {
+	 	 	 	 setMsg("Authorization failed. WhatsApp number is not in the approved list for the selected institute. / සත්‍යාපනය අසාර්ථකයි. මෙම WhatsApp අංකය තෝරාගත් ආයතනය සඳහා අනුමත ලැයිස්තුවේ නොමැත.", false);
+	 	 	 	 submitBtn.disabled = false;
+	 	 	 	 submitBtn.textContent = 'Register (ලියාපදිංචි වන්න)';
+	 	 	 	 return;
+	 	 	 }
+	 	 	 // --- End Authorization Check ---
 
-     submitBtn.disabled = false;
-   }
-   
-   // Run initialization
-   init();
+	 	 	 // If authorized, proceed with local registration
+	 	 	 localStorage.setItem(KEY_USER, u);
+	 	 	 localStorage.setItem(KEY_PASS, hash);
+	 	 	 localStorage.setItem(KEY_REGISTERED, "1");
+	 	 	 localStorage.setItem(KEY_LOGGED, "true");
+	 	 	 
+	 	 	 localStorage.setItem(KEY_FULL_NAME, inputFullname.value.trim());
+	 	 	 localStorage.setItem(KEY_GRADE, inputGrade.value.trim());
+	 	 	 localStorage.setItem(KEY_CLASS, inputClass.value.trim());
+
+	 	 	 setMsg("Registration successful! Redirecting... / ලියාපදිංචිය සාර්ථකයි! යළි හරවා යවමින්...", true);
+	 	 	 
+	 	 	 // --- MODIFIED: Call onLoginSuccess immediately ---
+	 	 	 onLoginSuccess(u);
+	 	 	 
+	 	 } else {
+	 	 	 // Login Logic
+	 	 	 const savedUser = localStorage.getItem(KEY_USER);
+	 	 	 const savedPass = localStorage.getItem(KEY_PASS);
+
+	 	 	 if(!savedUser){
+	 	 	 	 setMsg("No registered account found. Please switch to Register tab. / ලියාපදිංචි ගිණුමක් හමු නොවීය. කරුණාකර ලියාපදිංචි වන්න ටැබය වෙත මාරු වන්න.");
+	 	 	 	 submitBtn.disabled = false;
+	 	 	 	 submitBtn.textContent = 'Login (පිවිසෙන්න)';
+	 	 	 	 return;
+	 	 	 }
+	 	 	 
+	 	 	 if(savedUser === u && savedPass === hash){
+	 	 	 	 // Success
+	 	 	 	 localStorage.setItem(KEY_LOGGED, "true");
+	 	 	 	 setMsg("Login successful! Redirecting... / පිවිසීම සාර්ථකයි! යළි හරවා යවමින්...", true);
+	 	 	 	 // --- MODIFIED: Call onLoginSuccess immediately ---
+	 	 	 	 onLoginSuccess(u);
+	 	 	 } else {
+	 	 	 	 // Failure
+	 	 	 	 setMsg("Invalid WhatsApp number or password. / වැරදි WhatsApp අංකය හෝ මුරපදය.");
+	 	 	 	 submitBtn.disabled = false;
+	 	 	 	 submitBtn.textContent = 'Login (පිවිසෙන්න)';
+	 	 	 }
+	 	 }
+	 });
+
+	 // --- Success Handler ---
+	 function onLoginSuccess(identifier){
+	 	 
+	 	 // Clear password input after security
+	 	 inputPass.value = '';
+	 	 authContainer.classList.add('hidden-strict'); // Hide the form right before redirecting
+	 	 
+	 	 // REDIRECTION LOGIC 
+	 	 const REDIRECT_URL = "https://mprgc.github.io/gkictlms/"; 
+	 	 const logMessageId = localStorage.getItem(KEY_USER) || identifier; 
+
+	 	 console.log(`Login successful for ${logMessageId}. Attempting redirect to ${REDIRECT_URL}...`);
+	 	 
+	 	 // The core redirect logic
+	 	 window.location.href = REDIRECT_URL;
+	 }
+
+	 // --- Initialization ---
+	 async function init(){
+	 	 // First, try to load the approved numbers (this might take a moment)
+	 	 // The message will be updated by getApprovedNumbers()
+	 	 await getApprovedNumbers();
+	 	 
+	 	 const savedIdentifier = localStorage.getItem(KEY_USER);
+	 	 const regFlag = localStorage.getItem(KEY_REGISTERED);
+	 	 
+	 	 authContainer.classList.remove('hidden-strict');
+
+	 	 // Set initial mode based on registration status 
+	 	 let initialMode = (regFlag === "1") ? 'login' : 'register';
+	 	 setMode(initialMode); 
+	 	 
+	 	 // Pre-fill fields if saved 
+	 	 if(savedIdentifier){
+	 	 	 inputIdentifier.value = savedIdentifier;
+	 	 	 inputFullname.value = localStorage.getItem(KEY_FULL_NAME) || "";
+	 	 	 inputGrade.value = localStorage.getItem(KEY_GRADE) || "";
+	 	 	 inputClass.value = localStorage.getItem(KEY_CLASS) || ""; 
+	 	 } else {
+	 	 	 inputIdentifier.value = "";
+	 	 	 inputFullname.value = "";
+	 	 	 inputGrade.value = "";
+	 	 	 inputClass.value = "";
+	 	 }
+	 	 
+	 	 inputPass.value = ""; // Always clear password on load
+
+	 	 // Control visibility of Clear Saved Data link 
+	 	 if (savedIdentifier && mode === 'register') {
+	 	 	 clearSavedBtnForm.classList.remove('hidden-strict');
+	 	 } else {
+	 	 	 clearSavedBtnForm.classList.add('hidden-strict');
+	 	 }
+
+	 	 submitBtn.disabled = false;
+	 }
+	 
+	 // Run initialization
+	 init();
 
 })();
 </script>
