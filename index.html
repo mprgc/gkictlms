@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GK ICT LMS Login Page</title>
+    <title>GK ICT LMS Login</title>
     <!-- Include Tailwind CSS via CDN --><script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* This class is referenced by the JS for strict hiding/showing */
@@ -30,7 +30,7 @@
 
     <!-- Auth Container --><div id="authContainer" class="w-full max-w-sm bg-white rounded-xl shadow-2xl p-5 md:p-6">
         
-        <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">GK ICT LMS Login Page</h2>
+        <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">GK ICT LMS Login</h2>
 
         <!-- Tabs Container --><div class="flex p-1 bg-gray-100 rounded-lg mb-6">
             <button data-mode="login" class="tab w-1/2 py-2 text-sm font-semibold rounded-lg transition-all duration-300" id="loginTab">
@@ -49,9 +49,16 @@
                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base" />
             </div>
 
-            <!-- WhatsApp Number (Identifier for both) --><div class="space-y-1">
+            <!-- WhatsApp Number (Identifier for both) --><div id="whatsappInputWrapper" class="space-y-1">
                 <label for="authIdentifier" class="block text-sm font-medium text-gray-700">WhatsApp Number (වට්සැප් අංකය)</label>
                 <input type="tel" id="authIdentifier" placeholder="e.g., 0712345678" 
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base" />
+            </div>
+
+            <!-- Access Code Input - NEW -->
+            <div id="accessCodeLabel" class="space-y-1">
+                <label for="authAccessCode" class="block text-sm font-medium text-gray-700">Access Code</label>
+                <input type="text" id="authAccessCode" placeholder="Enter Access Code" 
                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base" />
             </div>
 
@@ -159,13 +166,19 @@
             const KEY_FULL_NAME = 'reg_fullname';
             const KEY_GRADE = 'reg_grade';
             const KEY_CLASS = 'reg_class'; 
+            const KEY_ACCESS_CODE = 'app_access_code'; // NEW Key for Access Code
+            
+            const HARDCODED_ACCESS_CODE = "#1234"; // Hardcoded Access Code
+            const ACCESS_CODE_ERROR_MSG = "Invalid Access Code (වැරදි ප්‍රවේශ කේතය)"; // Sinhala error message
 
             const form = $id('authForm');
             const inputIdentifier = $id('authIdentifier');
+            const whatsappInputWrapper = $id('whatsappInputWrapper'); // NEW ELEMENT: WhatsApp wrapper
+            const inputAccessCode = $id('authAccessCode');
             const inputPass = $id('authPassword');
             
             const inputFullname = $id('authFullname');
-            const inputGrade = $id('authGrade'); // This is now a <select> element
+            const inputGrade = $id('authGrade'); 
             const inputClass = $id('authClass');
             
             const extraRegFieldsContainer = $id('extraRegFields');
@@ -180,7 +193,7 @@
             const forgotPasswordBtn = $id('forgotPasswordBtn');
             const forgotPasswordModal = $id('forgotPasswordModal');
             const closeModalBtn = $id('closeModalBtn');
-            const modalContent = forgotPasswordModal.querySelector('.modal-content'); // NEW: Get modal content
+            const modalContent = forgotPasswordModal.querySelector('.modal-content'); 
 
             let mode = "login"; 
 
@@ -211,6 +224,7 @@
               setMsg(''); 
               
               if (mode === 'register') {
+                whatsappInputWrapper.classList.remove('hidden-strict'); // Show WhatsApp input for registration
                 extraRegFieldsContainer.classList.remove('hidden-strict');
                 fullNameLabel.classList.remove('hidden-strict');
                 
@@ -219,6 +233,7 @@
                 clearSavedBtnForm.classList.remove('hidden-strict');
 
               } else {
+                whatsappInputWrapper.classList.add('hidden-strict'); // HIDE WhatsApp input for login
                 extraRegFieldsContainer.classList.add('hidden-strict'); 
                 fullNameLabel.classList.add('hidden-strict'); 
                 
@@ -232,9 +247,10 @@
               localStorage.clear(); 
               
               inputIdentifier.value = ""; 
+              inputAccessCode.value = ""; 
               inputPass.value = "";
               inputFullname.value = "";
-              inputGrade.value = ""; // Resetting select value
+              inputGrade.value = ""; 
               inputClass.value = ""; 
               
               clearSavedBtnForm.classList.add('hidden-strict');
@@ -255,8 +271,7 @@
             // Forgot Password Modal Handlers with animation
             forgotPasswordBtn.addEventListener('click', (ev) => {
                 ev.preventDefault(); 
-                forgotPasswordModal.classList.remove('hidden-strict'); // Show modal display
-                // Timeout to allow display:block to apply before transition
+                forgotPasswordModal.classList.remove('hidden-strict'); 
                 setTimeout(() => {
                     forgotPasswordModal.classList.add('opacity-100', 'modal-show'); 
                 }, 10);
@@ -264,10 +279,9 @@
 
             closeModalBtn.addEventListener('click', () => {
                 forgotPasswordModal.classList.remove('opacity-100', 'modal-show');
-                // Timeout to allow transition to complete before hiding display
                 setTimeout(() => {
                     forgotPasswordModal.classList.add('hidden-strict');
-                }, 300); // Should match CSS transition duration
+                }, 300); 
             });
 
 
@@ -276,61 +290,93 @@
               submitBtn.disabled = true;
               submitBtn.textContent = (mode === 'login') ? 'Logging in...' : 'Registering...';
 
-              const u = inputIdentifier.value.trim(); 
               const p = inputPass.value;
-
-              if(!u || !p){
-                setMsg("Please enter both WhatsApp number and password.");
-                submitBtn.disabled = false;
-                submitBtn.textContent = (mode === 'login') ? 'Login' : 'Register';
-                return;
-              }
+              const a = inputAccessCode.value.trim(); // Get Access Code
               
-              const hash = await hashPassword(p);
-
               if(mode === "register"){
-                // Check if Grade or Institute is selected (since they are now both selects)
-                if (!inputGrade.value || !inputClass.value) {
-                  setMsg("Please select both Grade (ශ්‍රේණිය) and Institute (ආයතනය).");
-                  submitBtn.disabled = false;
-                  submitBtn.textContent = 'Register';
-                  return;
-                }
-                
-                // Save data
-                localStorage.setItem(KEY_USER, u);
-                localStorage.setItem(KEY_PASS, hash);
-                localStorage.setItem(KEY_REGISTERED, "1");
-                localStorage.setItem(KEY_LOGGED, "true");
-                
-                localStorage.setItem(KEY_FULL_NAME, inputFullname.value.trim());
-                localStorage.setItem(KEY_GRADE, inputGrade.value.trim()); // Saves selected value
-                localStorage.setItem(KEY_CLASS, inputClass.value.trim());
+                  const u = inputIdentifier.value.trim(); // Get WhatsApp ID only in register mode
+                  
+                  // Check all required fields for registration
+                  if(!u || !p || !a){ 
+                    setMsg("Please enter WhatsApp number, Access Code, and password.");
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Register';
+                    return;
+                  }
+                  
+                  const hash = await hashPassword(p);
 
-                setMsg("Registration successful! Redirecting...", true);
-                
-                setTimeout(() => onLoginSuccess(u), 500);
-                
-              } else {
-                const savedUser = localStorage.getItem(KEY_USER);
-                const savedPass = localStorage.getItem(KEY_PASS);
-
-                if(!savedUser){
-                  setMsg("No registered account found. Please switch to Register tab or use the correct WhatsApp number.");
-                  submitBtn.disabled = false;
-                  submitBtn.textContent = 'Login';
-                  return;
-                }
-                
-                if(savedUser === u && savedPass === hash){
+                  // Access Code Validation for Registration/Reset
+                  if (a !== HARDCODED_ACCESS_CODE) {
+                    setMsg(ACCESS_CODE_ERROR_MSG);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Register';
+                    return;
+                  }
+                  
+                  if (!inputGrade.value || !inputClass.value) {
+                    setMsg("Please select both Grade (ශ්‍රේණිය) and Institute (ආයතනය).");
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Register';
+                    return;
+                  }
+                  
+                  // Save data
+                  localStorage.setItem(KEY_USER, u);
+                  localStorage.setItem(KEY_PASS, hash);
+                  localStorage.setItem(KEY_ACCESS_CODE, a);
+                  localStorage.setItem(KEY_REGISTERED, "1");
                   localStorage.setItem(KEY_LOGGED, "true");
-                  setMsg("Login successful! Redirecting...", true);
+                  
+                  localStorage.setItem(KEY_FULL_NAME, inputFullname.value.trim());
+                  localStorage.setItem(KEY_GRADE, inputGrade.value.trim()); 
+                  localStorage.setItem(KEY_CLASS, inputClass.value.trim());
+
+                  setMsg("Registration successful! Redirecting...", true);
+                  
                   setTimeout(() => onLoginSuccess(u), 500);
-                } else {
-                  setMsg("Invalid WhatsApp number or password.");
-                  submitBtn.disabled = false;
-                  submitBtn.textContent = 'Login';
-                }
+                
+              } else { // Login mode
+                  // Only require Password and Access Code for login
+                  if (!p || !a) {
+                    setMsg("Please enter Access Code and password.");
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Login';
+                    return;
+                  }
+
+                  const hash = await hashPassword(p);
+
+                  // Retrieve saved data for verification
+                  const savedUser = localStorage.getItem(KEY_USER);
+                  const savedPass = localStorage.getItem(KEY_PASS);
+                  const savedAccessCode = localStorage.getItem(KEY_ACCESS_CODE);
+
+                  if(!savedUser){
+                    setMsg("No registered account found. Please switch to Register tab.");
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Login';
+                    return;
+                  }
+                  
+                  // Access Code Validation
+                  if (savedAccessCode !== a) {
+                    setMsg(ACCESS_CODE_ERROR_MSG);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Login';
+                    return;
+                  }
+                  
+                  // Password Validation (User is validated by Access Code and Password)
+                  if(savedPass === hash){
+                    localStorage.setItem(KEY_LOGGED, "true");
+                    setMsg("Login successful! Redirecting...", true);
+                    setTimeout(() => onLoginSuccess(savedUser), 500);
+                  } else {
+                    setMsg("Invalid password.");
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Login';
+                  }
               }
             });
 
@@ -344,7 +390,6 @@
 
             function init(){
               const savedIdentifier = localStorage.getItem(KEY_USER);
-              const regFlag = localStorage.getItem(KEY_REGISTERED);
               
               let initialMode = 'login'; 
               
@@ -352,15 +397,16 @@
               
               if(savedIdentifier){
                 inputIdentifier.value = savedIdentifier;
+                inputAccessCode.value = localStorage.getItem(KEY_ACCESS_CODE) || "";
                 inputFullname.value = localStorage.getItem(KEY_FULL_NAME) || "";
                 
-                // Handling saved Grade value for the new <select>
+                // Handling saved Grade value
                 const savedGrade = localStorage.getItem(KEY_GRADE) || "";
                 const gradeOptions = Array.from(inputGrade.options).map(opt => opt.value);
                 if(gradeOptions.includes(savedGrade)) {
                   inputGrade.value = savedGrade;
                 } else {
-                  inputGrade.value = ""; // Default to select if value is missing/invalid
+                  inputGrade.value = ""; 
                 }
 
                 // Handling saved Institute value
@@ -369,10 +415,11 @@
                 if(classOptions.includes(savedClass)) {
                   inputClass.value = savedClass;
                 } else {
-                  inputClass.value = ""; // Default to select if value is missing/invalid
+                  inputClass.value = ""; 
                 }
               } else {
                 inputIdentifier.value = "";
+                inputAccessCode.value = "";
                 inputFullname.value = "";
                 inputGrade.value = "";
                 inputClass.value = "";
