@@ -131,6 +131,14 @@
 	 	 }
 	 }
 
+	 // New utility to ensure consistent number format (7xxxxxxx)
+	 // Removes spaces and the leading '0' if it exists.
+	 function normalizeIdentifier(identifier) {
+	 	 const cleanIdentifier = identifier.replace(/\s/g, ''); // Remove spaces
+	 	 // Remove the leading '0' if it exists and the number is longer than 1 digit
+	 	 return cleanIdentifier.startsWith('0') && cleanIdentifier.length > 1 ? cleanIdentifier.substring(1) : cleanIdentifier;
+	 }
+
 	 // Uses Web Crypto API for secure hashing
 	 async function hashPassword(pass){
 	 	 const data = new TextEncoder().encode(pass);
@@ -186,11 +194,12 @@
 	 	 if (APPROVED_NUMBERS_MAP) return APPROVED_NUMBERS_MAP; // Return cached data
 
 	 	 try {
-	 	 	 setMsg("Loading approved numbers list... / අනුමත අංක ලැයිස්තුව පටවමින්...", true);
+	 	 	 // FIX for flashing message: Set temporary loading message and style
+	 	 	 $id('authMessage').textContent = "Loading approved numbers list... / අනුමත අංක ලැයිස්තුව පටවමින්...";
+	 	 	 $id('authMessage').classList.add('text-green-700', 'bg-green-100', 'py-1', 'rounded-lg');
 	 	 	 
 	 	 	 const response = await fetch(SHEET_EXPORT_URL);
 	 	 	 if (!response.ok) {
-	 	 	 	 // HTTP 400 or other errors indicate a problem with the Sheet URL or publication settings
 	 	 	 	 throw new Error(`HTTP error! status: ${response.status} fetching URL: ${SHEET_EXPORT_URL}`);
 	 	 	 }
 	 	 	 
@@ -205,13 +214,11 @@
 	 	 	 for (let i = 0; i < parsedData.length; i++) {
 	 	 	 	 const row = parsedData[i];
 	 	 	 	 
-	 	 	 	 // Ensure the row has at least 2 columns and the first cell is not a known header (skip row 0)
 	 	 	 	 if (row.length < 2 || i === 0) continue; 
 	 	 	 	 
 	 	 	 	 const institute = row[0] ? row[0].trim() : '';
 	 	 	 	 const number = row[1] ? row[1].trim() : '';
 	 	 	 	 
-	 	 	 	 // We check against the valid institute options to prevent errors from sheet typos
 	 	 	 	 const validInstitutes = [
 	 	 	 	 	 "සජීවා කොස්ගම", 
 	 	 	 	 	 "සිප්වන් කොට්ටාව", 
@@ -223,16 +230,19 @@
 	 	 	 	 	 if (!numbersMap[institute]) {
 	 	 	 	 	 	 numbersMap[institute] = [];
 	 	 	 	 	 }
-	 	 	 	 	 numbersMap[institute].push(number);
+	 	 	 	 	 // Store the number in its normalized form for easy comparison later
+	 	 	 	 	 numbersMap[institute].push(normalizeIdentifier(number)); 
 	 	 	 	 }
 	 	 	 }
 	 	 	 
 	 	 	 APPROVED_NUMBERS_MAP = numbersMap; // Cache the result
 	 	 	 
-	 	 	 if (Object.keys(numbersMap).length > 0) {
-	 	 	 	 setMsg("Approved numbers loaded successfully. / අනුමත අංක සාර්ථකව පූරණය කරන ලදී.", true);
-	 	 	 } else {
+	 	 	 if (Object.keys(numbersMap).length === 0) {
 	 	 	 	 setMsg("Warning: Approved list loaded but may be empty. Check Sheet data/format. / අනතුරු ඇඟවීම: අනුමත ලැයිස්තුව පූරණය විය, නමුත් හිස් විය හැක. Sheet දත්ත/ආකෘතිය පරීක්ෂා කරන්න.", false);
+	 	 	 } else {
+	 	 	 	 // Clear the temporary loading message on success
+	 	 	 	 $id('authMessage').textContent = "";
+	 	 	 	 $id('authMessage').className = 'message text-center text-xs font-medium min-h-[20px] pt-2'; 
 	 	 	 }
 	 	 	 
 	 	 	 return numbersMap;
@@ -242,14 +252,12 @@
 	 	 	 
 	 	 	 let errorMessage = "Error loading approved list. The Google Sheet is not publicly accessible or a network error occurred. / අනුමත ලැයිස්තුව පැටවීමේ දෝෂයක්. Google Sheet ප්‍රසිද්ධියේ ප්‍රවේශ විය නොහැක හෝ ජාල දෝෂයක් සිදුවී ඇත.";
 	 	 	 
-	 	 	 // Specific advice for local file execution issue
 	 	 	 if (window.location.protocol === 'file:') {
-	 	 	 	 errorMessage += " (If running locally, please upload to GitHub Pages or use a local web server to avoid browser security restrictions on the file protocol. / ඔබ දේශීයව (locally) ධාවනය කරන්නේ නම්, browser ආරක්ෂක සීමා මග හැරීමට GitHub Pages මත උඩුගත කරන්න හෝ local web server එකක් භාවිතා කරන්න.)";
+	 	 	 	 errorMessage += " (If running locally, please upload to GitHub Pages or use a local web server to avoid browser security restrictions on the file protocol. / ඔබ දේශීයව ධාවනය කරන්නේ නම්, browser ආරක්ෂක සීමා මග හැරීමට GitHub Pages මත උඩුගත කරන්න හෝ local web server එකක් භාවිතා කරන්න.)";
 	 	 	 }
 	 	 	 
 	 	 	 setMsg(errorMessage, false);
 	 	 	 
-	 	 	 // Return an empty map on failure to prevent registration
 	 	 	 return {}; 
 	 	 }
 	 }
@@ -260,7 +268,6 @@
 	 async function checkAuthorization(identifier, institute) {
 	 	 setMsg("Checking authorization list... / අනුමත ලැයිස්තුව පරීක්ෂා කරමින්...", true);
 	 	 
-	 	 // Get the approved list (live fetch or cache)
 	 	 const approvedList = await getApprovedNumbers();
 
 	 	 if (Object.keys(approvedList).length === 0) {
@@ -268,12 +275,9 @@
 	 	 	 return false;
 	 	 }
 	 	 
-	 	 // Normalize the user input: remove '0' prefix, remove spaces
-	 	 const cleanIdentifier = identifier.replace(/\s/g, '');
-	 	 // Only remove the leading '0' if it exists.
-	 	 const normalizedIdentifier = cleanIdentifier.startsWith('0') && cleanIdentifier.length > 1 ? cleanIdentifier.substring(1) : cleanIdentifier;
+	 	 // Use the new normalization function for the identifier input
+	 	 const normalizedIdentifier = normalizeIdentifier(identifier);
 	 	 
-	 	 // Check if the selected institute exists in the list
 	 	 const instituteNumbers = approvedList[institute];
 	 	 
 	 	 if (!instituteNumbers) {
@@ -281,14 +285,8 @@
 	 	 	 return false;
 	 	 }
 
-	 	 // Check if any number in the institute's list includes the normalized identifier
-	 	 const isAuthorized = instituteNumbers.some(num => {
-	 	 	 // Normalize the list number as well (remove '0' prefix if present and remove spaces)
-	 	 	 const cleanListNum = num.replace(/\s/g, '');
-	 	 	 const normalizedListNum = cleanListNum.startsWith('0') && cleanListNum.length > 1 ? cleanListNum.substring(1) : cleanListNum;
-	 	 	 	 	 	 	 
-	 	 	 return normalizedListNum === normalizedIdentifier; // Compare without leading 0s
-	 	 });
+	 	 // Check if the normalized user input is present in the normalized list numbers
+	 	 const isAuthorized = instituteNumbers.includes(normalizedIdentifier);
 	 	 
 	 	 if (isAuthorized) {
 	 	 	 console.log("Authorization success based on live sheet data.");
@@ -394,11 +392,14 @@
 	 	 submitBtn.disabled = true;
 	 	 submitBtn.textContent = (mode === 'login') ? 'Logging in... / පිවිසෙමින්...' : 'Registering... / ලියාපදිංචි වෙමින්...';
 
-	 	 // u is the WhatsApp Number
-	 	 const u = inputIdentifier.value.trim(); 
+	 	 // Get raw input
+	 	 const rawIdentifier = inputIdentifier.value.trim(); 
 	 	 const p = inputPass.value;
 
-	 	 if(!u || !p){
+	 	 // NORMALIZE the identifier immediately (7xxxxxxx format)
+	 	 const identifier = normalizeIdentifier(rawIdentifier); 
+
+	 	 if(!identifier || !p){
 	 	 	 setMsg("Please enter both WhatsApp number and password. / කරුණාකර WhatsApp අංකය සහ මුරපදය දෙකම ඇතුළත් කරන්න.");
 	 	 	 submitBtn.disabled = false;
 	 	 	 submitBtn.textContent = (mode === 'login') ? 'Login (පිවිසෙන්න)' : 'Register (ලියාපදිංචි වන්න)';
@@ -416,8 +417,8 @@
 	 	 	 	 return;
 	 	 	 }
 	 	 	 
-	 	 	 // --- Check Authorization (Now uses the async checkAuthorization function) ---
-	 	 	 const isAuthorized = await checkAuthorization(u, inputClass.value);
+	 	 	 // --- Check Authorization (Uses raw identifier, which is normalized internally) ---
+	 	 	 const isAuthorized = await checkAuthorization(rawIdentifier, inputClass.value);
 	 	 	 
 	 	 	 if (!isAuthorized) {
 	 	 	 	 setMsg("Authorization failed. WhatsApp number is not in the approved list for the selected institute. / සත්‍යාපනය අසාර්ථකයි. මෙම WhatsApp අංකය තෝරාගත් ආයතනය සඳහා අනුමත ලැයිස්තුවේ නොමැත.", false);
@@ -427,8 +428,8 @@
 	 	 	 }
 	 	 	 // --- End Authorization Check ---
 
-	 	 	 // If authorized, proceed with local registration (for the current origin)
-	 	 	 localStorage.setItem(KEY_USER, u);
+	 	 	 // Store the normalized identifier in localStorage
+	 	 	 localStorage.setItem(KEY_USER, identifier); // <--- Storing normalized ID (7xxxxxxx)
 	 	 	 localStorage.setItem(KEY_PASS, hash);
 	 	 	 localStorage.setItem(KEY_REGISTERED, "1");
 	 	 	 localStorage.setItem(KEY_LOGGED, "true");
@@ -439,12 +440,12 @@
 
 	 	 	 setMsg("Registration successful! Redirecting... / ලියාපදිංචිය සාර්ථකයි! යළි හරවා යවමින්...", true);
 	 	 	 
-	 	 	 // --- Call onLoginSuccess with identifier and hash for cross-domain auth ---
-	 	 	 onLoginSuccess(u, hash);
+	 	 	 // --- Call onLoginSuccess with normalized identifier and hash ---
+	 	 	 onLoginSuccess(identifier, hash);
 	 	 	 
 	 	 } else {
 	 	 	 // Login Logic
-	 	 	 const savedUser = localStorage.getItem(KEY_USER);
+	 	 	 const savedUser = localStorage.getItem(KEY_USER); // Normalized ID (7xxxxxxx)
 	 	 	 const savedPass = localStorage.getItem(KEY_PASS);
 
 	 	 	 if(!savedUser){
@@ -454,13 +455,14 @@
 	 	 	 	 return;
 	 	 	 }
 	 	 	 
-	 	 	 if(savedUser === u && savedPass === hash){
+	 	 	 // Compare normalized user input with saved normalized ID and calculated hash
+	 	 	 if(savedUser === identifier && savedPass === hash){
 	 	 	 	 // Success
 	 	 	 	 localStorage.setItem(KEY_LOGGED, "true");
 	 	 	 	 setMsg("Login successful! Redirecting... / පිවිසීම සාර්ථකයි! යළි හරවා යවමින්...", true);
 	 	 	 	 
-	 	 	 	 // --- Call onLoginSuccess with identifier and hash for cross-domain auth ---
-	 	 	 	 onLoginSuccess(u, hash); // Pass the validated hash
+	 	 	 	 // --- Call onLoginSuccess with normalized identifier and hash ---
+	 	 	 	 onLoginSuccess(identifier, hash); 
 	 	 	 } else {
 	 	 	 	 // Failure
 	 	 	 	 setMsg("Invalid WhatsApp number or password. / වැරදි WhatsApp අංකය හෝ මුරපදය.");
@@ -471,7 +473,7 @@
 	 });
 
 	 // --- Success Handler (MODIFIED FOR CROSS-DOMAIN AUTH) ---
-	 // We pass the identifier and the password hash via the URL query string
+	 // pHash should be the validated/registered hash, identifier should be normalized (7xxxxxxx)
 	 function onLoginSuccess(identifier, pHash){
 	 	 
 	 	 // 1. Clear sensitive data and update UI
@@ -480,10 +482,10 @@
 	 	 
 	 	 const REDIRECT_URL_BASE = "https://mprgc.github.io/gkictlms/"; 
 	 	 
-         // Append the identifier and hash to the URL for the target page to read and validate.
+         // Send the NORMALIZED identifier and hash
          const redirectUrl = `${REDIRECT_URL_BASE}?id=${encodeURIComponent(identifier)}&token=${pHash}`;
 	 	 
-	 	 console.log(`[AUTH] Success for ${identifier}. Attempting cross-domain redirect to ${redirectUrl}`);
+	 	 console.log(`[AUTH] Success for normalized ID ${identifier}. Attempting cross-domain redirect to ${redirectUrl}`);
 	 	 
 	 	 // 2. Keep the 500ms delay for UI updates and console logging finalization
 	 	 setTimeout(() => {
@@ -494,11 +496,11 @@
 
 	 // --- Initialization ---
 	 async function init(){
-	 	 // First, try to load the approved numbers (this might take a moment)
-	 	 // The message will be updated by getApprovedNumbers()
+	 	 
+	 	 // Start loading the approved numbers. 
 	 	 await getApprovedNumbers();
 	 	 
-	 	 const savedIdentifier = localStorage.getItem(KEY_USER);
+	 	 const savedIdentifier = localStorage.getItem(KEY_USER); // This is the normalized ID (7xxxxxxx)
 	 	 const regFlag = localStorage.getItem(KEY_REGISTERED);
 	 	 
 	 	 authContainer.classList.remove('hidden-strict');
@@ -509,7 +511,13 @@
 	 	 
 	 	 // Pre-fill fields if saved 
 	 	 if(savedIdentifier){
-	 	 	 inputIdentifier.value = savedIdentifier;
+	 	 	 // If the saved ID is 9 digits (normalized), prepend '0' for better user display.
+	 	 	 if (savedIdentifier.length === 9 && /^\d+$/.test(savedIdentifier)) {
+	 	 	 	 inputIdentifier.value = '0' + savedIdentifier;
+	 	 	 } else {
+	 	 	 	 inputIdentifier.value = savedIdentifier;
+	 	 	 }
+	 	 	 
 	 	 	 inputFullname.value = localStorage.getItem(KEY_FULL_NAME) || "";
 	 	 	 inputGrade.value = localStorage.getItem(KEY_GRADE) || "";
 	 	 	 inputClass.value = localStorage.getItem(KEY_CLASS) || ""; 
