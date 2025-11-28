@@ -16,7 +16,8 @@
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
 
     <!-- Auth Container -->
-    <div id="authContainer" class="w-full max-w-sm bg-white rounded-xl shadow-2xl p-6 md:p-8">
+    <!-- CHANGED: Reduced vertical padding from p-6/p-8 to p-5/p-6 -->
+    <div id="authContainer" class="w-full max-w-sm bg-white rounded-xl shadow-2xl p-5 md:p-6">
         
         <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">Access Account</h2>
 
@@ -31,7 +32,8 @@
         </div>
 
         <!-- Form and Message Container -->
-        <form id="authForm" class="space-y-4">
+        <!-- CHANGED: Reduced vertical space between elements from space-y-4 to space-y-3 -->
+        <form id="authForm" class="space-y-3">
 
             <!-- Full Name (Only for Register Mode) -->
             <div id="fullNameLabel" class="space-y-1">
@@ -76,17 +78,18 @@
             </div>
 
             <!-- Submit Button (Login/Register) -->
+            <!-- CHANGED: Reduced top margin from mt-6 to mt-4 -->
             <button type="submit" id="authSubmit"
-                    class="w-full py-2.5 mt-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                    class="w-full py-2.5 mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300">
                 Register
             </button>
             
-            <!-- Clear Saved Data Link (Only in Register Mode when data is present) - MOVED HERE -->
+            <!-- Clear Saved Data Link (Only in Register Mode when data is present) -->
             <div class="mt-2 text-center">
                  <button type="button" id="clearSavedBtnForm" class="text-xs text-red-500 hover:text-red-700 hidden-strict">Clear saved credentials</button>
             </div>
 
-            <!-- Message Area (Used by JS: setMsg) - MOVED HERE -->
+            <!-- Message Area (Used by JS: setMsg) -->
             <!-- Adjusted spacing (pt-1) to appear right below the Clear button/link -->
             <div id="authMessage" class="message text-center text-xs font-medium min-h-[20px] pt-1"></div>
 
