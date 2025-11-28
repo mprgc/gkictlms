@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GK ICT Exam Portal</title>
+    <!-- Include Tailwind CSS via CDN --><script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Background Image Styles - Carried over from LMS Login */
+        body {
+            /* Use a sample URL. You can replace this with your preferred image URL. */
+            background-image: url('img/login_back4.jpg');
+            background-size: cover; 
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh; 
+            padding: 1rem;
+        }
+        
+        /* Pseudo-element to apply the blur effect and dark overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: inherit;
+            background-size: inherit;
+            background-position: inherit;
+            background-attachment: inherit;
+            filter: blur(8px); 
+            background-color: rgba(0, 0, 0, 0.2); 
+            z-index: -1; 
+        }
+
+        /* The main content container needs a slightly transparent background to see the blur */
+        #authContainer {
+            background-color: rgba(255, 255, 255, 0.95); /* Slightly less transparent white */
+            backdrop-filter: blur(10px); 
+            z-index: 10;
+        }
+
+        /* This class is referenced by the JS for strict hiding/showing */
+        .hidden-strict {
+            display: none !important;
+        }
+
+        /* Styles for fade-in/fade-out animation (Modal structure is retained but hidden) */
+        .modal-overlay {
+            transition: opacity 0.3s ease-out;
+        }
+        .modal-content {
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            transform: translateY(20px); 
+            opacity: 0;
+        }
+        .modal-show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <!-- Auth Container --><div id="authContainer" class="w-full max-w-sm rounded-xl shadow-2xl p-5 md:p-6 mb-8">
+        
+        <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">GK ICT Exam Portal Login</h2>
+
+        <!-- Form and Message Container --><form id="authForm" class="space-y-4">
+            
+            <!-- Exam Code Input (Formerly Access Code) -->
+            <div class="space-y-1">
+                <label for="authAccessCode" class="block text-sm font-medium text-gray-700">Exam Code</label>
+                <input type="text" id="authAccessCode" placeholder="Enter Exam Code" required
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base" />
+            </div>
+
+            <!-- Password Input - REMOVED -->
+            
+            <!-- Forgot Password Link Container - REMOVED -->
+
+            <!-- Submit Button (Login) --><button type="submit" id="authSubmit"
+                    class="w-full py-2.5 mt-4 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors duration-300 focus:outline-none focus:ring-4 focus:ring-green-300">
+                Login
+            </button>
+            
+            <!-- Clear Buttons Container - REMOVED. Only placeholder for unregistered users remains. -->
+            <div class="mt-2 text-center">
+                 <p class="text-xs text-gray-500 mt-2">No account? Please contact your institute for an Exam Code.</p>
+            </div>
+
+            <!-- Message Area (Used by JS: setMsg) --><div id="authMessage" class="message text-center text-xs font-medium min-h-[20px] pt-1"></div>
+
+        </form>
+    </div>
+    
+    <!-- Footer -->
+    <footer id="footerCredit" class="w-full max-w-lg mt-8 text-center text-xs text-gray-200 z-10">
+        <!-- Text is made light for better contrast against the darker, blurred background -->
+    </footer>
+
+
+    <!-- Forgot Password Modal Structure - RETAINED BUT HIDDEN. (No button to open it) -->
+    <div id="forgotPasswordModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 opacity-0 modal-overlay hidden-strict">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 modal-content">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Password Reset Help (මුරපදය යළි සකසන්න)</h3>
+            <p id="modalMessage" class="text-sm text-gray-700 mb-6">
+                මුරපදය යළි සැකසීමට, කරුණාකර ඔබගේ පන්ති භාර ගුරුතුමා හෝ ආයතනය අමතන්න.
+            </p>
+            <div class="text-right">
+                <button id="closeModalBtn" class="px-5 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300">
+                    Got it (තේරුණා)
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- JavaScript Logic --><script>
+
+
+        // MASTER Exam Code - Only this code is required to log in
+        const MASTER_EXAM_CODE = "#111"; // Hardcoded value for comparison
+
+        // Current Exam Portal Version (No longer checked during login, but kept for metadata)
+        const PORTAL_CURRENT_VERSION = "Exam Portal 1.0"; 
+        
+        // --- LOCAL STORAGE KEYS (Only KEY_LOGGED is functionally used) ---
+        const KEY_LOGGED = 'app_logged';
+
+        // Exam Code Error Message
+        const EXAM_CODE_ERROR_MSG = "Invalid Exam Code (වැරදි විභාග කේතය)"; 
+
+        //--------------------------------------
+
+        (async function(){
+            // --- Utility Functions ---
+            function $id(id){ return document.getElementById(id); }
+            
+            function setMsg(txt, ok=false){
+              const el = $id('authMessage');
+              el.textContent = txt;
+              el.className = 'message text-center text-xs font-medium min-h-[20px] pt-1'; // Reset classes
+              if (txt) {
+                if(ok){
+                  el.classList.add('text-green-700', 'bg-green-100', 'py-1', 'px-2', 'rounded-lg');
+                } else {
+                  el.classList.add('text-red-700', 'bg-red-100', 'py-1', 'px-2', 'rounded-lg');
+                }
+              }
+            }
+
+            // --- Elements ---
+            const form = $id('authForm');
+            const inputExamCode = $id('authAccessCode');
+            const submitBtn = $id('authSubmit');
+            
+            // Footer Element Reference
+            const footerCredit = $id('footerCredit');
+
+            // --- Event Listener (Simplified) ---
+            form.addEventListener('submit', async (ev)=>{
+              ev.preventDefault();
+              submitBtn.disabled = true;
+              submitBtn.textContent = 'Logging in...';
+
+              const enteredCode = inputExamCode.value.trim(); 
+              
+              // 1. Validate if Exam Code is entered
+              if(!enteredCode){ 
+                setMsg("Exam Code ඇතුළත් කරන්න.");
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Login';
+                return;
+              }
+
+              // 2. Exam Code Validation: Check input 'enteredCode' against the MASTER_EXAM_CODE
+              if (MASTER_EXAM_CODE === enteredCode) { 
+                localStorage.setItem(KEY_LOGGED, "true");
+                setMsg("Login successful! Redirecting to Exam Portal...", true);
+                
+                // Pass the Exam Code as the identifier for the redirect function
+                setTimeout(() => onLoginSuccess(enteredCode), 500); 
+              } else {
+                setMsg(EXAM_CODE_ERROR_MSG);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Login';
+              }
+            });
+
+            function onLoginSuccess(identifier){
+              inputExamCode.value = '';
+              $id('authContainer').classList.add('hidden-strict'); 
+              const REDIRECT_URL = "Exam/G7_L6_Q.html"; // Redirect to a new exam dashboard page
+              console.log(`Login successful using Exam Code: ${identifier}. Redirecting to ${REDIRECT_URL}...`);
+              window.location.href = REDIRECT_URL;
+            }
+
+            function init(){
+              // REMOVED: inputExamCode.value = MASTER_EXAM_CODE; 
+              // The text box will now be empty on load.
+              inputExamCode.value = '';
+
+              // Set Footer Content
+              if (footerCredit) {
+                  footerCredit.textContent = `Design by : Gayan Karunathilaka | GK ICT School | Exam Portal Ai 2025 | ${PORTAL_CURRENT_VERSION}`;
+              }
+              
+              submitBtn.textContent = 'Login';
+              submitBtn.disabled = false;
+            }
+            
+            init();
+
+        })();
+    </script>
+
+</body>
+</html>
