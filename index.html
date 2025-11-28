@@ -244,7 +244,7 @@
 	 	 	 
 	 	 	 // Specific advice for local file execution issue
 	 	 	 if (window.location.protocol === 'file:') {
-	 	 	 	 errorMessage += " (If running locally, please use a local web server (e.g., Python: 'python -m http.server 8000') to avoid browser security restrictions. / ඔබ දේශීයව (locally) ධාවනය කරන්නේ නම්, browser ආරක්ෂක සීමා මග හැරීමට local web server එකක් භාවිතා කරන්න.)";
+	 	 	 	 errorMessage += " (If running locally, please upload to GitHub Pages or use a local web server to avoid browser security restrictions on the file protocol. / ඔබ දේශීයව (locally) ධාවනය කරන්නේ නම්, browser ආරක්ෂක සීමා මග හැරීමට GitHub Pages මත උඩුගත කරන්න හෝ local web server එකක් භාවිතා කරන්න.)";
 	 	 	 }
 	 	 	 
 	 	 	 setMsg(errorMessage, false);
@@ -439,7 +439,7 @@
 
 	 	 	 setMsg("Registration successful! Redirecting... / ලියාපදිංචිය සාර්ථකයි! යළි හරවා යවමින්...", true);
 	 	 	 
-	 	 	 // --- MODIFIED: Call onLoginSuccess immediately ---
+	 	 	 // --- MODIFIED: Call onLoginSuccess with robust redirect ---
 	 	 	 onLoginSuccess(u);
 	 	 	 
 	 	 } else {
@@ -458,7 +458,8 @@
 	 	 	 	 // Success
 	 	 	 	 localStorage.setItem(KEY_LOGGED, "true");
 	 	 	 	 setMsg("Login successful! Redirecting... / පිවිසීම සාර්ථකයි! යළි හරවා යවමින්...", true);
-	 	 	 	 // --- MODIFIED: Call onLoginSuccess immediately ---
+	 	 	 	 
+	 	 	 	 // --- MODIFIED: Call onLoginSuccess with robust redirect ---
 	 	 	 	 onLoginSuccess(u);
 	 	 	 } else {
 	 	 	 	 // Failure
@@ -469,21 +470,24 @@
 	 	 }
 	 });
 
-	 // --- Success Handler ---
+	 // --- Success Handler (MODIFIED) ---
 	 function onLoginSuccess(identifier){
 	 	 
-	 	 // Clear password input after security
+	 	 // 1. Clear sensitive data and update UI
 	 	 inputPass.value = '';
-	 	 authContainer.classList.add('hidden-strict'); // Hide the form right before redirecting
+	 	 authContainer.classList.add('hidden-strict'); // Hide the form
 	 	 
-	 	 // REDIRECTION LOGIC 
 	 	 const REDIRECT_URL = "https://mprgc.github.io/gkictlms/"; 
-	 	 const logMessageId = localStorage.getItem(KEY_USER) || identifier; 
-
-	 	 console.log(`Login successful for ${logMessageId}. Attempting redirect to ${REDIRECT_URL}...`);
 	 	 
-	 	 // The core redirect logic
-	 	 window.location.href = REDIRECT_URL;
+	 	 console.log(`[AUTH] Success for ${identifier}. Attempting secure redirect to ${REDIRECT_URL}`);
+	 	 
+	 	 // 2. Introduce a very small delay (50ms) to ensure the UI update (message/form hiding) 
+         // and localStorage commit are fully processed before navigation. This prevents 
+         // potential browser security features from blocking the redirect.
+	 	 setTimeout(() => {
+	 	 	 // 3. Use location.replace for a cleaner redirect that doesn't save the login page in history
+	 	 	 window.location.replace(REDIRECT_URL);
+	 	 }, 50); // 50 milliseconds delay
 	 }
 
 	 // --- Initialization ---
