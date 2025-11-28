@@ -6,6 +6,56 @@
     <title>GK ICT LMS Login</title>
     <!-- Include Tailwind CSS via CDN --><script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* NEW: Blur Background Image Styles */
+        body {
+            /* Use a sample URL. You can replace this with your preferred image URL. */
+            background-image: url('img/login_back.jpg');
+            background-size: cover; /* Cover the entire viewport */
+            background-position: center;
+            background-attachment: fixed; /* Keep image fixed when scrolling */
+            /* Add a slightly dark overlay or blur for readability of foreground elements */
+            
+            /* The blur effect is applied to the pseudo-element overlay for better browser support and control */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh; 
+            padding: 1rem;
+        }
+        
+        /* Pseudo-element to apply the blur effect and dark overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /* Re-use the background image for the blur effect */
+            background-image: inherit;
+            background-size: inherit;
+            background-position: inherit;
+            background-attachment: inherit;
+            
+            /* Apply the blur filter */
+            filter: blur(5px); /* Adjust the blur intensity (e.g., 5px, 10px) as needed */
+            
+            /* Optional: Add a subtle dark overlay for contrast */
+            background-color: rgba(0, 0, 0, 0.2); 
+            
+            z-index: -1; /* Place behind all content */
+        }
+
+
+        /* The main content container needs a slightly transparent background to see the blur */
+        #authContainer {
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+            backdrop-filter: blur(10px); /* Optional: Blur the card itself slightly */
+            z-index: 10;
+        }
+
         /* This class is referenced by the JS for strict hiding/showing */
         .hidden-strict {
             display: none !important;
@@ -26,9 +76,9 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen p-4">
+<body class="p-4">
 
-    <!-- Auth Container --><div id="authContainer" class="w-full max-w-sm bg-white rounded-xl shadow-2xl p-5 md:p-6 mb-8">
+    <!-- Auth Container --><div id="authContainer" class="w-full max-w-sm rounded-xl shadow-2xl p-5 md:p-6 mb-8">
         
         <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">GK ICT LMS Login</h2>
 
@@ -120,8 +170,8 @@
     </div>
     
     <!-- Footer - NEWLY ADDED -->
-    <footer id="footerCredit" class="w-full max-w-lg mt-8 text-center text-xs text-gray-500">
-        <!-- Content will be set by JS: Design by : Gayan Karunathilaka | GK ICT School | Software.GKICT Ai 2025 | Version 1.0 -->
+    <footer id="footerCredit" class="w-full max-w-lg mt-8 text-center text-xs text-gray-200 z-10">
+        <!-- Text is made light for better contrast against the darker, blurred background -->
     </footer>
 
 
@@ -160,10 +210,10 @@
 
         // Login Access Code Type here----------
         // Developer can change this for new registrations. Old users will use their saved code unless LMS_CURRENT_VERSION changes.
-        const HARDCODED_ACCESS_CODE = "#1234"; 
+        const HARDCODED_ACCESS_CODE = "#123"; 
 
         // Current LMS Version - Change this to force all users to use the new HARDCODED_ACCESS_CODE.
-        const LMS_CURRENT_VERSION = "Version 1.2"; 
+        const LMS_CURRENT_VERSION = "Version 1.0"; 
 
         //--------------------------------------
 
@@ -537,5 +587,3 @@
 
 </body>
 </html>
-
-
