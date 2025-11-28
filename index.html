@@ -3,26 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access Account</title>
-    <!-- Include Tailwind CSS via CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>GK ICT LMS Login Page</title>
+    <!-- Include Tailwind CSS via CDN --><script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* This class is referenced by the JS for strict hiding/showing */
         .hidden-strict {
             display: none !important;
         }
+
+        /* NEW: Styles for fade-in/fade-out animation */
+        .modal-overlay {
+            transition: opacity 0.3s ease-out;
+        }
+        .modal-content {
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            transform: translateY(20px); /* Initial state for slide-up effect */
+            opacity: 0;
+        }
+        .modal-show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
 
-    <!-- Auth Container -->
-    <!-- CHANGED: Reduced vertical padding from p-6/p-8 to p-5/p-6 -->
-    <div id="authContainer" class="w-full max-w-sm bg-white rounded-xl shadow-2xl p-5 md:p-6">
+    <!-- Auth Container --><div id="authContainer" class="w-full max-w-sm bg-white rounded-xl shadow-2xl p-5 md:p-6">
         
-        <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">Access Account</h2>
+        <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">GK ICT LMS Login Page</h2>
 
-        <!-- Tabs Container -->
-        <div class="flex p-1 bg-gray-100 rounded-lg mb-6">
+        <!-- Tabs Container --><div class="flex p-1 bg-gray-100 rounded-lg mb-6">
             <button data-mode="login" class="tab w-1/2 py-2 text-sm font-semibold rounded-lg transition-all duration-300" id="loginTab">
                 Login
             </button>
@@ -31,30 +41,36 @@
             </button>
         </div>
 
-        <!-- Form and Message Container -->
-        <!-- CHANGED: Reduced vertical space between elements from space-y-4 to space-y-3 -->
-        <form id="authForm" class="space-y-3">
+        <!-- Form and Message Container --><form id="authForm" class="space-y-3">
 
-            <!-- Full Name (Only for Register Mode) -->
-            <div id="fullNameLabel" class="space-y-1">
+            <!-- Full Name (Only for Register Mode) --><div id="fullNameLabel" class="space-y-1 hidden-strict">
                 <label for="authFullname" class="block text-sm font-medium text-gray-700">Full Name (සම්පූර්ණ නම)</label>
                 <input type="text" id="authFullname" placeholder="Enter your full name" 
                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base" />
             </div>
 
-            <!-- WhatsApp Number (Identifier for both) -->
-            <div class="space-y-1">
+            <!-- WhatsApp Number (Identifier for both) --><div class="space-y-1">
                 <label for="authIdentifier" class="block text-sm font-medium text-gray-700">WhatsApp Number (වට්සැප් අංකය)</label>
                 <input type="tel" id="authIdentifier" placeholder="e.g., 0712345678" 
                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base" />
             </div>
 
-            <!-- Registration-Specific Fields (Gradecle and Institute) -->
-            <div id="extraRegFields" class="grid grid-cols-2 gap-4">
+            <!-- Registration-Specific Fields (Grade and Institute) -->
+            <div id="extraRegFields" class="grid grid-cols-2 gap-4 hidden-strict">
+                <!-- Grade (ශ්‍රේණිය) Dropdown - UPDATED -->
                 <div class="space-y-1">
                     <label for="authGrade" class="block text-sm font-medium text-gray-700">Grade (ශ්‍රේණිය)</label>
-                    <input type="text" id="authGrade" placeholder="e.g., 10 or A/L" 
-                           class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base" />
+                    <select id="authGrade" 
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base appearance-none">
+                        <option value="">-Select Grade-</option>
+                        <option value="6">6 ශ්‍රේණිය</option>
+                        <option value="7">7 ශ්‍රේණිය</option>
+                        <option value="8">8 ශ්‍රේණිය</option>
+                        <option value="9">9 ශ්‍රේණිය</option>
+                        <option value="10">10 ශ්‍රේණිය</option>
+                        <option value="11">11 ශ්‍රේණිය</option>
+                        <option value="A/L">A/L</option>
+                    </select>
                 </div>
                 <div class="space-y-1">
                     <label for="authClass" class="block text-sm font-medium text-gray-700">Institute (ආයතනය)</label>
@@ -70,37 +86,46 @@
                 </div>
             </div>
 
-            <!-- Password -->
-            <div class="space-y-1">
+            <!-- Password --><div class="space-y-1">
                 <label for="authPassword" class="block text-sm font-medium text-gray-700">Password (මුරපදය)</label>
                 <input type="password" id="authPassword" placeholder="••••••••" 
                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base" />
             </div>
+            
+            <!-- Forgot Password Link Container --><div id="forgotPasswordLinkContainer" class="text-right -mt-2 pb-2 hidden-strict">
+                <a href="#" id="forgotPasswordBtn" class="text-xs text-blue-500 hover:text-blue-700 font-medium" onclick="event.preventDefault()">Forgot Password?</a>
+            </div>
 
-            <!-- Submit Button (Login/Register) -->
-            <!-- CHANGED: Reduced top margin from mt-6 to mt-4 -->
-            <button type="submit" id="authSubmit"
+            <!-- Submit Button (Login/Register) --><button type="submit" id="authSubmit"
                     class="w-full py-2.5 mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300">
                 Register
             </button>
             
-            <!-- Clear Saved Data Link (Only in Register Mode when data is present) -->
-            <div class="mt-2 text-center">
+            <!-- Clear Saved Data Link (Only in Register Mode when data is present) --><div class="mt-2 text-center">
                  <button type="button" id="clearSavedBtnForm" class="text-xs text-red-500 hover:text-red-700 hidden-strict">Clear saved credentials</button>
             </div>
 
-            <!-- Message Area (Used by JS: setMsg) -->
-            <!-- Adjusted spacing (pt-1) to appear right below the Clear button/link -->
-            <div id="authMessage" class="message text-center text-xs font-medium min-h-[20px] pt-1"></div>
+            <!-- Message Area (Used by JS: setMsg) --><div id="authMessage" class="message text-center text-xs font-medium min-h-[20px] pt-1"></div>
 
-            
         </form>
     </div>
 
+    <!-- Forgot Password Modal Structure --><!-- Added 'modal-overlay' for fade-in/out effect --><div id="forgotPasswordModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 opacity-0 modal-overlay hidden-strict">
+        <!-- Added 'modal-content' for slide-up effect --><div class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 modal-content">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Password Reset Help (මුරපදය යළි සකසන්න)</h3>
+            <p id="modalMessage" class="text-sm text-gray-700 mb-6">
+                Register tab එකට මාරුවී නව password එකක් පමණක් යොදා reset කරන්න. එවිට Password එක පමණක් Reset වේ.)
+            </p>
+            <div class="text-right">
+                <button id="closeModalBtn" class="px-5 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300">
+                    Got it (තේරුණා)
+                </button>
+            </div>
+        </div>
+    </div>
 
-    <!-- JavaScript Logic -->
-    <script>
-        // The user-provided JS code for functionality
+
+    <!-- JavaScript Logic --><script>
         (async function(){
             // --- Utility Functions ---
             function $id(id){ return document.getElementById(id); }
@@ -108,7 +133,6 @@
             function setMsg(txt, ok=false){
               const el = $id('authMessage');
               el.textContent = txt;
-              // Updated class for positioning below the clear credentials link
               el.className = 'message text-center text-xs font-medium min-h-[20px] pt-1'; // Reset classes
               if (txt) {
                 if(ok){
@@ -119,7 +143,6 @@
               }
             }
 
-            // Uses Web Crypto API for secure hashing
             async function hashPassword(pass){
               const data = new TextEncoder().encode(pass);
               const hashBuffer = await crypto.subtle.digest('SHA-256', data);
@@ -135,14 +158,14 @@
             
             const KEY_FULL_NAME = 'reg_fullname';
             const KEY_GRADE = 'reg_grade';
-            const KEY_CLASS = 'reg_class'; // Stores the selected Institute
+            const KEY_CLASS = 'reg_class'; 
 
             const form = $id('authForm');
             const inputIdentifier = $id('authIdentifier');
             const inputPass = $id('authPassword');
             
             const inputFullname = $id('authFullname');
-            const inputGrade = $id('authGrade');
+            const inputGrade = $id('authGrade'); // This is now a <select> element
             const inputClass = $id('authClass');
             
             const extraRegFieldsContainer = $id('extraRegFields');
@@ -152,13 +175,18 @@
             const tabs = document.querySelectorAll('.tab');
             const clearSavedBtnForm = $id('clearSavedBtnForm'); 
             
-            let mode = "login"; // State to track current mode
+            // Modal Elements
+            const forgotPasswordLinkContainer = $id('forgotPasswordLinkContainer');
+            const forgotPasswordBtn = $id('forgotPasswordBtn');
+            const forgotPasswordModal = $id('forgotPasswordModal');
+            const closeModalBtn = $id('closeModalBtn');
+            const modalContent = forgotPasswordModal.querySelector('.modal-content'); // NEW: Get modal content
 
-            // Function to set the current authentication mode (Login/Register)
+            let mode = "login"; 
+
             function setMode(newMode) {
               mode = newMode;
               
-              // 1. Deactivate all tabs and activate the current one
               tabs.forEach(x => {
                 x.classList.remove('bg-white', 'text-blue-600', 'shadow-md'); 
                 x.classList.add('bg-gray-100', 'text-gray-600');
@@ -170,11 +198,9 @@
                 activeTab.classList.remove('bg-gray-100', 'text-gray-600');
               }
 
-              // 2. Update button text and tab label 
               const regFlag = localStorage.getItem(KEY_REGISTERED);
               const registerTab = document.querySelector(`.tab[data-mode="register"]`);
               
-              // Update Register tab label based on registration status
               if (regFlag === "1") {
                 registerTab.textContent = "Reset Account";
               } else {
@@ -182,43 +208,37 @@
               }
 
               submitBtn.textContent = (mode === 'login') ? 'Login' : registerTab.textContent;
-              setMsg(''); // Clear messages on mode switch
+              setMsg(''); 
               
-              // 3. Show/Hide registration-specific fields (Full Name, Grade, Institute)
               if (mode === 'register') {
-                // SHOW all registration fields
                 extraRegFieldsContainer.classList.remove('hidden-strict');
                 fullNameLabel.classList.remove('hidden-strict');
                 
-                // Show form link always when in Register Mode (as requested by user)
+                forgotPasswordLinkContainer.classList.add('hidden-strict'); // Hide forgot password in register mode
+                
                 clearSavedBtnForm.classList.remove('hidden-strict');
 
               } else {
-                // HIDE all registration fields for login mode
-                extraRegFieldsContainer.classList.add('hidden-strict'); // Hides Grade/Institute
-                fullNameLabel.classList.add('hidden-strict'); // Hides Full Name
+                extraRegFieldsContainer.classList.add('hidden-strict'); 
+                fullNameLabel.classList.add('hidden-strict'); 
                 
-                // Hide form link in login mode
+                forgotPasswordLinkContainer.classList.remove('hidden-strict'); // Show forgot password in login mode
+                
                 clearSavedBtnForm.classList.add('hidden-strict');
               }
             }
 
-            // --- Clear Saved Data Handler ---
             function handleClearSavedData() {
-              localStorage.clear(); // Clears ALL stored keys
+              localStorage.clear(); 
               
-              // Reset inputs
               inputIdentifier.value = ""; 
               inputPass.value = "";
               inputFullname.value = "";
-              inputGrade.value = "";
+              inputGrade.value = ""; // Resetting select value
               inputClass.value = ""; 
               
-              // HIDE the form clear link immediately
               clearSavedBtnForm.classList.add('hidden-strict');
               
-              // CHANGED: Instead of calling init(), explicitly set mode to 'register' to prevent
-              // switching to the 'login' UI after clearing credentials.
               setMode('register'); 
               
               setMsg("All saved credentials cleared.", true);
@@ -226,16 +246,31 @@
 
 
             // --- Event Listeners ---
-
-            // Tab Switching Logic
             tabs.forEach(t => t.addEventListener('click', ()=>{
               setMode(t.dataset.mode);
             }));
 
-            // Clear Saved Data - Attach handler to the form button only
             clearSavedBtnForm.addEventListener('click', handleClearSavedData);
+            
+            // Forgot Password Modal Handlers with animation
+            forgotPasswordBtn.addEventListener('click', (ev) => {
+                ev.preventDefault(); 
+                forgotPasswordModal.classList.remove('hidden-strict'); // Show modal display
+                // Timeout to allow display:block to apply before transition
+                setTimeout(() => {
+                    forgotPasswordModal.classList.add('opacity-100', 'modal-show'); 
+                }, 10);
+            });
 
-            // Form Submission Handler
+            closeModalBtn.addEventListener('click', () => {
+                forgotPasswordModal.classList.remove('opacity-100', 'modal-show');
+                // Timeout to allow transition to complete before hiding display
+                setTimeout(() => {
+                    forgotPasswordModal.classList.add('hidden-strict');
+                }, 300); // Should match CSS transition duration
+            });
+
+
             form.addEventListener('submit', async (ev)=>{
               ev.preventDefault();
               submitBtn.disabled = true;
@@ -254,9 +289,9 @@
               const hash = await hashPassword(p);
 
               if(mode === "register"){
-                // Registration Logic
-                if (!inputClass.value) {
-                  setMsg("Please select an Institute (ආයතනයක් තෝරන්න).");
+                // Check if Grade or Institute is selected (since they are now both selects)
+                if (!inputGrade.value || !inputClass.value) {
+                  setMsg("Please select both Grade (ශ්‍රේණිය) and Institute (ආයතනය).");
                   submitBtn.disabled = false;
                   submitBtn.textContent = 'Register';
                   return;
@@ -269,7 +304,7 @@
                 localStorage.setItem(KEY_LOGGED, "true");
                 
                 localStorage.setItem(KEY_FULL_NAME, inputFullname.value.trim());
-                localStorage.setItem(KEY_GRADE, inputGrade.value.trim());
+                localStorage.setItem(KEY_GRADE, inputGrade.value.trim()); // Saves selected value
                 localStorage.setItem(KEY_CLASS, inputClass.value.trim());
 
                 setMsg("Registration successful! Redirecting...", true);
@@ -277,7 +312,6 @@
                 setTimeout(() => onLoginSuccess(u), 500);
                 
               } else {
-                // Login Logic
                 const savedUser = localStorage.getItem(KEY_USER);
                 const savedPass = localStorage.getItem(KEY_PASS);
 
@@ -289,12 +323,10 @@
                 }
                 
                 if(savedUser === u && savedPass === hash){
-                  // Success
                   localStorage.setItem(KEY_LOGGED, "true");
                   setMsg("Login successful! Redirecting...", true);
                   setTimeout(() => onLoginSuccess(u), 500);
                 } else {
-                  // Failure
                   setMsg("Invalid WhatsApp number or password.");
                   submitBtn.disabled = false;
                   submitBtn.textContent = 'Login';
@@ -302,40 +334,36 @@
               }
             });
 
-            // --- Success Handler ---
             function onLoginSuccess(identifier){
-              
-              // Clear password input after success for security
               inputPass.value = '';
-              
-              // Hide the form right before redirecting
               $id('authContainer').classList.add('hidden-strict'); 
-              
-              // REDIRECTION LOGIC
               const REDIRECT_URL = "index_si.html"; 
               console.log(`Login successful for ${identifier}. Redirecting to ${REDIRECT_URL}...`);
               window.location.href = REDIRECT_URL;
             }
 
-            // --- Initialization ---
             function init(){
               const savedIdentifier = localStorage.getItem(KEY_USER);
               const regFlag = localStorage.getItem(KEY_REGISTERED);
               
-              // MODIFIED: Force initial mode to 'login' to match the user's requested image state.
               let initialMode = 'login'; 
-              
-              // Note: The previous logic was: let initialMode = (regFlag === "1") ? 'login' : 'register';
-              // The new logic prioritizes the visual state requested by the user's image.
               
               setMode(initialMode); 
               
-              // Pre-fill fields if saved and set inputs to match saved data for current mode
               if(savedIdentifier){
                 inputIdentifier.value = savedIdentifier;
                 inputFullname.value = localStorage.getItem(KEY_FULL_NAME) || "";
-                inputGrade.value = localStorage.getItem(KEY_GRADE) || "";
-                // Ensure the select dropdown value is set correctly
+                
+                // Handling saved Grade value for the new <select>
+                const savedGrade = localStorage.getItem(KEY_GRADE) || "";
+                const gradeOptions = Array.from(inputGrade.options).map(opt => opt.value);
+                if(gradeOptions.includes(savedGrade)) {
+                  inputGrade.value = savedGrade;
+                } else {
+                  inputGrade.value = ""; // Default to select if value is missing/invalid
+                }
+
+                // Handling saved Institute value
                 const savedClass = localStorage.getItem(KEY_CLASS) || "";
                 const classOptions = Array.from(inputClass.options).map(opt => opt.value);
                 if(classOptions.includes(savedClass)) {
@@ -344,21 +372,18 @@
                   inputClass.value = ""; // Default to select if value is missing/invalid
                 }
               } else {
-                // Clear all fields if no user is saved
                 inputIdentifier.value = "";
                 inputFullname.value = "";
                 inputGrade.value = "";
                 inputClass.value = "";
               }
               
-              inputPass.value = ""; // Always clear password on load
+              inputPass.value = ""; 
 
-              // Control visibility of Clear Saved Data link (Re-run setMode to ensure button visibility is correct)
               setMode(initialMode);
               submitBtn.disabled = false;
             }
             
-            // Run initialization
             init();
 
         })();
