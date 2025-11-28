@@ -144,7 +144,7 @@
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 modal-content">
             <h3 class="text-xl font-bold text-red-600 mb-4">Security Update (ආරක්ෂක යාවත්කාලීනය)</h3>
             <p id="versionModalMessage" class="text-sm text-gray-700 mb-6 font-semibold">
-                Security update එකක් සිදුවිය. කරුණාකර නව Access Code එක ඇතුළත් කරන්න.
+                ආරක්ෂක යාවත්කාලීනයක් සිදුවී ඇත. කරුණාකර 'Reset Account' ටැබ් එකට ගොස් නව Access Code එක සහ ඔබ කැමති මුරපදය යොදා නැවත පිවිසෙන්න.
             </p>
             <div class="text-right">
                 <button id="closeVersionModalBtn" class="px-5 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors focus:outline-none focus:ring-4 focus:ring-red-300">
@@ -159,13 +159,13 @@
 
 
         // Login Access Code Type here----------
+        // Developer can change this for new registrations. Old users will use their saved code unless LMS_CURRENT_VERSION changes.
+        const HARDCODED_ACCESS_CODE = "#123"; 
 
-        const HARDCODED_ACCESS_CODE = "#1234"; // 
+        // Current LMS Version - Change this to force all users to use the new HARDCODED_ACCESS_CODE.
+        const LMS_CURRENT_VERSION = "Version 1.0"; 
 
         //--------------------------------------
-
-        // NEW: LMS Current Version Constant
-        const LMS_CURRENT_VERSION = "Version 1.2"; // Current official version
 
         (async function(){
             // --- Utility Functions ---
@@ -203,7 +203,7 @@
             const KEY_ACCESS_CODE = 'app_access_code';
             const KEY_VERSION = 'app_version'; 
             
-           // Hardcoded Access Code
+           // Hardcoded Access Code Error Message
             const ACCESS_CODE_ERROR_MSG = "Invalid Access Code (වැරදි ප්‍රවේශ කේතය)"; // Sinhala error message
 
             const form = $id('authForm');
@@ -224,7 +224,7 @@
             const clearSavedBtnForm = $id('clearSavedBtnForm'); 
             const clearVersionBtn = $id('clearVersionBtn'); 
             
-            // NEW: Footer Element Reference
+            // Footer Element Reference
             const footerCredit = $id('footerCredit');
 
             // Modal Elements
@@ -264,6 +264,7 @@
               setMsg(''); 
               
               if (mode === 'register') {
+                // Ensure all register fields are visible
                 whatsappInputWrapper.classList.remove('hidden-strict'); 
                 extraRegFieldsContainer.classList.remove('hidden-strict');
                 fullNameLabel.classList.remove('hidden-strict');
@@ -273,6 +274,7 @@
                 clearVersionBtn.classList.remove('hidden-strict'); 
 
               } else {
+                // Hide register-only fields for login
                 whatsappInputWrapper.classList.add('hidden-strict'); 
                 extraRegFieldsContainer.classList.add('hidden-strict'); 
                 fullNameLabel.classList.add('hidden-strict'); 
@@ -298,14 +300,15 @@
               localStorage.removeItem(KEY_FULL_NAME);
               localStorage.removeItem(KEY_GRADE);
               localStorage.removeItem(KEY_CLASS);
-              localStorage.removeItem(KEY_ACCESS_CODE);
+              localStorage.removeItem(KEY_ACCESS_CODE); // Cleared
+              localStorage.removeItem(KEY_VERSION); // Cleared
               
               inputIdentifier.value = ""; 
               inputAccessCode.value = ""; 
               inputPass.value = "";
               inputFullname.value = "";
-              inputGrade.value = ""; 
-              inputClass.value = ""; 
+              inputGrade.value = "";
+              inputClass.value = "";
               
               clearSavedBtnForm.classList.add('hidden-strict');
               
@@ -327,8 +330,19 @@
                 versionMismatchModal.classList.remove('opacity-100', 'modal-show');
                 setTimeout(() => {
                     versionMismatchModal.classList.add('hidden-strict');
-                    // Reset UI after user acknowledges the update
-                    setMsg('කරුණාකර නව Access Code සහ මුරපදය යොදා නැවත පිවිසෙන්න.', false);
+                    
+                    // --- VERSION MISMATCH FORCED UPDATE LOGIC ---
+                    // 1. Clear old access code and version to force new registration/reset
+                    localStorage.removeItem(KEY_ACCESS_CODE);
+                    localStorage.removeItem(KEY_VERSION);
+                    
+                    // 2. Switch to register mode (which acts as Reset Account)
+                    setMode('register'); 
+                    
+                    // 3. Inform the user what to do next
+                    setMsg('ආරක්ෂක යාවත්කාලීනය! නව Access Code සහ මුරපදය යොදා "Reset Account" හරහා නැවත ලියාපදිංචි වන්න.', false);
+                    // ---------------------------------------------
+
                 }, 300); 
             }
 
@@ -370,19 +384,17 @@
               const a = inputAccessCode.value.trim(); 
               
               if(mode === "register"){
+                  // --- REGISTER/RESET LOGIC ---
                   const u = inputIdentifier.value.trim(); 
                   
-                  // Check all required fields for registration
-                  if(!u || !p || !a){ 
-                    setMsg("Please enter WhatsApp number, Access Code, and password.");
+                  if(!u || !p || !a || !inputGrade.value || !inputClass.value){ 
+                    setMsg("සියලුම ක්ෂේත්‍ර (වට්සැප් අංකය, Access Code, මුරපදය, ශ්‍රේණිය සහ ආයතනය) ඇතුළත් කරන්න.");
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Register';
                     return;
                   }
                   
-                  const hash = await hashPassword(p);
-                  
-                  // Access Code Validation for Registration/Reset
+                  // Access Code Validation (must match the new HARDCODED_ACCESS_CODE)
                   if (a !== HARDCODED_ACCESS_CODE) {
                     setMsg(ACCESS_CODE_ERROR_MSG);
                     submitBtn.disabled = false;
@@ -390,17 +402,12 @@
                     return;
                   }
                   
-                  if (!inputGrade.value || !inputClass.value) {
-                    setMsg("Please select both Grade (ශ්‍රේණිය) and Institute (ආයතනය).");
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Register';
-                    return;
-                  }
+                  const hash = await hashPassword(p);
                   
-                  // Save data
+                  // Save all data, including the new Access Code and current Version
                   localStorage.setItem(KEY_USER, u);
                   localStorage.setItem(KEY_PASS, hash);
-                  localStorage.setItem(KEY_ACCESS_CODE, a);
+                  localStorage.setItem(KEY_ACCESS_CODE, a); // Save new Access Code
                   localStorage.setItem(KEY_REGISTERED, "1");
                   localStorage.setItem(KEY_LOGGED, "true");
                   
@@ -408,16 +415,15 @@
                   localStorage.setItem(KEY_GRADE, inputGrade.value.trim()); 
                   localStorage.setItem(KEY_CLASS, inputClass.value.trim());
                   
-                  // Always save/overwrite version during successful registration/reset
-                  localStorage.setItem(KEY_VERSION, LMS_CURRENT_VERSION);
-                  console.log("LMS Version saved/updated during registration/reset.");
+                  localStorage.setItem(KEY_VERSION, LMS_CURRENT_VERSION); // Save current Version
                  
-                  setMsg("Registration successful! Redirecting...", true);
+                  setMsg("Registration/Reset successful! Redirecting...", true);
                   
                   setTimeout(() => onLoginSuccess(u), 500);
                 
-              } else { // Login mode
-                  // Only require Password and Access Code for login
+              } else { 
+                  // --- LOGIN LOGIC ---
+                  
                   if (!p || !a) {
                     setMsg("Please enter Access Code and password.");
                     submitBtn.disabled = false;
@@ -425,9 +431,6 @@
                     return;
                   }
 
-                  const hash = await hashPassword(p);
-
-                  // Retrieve saved data for verification
                   const savedUser = localStorage.getItem(KEY_USER);
                   const savedPass = localStorage.getItem(KEY_PASS);
                   const savedAccessCode = localStorage.getItem(KEY_ACCESS_CODE);
@@ -440,15 +443,7 @@
                     return;
                   }
                   
-                  // Access Code Validation
-                  if (savedAccessCode !== a) {
-                    setMsg(ACCESS_CODE_ERROR_MSG);
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Login';
-                    return;
-                  }
-                  
-                  // Version Check (If mismatch, show modal and STOP login)
+                  // Version Mismatch Check (Requirement 4)
                   if (!savedVersion || savedVersion !== LMS_CURRENT_VERSION) {
                     console.warn(`Version mismatch detected. Saved: ${savedVersion}, Current: ${LMS_CURRENT_VERSION}. Showing update alert.`);
                     
@@ -458,7 +453,16 @@
                     return; // Stop the login process
                   }
                   
-                  // Password Validation (If all 3 checks (Version, Access Code, Password) pass, allow login)
+                  // Access Code Validation (Requirement 2 & 3: Check against the SAVED code)
+                  if (savedAccessCode !== a) {
+                    setMsg(ACCESS_CODE_ERROR_MSG);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Login';
+                    return;
+                  }
+                  
+                  // Password Validation (If all checks pass)
+                  const hash = await hashPassword(p);
                   if(savedPass === hash){
                     localStorage.setItem(KEY_LOGGED, "true");
                     setMsg("Login successful! Redirecting...", true);
@@ -517,15 +521,9 @@
               
               inputPass.value = ""; 
 
-              // Check if already registered but missing version (legacy user scenario)
-              if (localStorage.getItem(KEY_REGISTERED) === "1" && !localStorage.getItem(KEY_VERSION)) {
-                  console.warn("No version saved for registered user. Saving current version for future checks.");
-                  localStorage.setItem(KEY_VERSION, LMS_CURRENT_VERSION);
-              }
-              
-              // NEW: Set Footer Content using the constant
+              // Set Footer Content using the constant
               if (footerCredit) {
-                  footerCredit.textContent = `Design by : Gayan Karunathilaka | GK ICT School | AC 0.2 | Software.GKICT Ai 2025 | ${LMS_CURRENT_VERSION}`;
+                  footerCredit.textContent = `Design by : Gayan Karunathilaka | GK ICT School | Software.GKICT Ai 2025 | ${LMS_CURRENT_VERSION}`;
               }
               
               setMode(initialMode);
@@ -539,5 +537,3 @@
 
 </body>
 </html>
-
-
