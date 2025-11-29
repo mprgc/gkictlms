@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ඔන්ලයින් අධ්‍යාපන වෙළඳසැල</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use Inter font family -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fc; /* Light background to match the app feel */
+        }
+        /* Custom styles for the blue and green colors used in the provided image */
+        .btn-primary {
+            background-color: #3B82F6; /* A clean blue */
+            color: white;
+            transition: background-color 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #2563EB;
+        }
+        .btn-secondary {
+            background-color: #10B981; /* A nice green */
+            color: white;
+            transition: background-color 0.3s;
+        }
+        .btn-secondary:hover {
+            background-color: #059669;
+        }
+        /* Custom CSS for the image slider track transition */
+        #slider-track {
+            transition: transform 0.5s ease-in-out; /* Smooth sliding animation */
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header - Updated Title -->
+    <header class="bg-white shadow-md p-4 sticky top-0 z-10">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <!-- UPDATED TITLE HERE -->
+            <h1 class="text-xl font-bold text-gray-800 flex items-center">GK ICT Tute Hub 📚 🛍️</h1>
+            <!-- Cart icon is kept only as a visual element, counter is removed as online ordering is disabled -->
+            <div class="text-blue-600 font-semibold flex items-center p-2 rounded-lg cursor-default">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content - Product Grid -->
+    <main class="max-w-4xl mx-auto p-4">
+        <h2 class="text-2xl font-bold text-gray-700 mb-2">පොත් සහ ටියුට් එකතුව</h2>
+        <!-- Slogan updated to text-gray-600 -->
+        <p class="text-lg text-gray-600 font-medium mb-6">ඔබේ අධ්‍යාපනයට අවශ්‍ය හොඳම සම්පත්, දැන් විශාල වට්ටම් යටතේ!</p>
+        
+        <!-- Image Slider Container (New Section) -->
+        <div class="relative w-full overflow-hidden rounded-xl shadow-lg mb-6 h-48 sm:h-64">
+            <!-- Slider Track: Holds all slides horizontally -->
+            <div id="slider-track" class="absolute top-0 left-0 h-full w-full flex">
+                <!-- Slides will be injected here by JavaScript -->
+            </div>
+            <!-- Indicators/Dots -->
+            <div id="slider-indicators" class="absolute bottom-3 left-0 right-0 flex justify-center space-x-2 z-10">
+                <!-- Indicators will be injected here by JavaScript -->
+            </div>
+        </div>
+        <!-- End Image Slider Container -->
+
+        <!-- IMPORTANT NOTIFICATION (Yellow) -->
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-xl mb-6 shadow-md">
+            <p class="font-bold text-lg flex items-center">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                වැදගත් දැනුම්දීම:
+            </p>
+            <p class="mt-1">මෙම නිෂ්පාදන ගුරුවරයාගෙන් පමණක් මිලදී ගත හැකිය. කරුණාකර ඔබට අවශ්‍ය නිෂ්පාදනය ගුරුවරයා හා සම්බන්ධ වී ලබාගන්න. </p>
+        </div>
+
+
+        <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Product Cards will be rendered here by JS -->
+        </div>
+    </main>
+
+    <!-- NEW SIMPLE FOOTER -->
+    <footer class="bg-gray-800 text-white p-6 mt-10 shadow-inner rounded-t-xl">
+        <div class="max-w-4xl mx-auto text-center">
+            <h4 class="text-lg font-bold mb-2">GK ICT Tute Hub 📚</h4>
+            <p class="text-sm text-gray-400 mb-1">
+                © 2025 සියලුම හිමිකම් ඇවිරිණි. | අධ්‍යාපනයට නව පියවරක්
+            </p>
+            <p class="text-xs text-gray-500">
+                විමසීම් සඳහා කරුණාකර ගුරුවරයා සම්බන්ධ කර ගන්න.
+            </p>
+        </div>
+    </footer>
+    <!-- End NEW SIMPLE FOOTER -->
+
+    <!-- Product Details Modal (Pop-up) -->
+    <!-- Backdrop: Initially transparent (bg-opacity-0) and non-interactive (pointer-events-none). Fades in on open. -->
+    <div id="product-modal" class="fixed inset-0 bg-black bg-opacity-0 z-50 flex items-center justify-center p-4 transition-opacity duration-300 pointer-events-none" onclick="closeModal(event)">
+        
+        <!-- Modal Content: Initially scaled down (scale-95) and fully transparent (opacity-0). Scales up and fades in on open. -->
+        <div id="modal-content" class="bg-white w-full max-w-lg p-6 rounded-2xl shadow-2xl transition-all duration-300 transform scale-95 opacity-0" onclick="event.stopPropagation()">
+            
+            <!-- Close Button -->
+            <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-600" onclick="closeModal()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+
+            <h3 class="text-2xl font-bold mb-4 text-gray-800 border-b pb-2">නිෂ්පාදන විස්තර</h3>
+            
+            <div class="flex flex-col sm:flex-row gap-4">
+                <!-- Image Placeholder -->
+                <div class="flex-shrink-0 w-full sm:w-1/3 h-48 bg-gray-100 rounded-xl overflow-hidden shadow-inner">
+                    <img id="modal-image" src="" alt="නිෂ්පාදන රූපය" onerror="this.onerror=null; this.src='https://placehold.co/400x400/ECECEC/6C757D?text=Book';" class="w-full h-full object-cover">
+                </div>
+                
+                <!-- Details -->
+                <div class="flex-grow">
+                    <h4 id="modal-title" class="text-xl font-bold mb-2 text-gray-900"></h4>
+                    
+                    <!-- NEW PRICE DISPLAY in Modal -->
+                    <div class="flex items-baseline space-x-3 mb-4">
+                        <!-- Discount Price (Large) -->
+                        <p class="text-blue-600 font-extrabold text-3xl" id="modal-price"></p>
+                        <!-- Old Price (Slashed) -->
+                        <p class="text-gray-400 line-through text-lg" id="modal-old-price"></p>
+                    </div>
+
+                    <p id="modal-description" class="text-gray-600 mb-6 text-sm"></p>
+                    
+                    <div class="flex flex-col space-y-3">
+                         <!-- Only the Close button remains. -->
+                         <button onclick="closeModal()" class="w-full py-3 rounded-xl font-semibold bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors">
+                             වසා දමන්න
+                         </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Success/Error Message Box (Only used for inquiry feedback now) -->
+    <div id="message-box" class="fixed bottom-4 right-4 p-4 rounded-xl shadow-lg text-white font-semibold transition-opacity duration-300 opacity-0" style="min-width: 200px;"></div>
+
+
+    <script>
+        // --- PRODUCT DATA ---
+        const products = [
+            {
+                id: 1,
+                title: "6 ශ්‍රේණිය - ICT මාර්ගෝපදේශය",
+                price: "රු. 450.00",
+                oldPrice: "රු. 750.00", 
+                description: "මෙම මාර්ගෝපදේශය 6 ශ්‍රේණියේ ICT විෂය නිර්දේශයේ සියලුම මූලික සංකල්ප ආවරණය කරයි. පැහැදිලි සටහන් සහ ප්‍රශ්න පත්‍ර ඇතුළත්.",
+                image: "https://placehold.co/400x400/3B82F6/ffffff?text=ICT+Guide"
+            },
+            {
+                id: 2,
+                title: "ගණිත අභ්‍යාස - 9 ශ්‍රේණිය (පොත)",
+                price: "රු. 780.00",
+                oldPrice: "රු. 1,300.00", 
+                description: "9 ශ්‍රේණියේ ගණිතය සඳහා අභ්‍යාස 200 කට අධික ප්‍රමාණයක් සහ විසඳුම් පියවරෙන් පියවර විස්තර කර ඇත.",
+                image: "https://placehold.co/400x400/FACC15/6C757D?text=Math+Book"
+            },
+            {
+                id: 3,
+                title: "විද්‍යා ටියුට් - අ.පො.ස. සාමාන්‍ය පෙළ",
+                price: "රු. 1,200.00",
+                oldPrice: "රු. 2,000.00", 
+                description: "සාමාන්‍ය පෙළ විද්‍යා විෂය සඳහා සම්පූර්ණ ටියුට් කට්ටලය. සෑම පාඩමක් සඳහාම සාරාංශගත සටහන් සහ පසුගිය විභාග ප්‍රශ්න.",
+                image: "https://placehold.co/400x400/10B981/ffffff?text=Science+Tute"
+            },
+            {
+                id: 4,
+                title: "ඉංග්‍රීසි ව්‍යාකරණ පොත",
+                price: "රු. 350.00",
+                oldPrice: "රු. 600.00", 
+                description: "මූලික ඉංග්‍රීසි ව්‍යාකරණ නීති සරලව තේරුම් ගැනීමට උපකාරී වේ. සියලුම ශ්‍රේණි සඳහා සුදුසුයි.",
+                image: "https://placehold.co/400x400/EC4899/ffffff?text=English+Grammar"
+            },
+
+                        {
+                id: 5,
+                title: "ඉංග්‍රීසි ව්‍යාකරණ පොත",
+                price: "රු. 350.00",
+                oldPrice: "රු. 600.00", 
+                description: "මූලික ඉංග්‍රීසි ව්‍යාකරණ නීති සරලව තේරුම් ගැනීමට උපකාරී වේ. සියලුම ශ්‍රේණි සඳහා සුදුසුයි.",
+                image: "https://placehold.co/400x400/EC4899/ffffff?text=English+Grammar"
+            },
+
+            {
+                id: 6,
+                title: "6 ශ්‍රේණිය - ICT මාර්ගෝපදේශය",
+                price: "රු. 450.00",
+                oldPrice: "රු. 750.00", 
+                description: "මෙම මාර්ගෝපදේශය 6 ශ්‍රේණියේ ICT විෂය නිර්දේශයේ සියලුම මූලික සංකල්ප ආවරණය කරයි. පැහැදිලි සටහන් සහ ප්‍රශ්න පත්‍ර ඇතුළත්.",
+                image: "https://placehold.co/400x400/3B82F6/ffffff?text=ICT+Guide"
+            },
+        ];
+
+        // --- GLOBAL DOM REFERENCES ---
+        const productList = document.getElementById('product-list');
+        const productModal = document.getElementById('product-modal');
+        const modalContent = document.getElementById('modal-content');
+        const modalTitle = document.getElementById('modal-title');
+        const modalPrice = document.getElementById('modal-price');
+        const modalOldPrice = document.getElementById('modal-old-price'); 
+        const modalDescription = document.getElementById('modal-description');
+        const modalImage = document.getElementById('modal-image');
+        const messageBox = document.getElementById('message-box');
+        
+        // --- PRODUCT RENDERING FUNCTIONS ---
+
+        /**
+         * Renders the product cards onto the main page.
+         */
+        function renderProducts() {
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100';
+                card.setAttribute('data-product-id', product.id);
+                
+                // Add event listener to open modal on click
+                card.onclick = () => openModal(product.id);
+
+                // Create the HTML content for the card
+                card.innerHTML = `
+                    <div class="h-48 rounded-xl overflow-hidden mb-4 shadow-inner">
+                        <img src="${product.image}" alt="${product.title}" 
+                            onerror="this.onerror=null; this.src='https://placehold.co/400x400/ECECEC/6C757D?text=Book';" 
+                            class="w-full h-full object-cover">
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-800 truncate">${product.title}</h3>
+                    <!-- Price display with old price slashed and new price prominent -->
+                    <div class="flex items-baseline space-x-2 mt-1">
+                        <p class="text-xl font-extrabold text-blue-600">${product.price}</p>
+                        <p class="text-sm text-gray-400 line-through">${product.oldPrice}</p>
+                    </div>
+                    <button class="mt-4 w-full py-2 rounded-xl font-semibold btn-primary shadow-md">
+                        විස්තර බලන්න
+                    </button>
+                `;
+
+                productList.appendChild(card);
+            });
+        }
+
+        // --- MODAL FUNCTIONS ---
+
+        /**
+         * Opens the product details modal and triggers the animation.
+         * @param {number} productId - The ID of the product to display.
+         */
+        function openModal(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            // Populate the modal with product data
+            modalTitle.textContent = product.title;
+            modalPrice.textContent = product.price; // Discounted Price
+            modalOldPrice.textContent = product.oldPrice; // Old Price
+            modalDescription.textContent = product.description;
+            modalImage.src = product.image;
+            
+            // Display and Animate the modal:
+            
+            // 1. Backdrop: Fade in opacity and enable interaction
+            productModal.classList.add('flex'); // Ensure the container is flex so content is centered
+            setTimeout(() => {
+                productModal.classList.add('bg-opacity-50', 'pointer-events-auto');
+                productModal.classList.remove('bg-opacity-0');
+            }, 10);
+            
+            // 2. Content: Scale up and fade in
+            setTimeout(() => {
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+            }, 50); 
+        }
+
+        /**
+         * Closes the product details modal and triggers the reverse animation.
+         * @param {Event} event - Optional event object for preventing close when clicking inside.
+         */
+        function closeModal(event) {
+            // Only close if the click is on the backdrop or the close button
+            if (event && event.target !== productModal) return; 
+
+            // 1. Content: Scale down and fade out
+            modalContent.classList.remove('scale-100', 'opacity-100');
+            modalContent.classList.add('scale-95', 'opacity-0');
+
+            // 2. Backdrop: Fade out opacity
+            productModal.classList.add('bg-opacity-0');
+            productModal.classList.remove('bg-opacity-50');
+            
+            // 3. Hide completely (disable interaction) after transition finishes (300ms)
+            setTimeout(() => {
+                productModal.classList.remove('pointer-events-auto', 'flex');
+            }, 300);
+        }
+        
+        // --- IMAGE SLIDER LOGIC (NEW) ---
+        
+        const sliderImages = [
+            { url: "https://placehold.co/800x400/3B82F6/ffffff?text=ICT+Study+Material", alt: "ICT සම්පත්" },
+            { url: "https://placehold.co/800x400/10B981/ffffff?text=Great+Discounts+Available", alt: "විශාල වට්ටම්" },
+            { url: "https://placehold.co/800x400/FACC15/000000?text=Quality+Education", alt: "ගුණාත්මක අධ්‍යාපන ද්‍රව්‍ය" },
+            { url: "https://placehold.co/800x400/EC4899/ffffff?text=Join+our+classes", alt: "අපේ පන්ති වලට එකතු වන්න" }
+        ];
+
+        let currentSlide = 0;
+        const slideInterval = 4000; // 4 seconds between slides
+        let sliderTimer;
+
+        const sliderTrack = document.getElementById('slider-track');
+        const sliderIndicators = document.getElementById('slider-indicators');
+
+        // Function to render slides and indicators
+        function renderSlider() {
+            // Set the track width to accommodate all slides (e.g., 4 slides = 400% width)
+            sliderTrack.style.width = `${sliderImages.length * 100}%`;
+
+            sliderImages.forEach((img, index) => {
+                // 1. Render Slides
+                const slide = document.createElement('div');
+                // w-full makes each slide 1/Nth of the track width, which is 100% of the viewport width.
+                slide.className = 'w-1/' + sliderImages.length + ' h-full flex-shrink-0'; 
+                slide.style.width = `${100 / sliderImages.length}%`; // Explicit width setting
+                slide.innerHTML = `<img src="${img.url}" alt="${img.alt}" class="w-full h-full object-cover">`;
+                sliderTrack.appendChild(slide);
+                
+                // 2. Render Indicators
+                const indicator = document.createElement('button');
+                indicator.className = 'w-2.5 h-2.5 rounded-full bg-white bg-opacity-50 hover:bg-opacity-100 transition-all duration-300';
+                indicator.setAttribute('aria-label', `Go to slide ${index + 1}`);
+                if (index === 0) {
+                    indicator.classList.remove('bg-opacity-50');
+                    indicator.classList.add('bg-opacity-100');
+                }
+                indicator.onclick = () => {
+                    goToSlide(index);
+                    resetTimer();
+                };
+                sliderIndicators.appendChild(indicator);
+            });
+        }
+
+        // Function to move to a specific slide
+        function goToSlide(index) {
+            // Handle looping (right-to-left animation)
+            if (index < 0) {
+                index = sliderImages.length - 1; 
+            } else if (index >= sliderImages.length) {
+                index = 0; 
+            }
+
+            // Calculate the percentage to translate the track (e.g., Slide 0: 0%, Slide 1: -25%, Slide 2: -50%)
+            const offset = -index * (100 / sliderImages.length); 
+            
+            // Apply the slide animation (right to left movement)
+            sliderTrack.style.transform = `translateX(${offset}%)`;
+            currentSlide = index;
+            
+            // Update indicators
+            updateIndicators();
+        }
+        
+        // Function to advance slide
+        function nextSlide() {
+            goToSlide(currentSlide + 1);
+        }
+        
+        // Function to update indicators' active state
+        function updateIndicators() {
+            document.querySelectorAll('#slider-indicators button').forEach((indicator, index) => {
+                if (index === currentSlide) {
+                    indicator.classList.remove('bg-opacity-50');
+                    indicator.classList.add('bg-opacity-100');
+                } else {
+                    indicator.classList.remove('bg-opacity-100');
+                    indicator.classList.add('bg-opacity-50');
+                }
+            });
+        }
+
+        // Function to reset interval timer
+        function resetTimer() {
+            clearInterval(sliderTimer);
+            sliderTimer = setInterval(nextSlide, slideInterval);
+        }
+
+        // --- INITIALIZATION ---
+        
+        // Initialize the product list and slider on page load
+        window.onload = function() {
+            renderProducts();
+            renderSlider();
+            resetTimer(); // Start the auto-slide timer
+        };
+
+    </script>
+</body>
+</html>
