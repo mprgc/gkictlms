@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10/11 ශ්‍රේණි ICT Zoom පන්ති කාලසටහන</title>
+    <!-- Tailwind CSS Script -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Setting up Inter font for better readability -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        /* Custom scrollbar for better appearance */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #9ca3af;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8 min-h-screen">
+
+    <div class="max-w-6xl mx-auto">
+        <!-- Main Header -->
+        <header class="text-center mb-12 p-6 bg-white rounded-xl shadow-lg">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 leading-tight">
+                GK ICT Online Zoom පන්ති කාලසටහන
+            </h1>
+            <p class="text-lg text-gray-500 mt-2">
+                10 සහ 11 ශ්‍රේණි සඳහා ICT විෂයයේ සියලුම Online පන්ති පහතින් බලන්න.
+            </p>
+        </header>
+
+        <!-- Grade 10 Section - ICT Live Class -->
+        <section class="mb-16">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-700 mb-6 border-b-4 border-cyan-500 pb-2">
+                <span class="bg-cyan-500 text-white px-3 py-1 rounded-full mr-2">10</span> 10 ශ්‍රේණිය - ICT
+            </h2>
+            <div id="grade-10-classes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Class Card 1: Grade 10 ICT -->
+                <div class="class-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300 border-t-4 border-cyan-500 col-span-1 md:col-span-2 lg:col-span-3 max-w-2xl mx-auto w-full">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">තොරතුරු හා සන්නිවේදන තාක්ෂණය (ICT)</h3>
+                    <p class="text-sm text-gray-500 mb-4">ගුරුවරයා: ගයාන් මිස්</p>
+                    <div class="space-y-2 mb-6">
+                        <div class="flex items-center text-gray-600">
+                            <svg class="w-5 h-5 mr-2 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span>වේලාව: බ්‍රහස්පතින්දා සවස 4:00 - 6:00</span>
+                        </div>
+                        <div class="flex items-center text-gray-600">
+                            <svg class="w-5 h-5 mr-2 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.881L11.19 13.518m1.26-2.522l3.385-3.385a4 4 0 10-5.656-5.656l-1.1-1.1"></path></svg>
+                            <span>Zoom ID: 555 1111 2222</span>
+                        </div>
+                    </div>
+                    <button onclick="joinClass('https://zoom.us/j/55511112222')"
+                        class="w-full py-3 bg-cyan-500 text-white font-semibold rounded-lg shadow-md hover:bg-cyan-600 transition duration-300 transform hover:scale-[1.01] active:scale-[0.98]">
+                        පන්තියට එක්වන්න
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Grade 11 Section - ICT Live Class -->
+        <section class="mb-16">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-700 mb-6 border-b-4 border-indigo-500 pb-2">
+                <span class="bg-indigo-500 text-white px-3 py-1 rounded-full mr-2">11</span> 11 ශ්‍රේණිය - ICT
+            </h2>
+            <div id="grade-11-classes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Class Card 1: Grade 11 ICT -->
+                <div class="class-card bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition duration-300 border-t-4 border-indigo-500 col-span-1 md:col-span-2 lg:col-span-3 max-w-2xl mx-auto w-full">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">තොරතුරු හා සන්නිවේදන තාක්ෂණය (ICT)</h3>
+                    <p class="text-sm text-gray-500 mb-4">ගුරුවරයා: ගයාන් සර්</p>
+                    <div class="space-y-2 mb-6">
+                        <div class="flex items-center text-gray-600">
+                            <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span>වේලාව: සෙනසුරාදා උදේ 9:00 - 11:00</span>
+                        </div>
+                        <div class="flex items-center text-gray-600">
+                            <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.881L11.19 13.518m1.26-2.522l3.385-3.385a4 4 0 10-5.656-5.656l-1.1-1.1"></path></svg>
+                            <span>Zoom ID: 777 3333 4444</span>
+                        </div>
+                    </div>
+                    <button onclick="joinClass('https://zoom.us/j/77733334444')"
+                        class="w-full py-3 bg-indigo-500 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-600 transition duration-300 transform hover:scale-[1.01] active:scale-[0.98]">
+                        පන්තියට එක්වන්න
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Class Recordings Section (New) -->
+        <section class="mt-16">
+            <h2 class="text-3xl font-bold text-gray-700 mb-8 border-b-4 border-teal-500 pb-3 text-center">
+                <svg class="w-8 h-8 inline-block text-teal-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.664v6.672a1 1 0 01-1.447.892L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                පසුගිය පන්ති පටිගත කිරීම් (Old Recordings)
+            </h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Grade 10 Recordings List -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-cyan-500">
+                    <h3 class="text-2xl font-semibold text-cyan-600 mb-4">10 ශ්‍රේණිය ICT පටිගත කිරීම්</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-150">
+                            <span class="text-gray-700 font-medium">👉 පාඩම 1: පරිගණක පද්ධති හැඳින්වීම</span>
+                            <a href="#" target="_blank" class="text-sm px-3 py-1 bg-teal-500 text-white rounded-full hover:bg-teal-600 transition transform hover:scale-105 active:scale-95">නරඹන්න</a>
+                        </li>
+                        <li class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-150">
+                            <span class="text-gray-700 font-medium">👉 පාඩම 2: දත්ත නිරූපණය</span>
+                            <a href="#" target="_blank" class="text-sm px-3 py-1 bg-teal-500 text-white rounded-full hover:bg-teal-600 transition transform hover:scale-105 active:scale-95">නරඹන්න</a>
+                        </li>
+                        <li class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-150">
+                            <span class="text-gray-700 font-medium">👉 පාඩම 3: දත්ත සමුදායන්</span>
+                            <a href="#" target="_blank" class="text-sm px-3 py-1 bg-teal-500 text-white rounded-full hover:bg-teal-600 transition transform hover:scale-105 active:scale-95">නරඹන්න</a>
+                        </li>
+                        <!-- NEW RECORDING ADDED FOR GRADE 10 -->
+                        <li class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-150">
+                            <span class="text-gray-700 font-medium">👉 පාඩම 4: දත්ත සන්නිවේදනය (Data Communication)</span>
+                            <a href="#" target="_blank" class="text-sm px-3 py-1 bg-teal-500 text-white rounded-full hover:bg-teal-600 transition transform hover:scale-105 active:scale-95">නරඹන්න</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Grade 11 Recordings List -->
+                <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-indigo-500">
+                    <h3 class="text-2xl font-semibold text-indigo-600 mb-4">11 ශ්‍රේණිය ICT පටිගත කිරීම්</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-150">
+                            <span class="text-gray-700 font-medium">👉 පාඩම 1: ඇල්ගොරිතම සහ ප්‍රවාහ සටහන්</span>
+                            <a href="#" target="_blank" class="text-sm px-3 py-1 bg-teal-500 text-white rounded-full hover:bg-teal-600 transition transform hover:scale-105 active:scale-95">නරඹන්න</a>
+                        </li>
+                        <li class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-150">
+                            <span class="text-gray-700 font-medium">👉 පාඩම 2: වෙබ් තාක්ෂණය</span>
+                            <a href="#" target="_blank" class="text-sm px-3 py-1 bg-teal-500 text-white rounded-full hover:bg-teal-600 transition transform hover:scale-105 active:scale-95">නරඹන්න</a>
+                        </li>
+                        <li class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-150">
+                            <span class="text-gray-700 font-medium">👉 පාඩම 3: සයිබර් ආරක්ෂාව</span>
+                            <a href="#" target="_blank" class="text-sm px-3 py-1 bg-teal-500 text-white rounded-full hover:bg-teal-600 transition transform hover:scale-105 active:scale-95">නරඹන්න</a>
+                        </li>
+                        <!-- NEW RECORDING ADDED FOR GRADE 11 -->
+                        <li class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-150">
+                            <span class="text-gray-700 font-medium">👉 පාඩම 4: නවීන තාක්ෂණික ප්‍රවණතා (Modern Tech Trends)</span>
+                            <a href="#" target="_blank" class="text-sm px-3 py-1 bg-teal-500 text-white rounded-full hover:bg-teal-600 transition transform hover:scale-105 active:scale-95">නරඹන්න</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="text-center mt-16 pt-6 border-t border-gray-300">
+            <p class="text-sm text-gray-500">
+                මෙම පිටුව සියලුම උපාංග සඳහා ප්‍රතිචාරාත්මකව නිර්මාණය කර ඇත.
+            </p>
+        </footer>
+    </div>
+
+    <!-- Custom Modal/Message Box for Alerts -->
+    <div id="modal-container" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div class="bg-white p-6 rounded-lg shadow-2xl max-w-sm w-full transform transition-all duration-300 scale-95 opacity-0" id="modal-content">
+            <h4 class="text-xl font-bold text-gray-800 mb-3">අවධානය!</h4>
+            <p id="modal-message" class="text-gray-600 mb-6"></p>
+            <button onclick="closeModal()" class="w-full py-2 bg-indigo-500 text-white font-semibold rounded-lg hover:bg-indigo-600 transition duration-300">
+                හරි
+            </button>
+        </div>
+    </div>
+
+
+    <script>
+        // JavaScript function to handle joining the class
+        function joinClass(zoomLink) {
+            // In a real application, this would open the Zoom link directly.
+            // Since we are running in an isolated environment, we will use a custom modal for feedback.
+            
+            // Attempt to open the link
+            window.open(zoomLink, '_blank');
+
+            // Show confirmation modal
+            const message = `ඔබ ${zoomLink} හරහා Zoom පන්තියට සම්බන්ධ වීමට උත්සාහ කරයි. ඔබව නව ටැබ් එකකට යොමු කරනු ඇත.`;
+            openModal(message);
+        }
+
+        // Modal functions (as alert() and confirm() are forbidden)
+        const modalContainer = document.getElementById('modal-container');
+        const modalContent = document.getElementById('modal-content');
+        const modalMessage = document.getElementById('modal-message');
+
+        function openModal(message) {
+            modalMessage.textContent = message;
+            modalContainer.classList.remove('hidden');
+            // Animate in
+            setTimeout(() => {
+                modalContent.classList.remove('opacity-0', 'scale-95');
+                modalContent.classList.add('opacity-100', 'scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            // Animate out
+            modalContent.classList.remove('opacity-100', 'scale-100');
+            modalContent.classList.add('opacity-0', 'scale-95');
+            setTimeout(() => {
+                modalContainer.classList.add('hidden');
+            }, 300); // Duration matches CSS transition
+        }
+
+    </script>
+</body>
+</html>
