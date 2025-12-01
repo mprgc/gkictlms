@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>තොරතුරු තාක්ෂණ Flashcards - සිංහල</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter font (or suitable sans-serif fallback) -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background-color: #e0f7fa; /* Light Blue Background */
+            display: flex; /* Ensure body uses flex for centering, especially on mobile */
+            flex-direction: column;
+        }
+        
+        /* Custom CSS for the 3D Flip Effect */
+        .scene {
+            width: 100%;
+            /* Mobile-friendly: Use viewport height percentage, but limit max height */
+            height: 60vh; 
+            max-height: 400px;
+            perspective: 1000px; /* Defines the 3D space */
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .card.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden; /* Hide the back side when facing away */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            
+            /* Responsive Font and Padding Defaults (Mobile) */
+            font-size: 1.125rem; /* text-lg equivalent */
+            padding: 1.5rem; 
+            font-weight: 600;
+        }
+        
+        /* Tablet/Desktop Adjustments */
+        @media (min-width: 640px) { 
+            .card-face {
+                font-size: 1.25rem; /* text-xl equivalent */
+                padding: 2rem;
+            }
+        }
+
+        /* Card Colors - UPDATED */
+        .card-front {
+            /* QUESTION SIDE: White */
+            background-color: #ffffff; 
+            color: #1f2937; /* Dark text for contrast */
+            border: 4px solid #3b82f6; /* Blue 500 border (to match theme) */
+        }
+
+        .card-back {
+            /* ANSWER SIDE: Dark Gray (Requested by user) */
+            background-color: #4b5563; /* Gray 600 */
+            color: #ffffff; /* White text for contrast */
+            transform: rotateY(180deg);
+            border: 4px solid #3b82f6; /* Blue 500 border (to match theme) */
+        }
+
+        /* Congratulation Animation Styles */
+        #congrats-message {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Darker background for focus */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+        }
+
+        #congrats-message.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.1) translateY(-20px);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.2) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        #congrats-message h2 {
+            animation: bounceIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        #congrats-message p {
+            animation: bounceIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards 0.2s; /* Slight delay */
+            font-size: 1.5rem;
+        }
+        
+        /* Firework Styles */
+        .firework {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            opacity: 0;
+            animation: firework 1s ease-out forwards;
+        }
+
+        @keyframes firework {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        /* Restart Button Pulse Animation */
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); /* Green shadow */
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+            }
+        }
+        #restart-btn {
+            animation: pulse 2s infinite;
+        }
+
+    </style>
+</head>
+<body class="flex items-center justify-center p-4">
+
+    <div class="w-full max-w-2xl">
+        
+        <h1 class="text-4xl font-bold text-center text-blue-800 mt-4 sm:mt-0 mb-2"> GK ICT Flashcard</h1>
+        
+        <p class="text-xl font-medium text-center text-gray-700 mb-8">දැනුම වර්ධනයට ප්‍රශ්න 50ක් (Revision Flashcards)</p>
+        
+        <!-- Card Display Area -->
+        <div class="scene mb-8">
+            <div id="flashcard" class="card">
+                <div id="card-front" class="card-face card-front">
+                    <!-- ප්‍රශ්නය මෙහි දිස්වේ -->
+                </div>
+                <div id="card-back" class="card-face card-back">
+                    <!-- පිළිතුර මෙහි දිස්වේ -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation and Status (Updated to ensure equal width buttons) -->
+        <div class="flex justify-between items-center space-x-2">
+            
+            <!-- Previous Button - Ensure w-1/3 on mobile and w-auto on larger screens -->
+            <!-- Changed sm:w-auto to w-1/3 for consistency across all screen sizes for the button itself -->
+            <button id="prev-btn" class="w-1/3 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-sm rounded-lg shadow-md transition duration-300 transform hover:scale-105 disabled:opacity-50 sm:px-6 sm:py-3 sm:text-base" disabled>
+                <span class="mr-1 sm:mr-2">←</span> පෙර
+            </button>
+
+            <!-- Status Indicator -->
+            <div id="status" class="text-lg font-medium text-blue-700 sm:text-xl w-1/3 text-center">
+                <!-- කාඩ්පත් තත්ත්වය මෙහි දිස්වේ -->
+            </div>
+            
+            <!-- Next Button - Use w-1/3 consistently -->
+            <button id="next-btn" class="w-1/3 px-3 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold text-sm rounded-lg shadow-md transition duration-300 transform hover:scale-105 sm:px-6 sm:py-3 sm:text-base">
+                ඊළඟට <span class="ml-1 sm:ml-2">→</span>
+            </button>
+        </div>
+        
+        <div class="text-center mt-4 text-sm text-blue-400">
+            පිළිතුර බැලීමට කාඩ්පත මත ක්ලික් කරන්න.
+        </div>
+    </div>
+
+    <!-- Congratulation Message -->
+    <div id="congrats-message">
+        <h2>සුභ පැතුම්! 🎉</h2>
+        <p>ඔබ සියලු ප්‍රශ්න සාර්ථකව සම්පූර්ණ කළා!</p>
+        <button id="restart-btn" class="mt-8 px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg shadow-xl transition duration-300 transform hover:scale-105">
+            නැවත ආරම්භ කරන්න
+        </button>
+    </div>
+
+    <script>
+        // 50 Sinhala IT Q&A Flashcards
+        const flashcards = [
+            { question: "URL යන්නෙහි දිගු ස්වරූපය කුමක්ද?", answer: "Uniform Resource Locator." },
+            { question: "වීඩියෝ සම්මන්ත්‍රණ (video conferencing) සඳහා භාවිතා කරන මෘදුකාංග සඳහා උදාහරණ දෙකක් දෙන්න.", answer: "Zoom, Skype, GoToMeeting, Webex." },
+            { question: "විද්‍යුත් තැපෑලක (e-mail) ලැබුණු පණිවිඩයක් වෙනත් අයෙකුට යැවීම හැඳින්වෙන්නේ කුමන නමකින්ද?", answer: "Forward කිරීම." },
+            { question: "විද්‍යුත් තැපෑලක් සමඟ ගොනු (files) යැවීමේ ක්‍රියාවලිය කුමක්ද?", answer: "Attach කිරීම." },
+            { question: "විද්‍යුත් තැපෑලක To ක්ෂේත්‍රයේ යොදනු ලබන්නේ කුමක්ද?", answer: "පණිවිඩයේ ප්‍රධාන ලබන්නාගේ විද්‍යුත් තැපැල් ලිපිනය." },
+            { question: "විද්‍යුත් තැපෑලක Cc යන්නෙහි තේරුම කුමක්ද?", answer: "Carbon Copy, එනම් පණිවිඩයේ පිටපතක් යවන අනෙකුත් ලබන්නන්." },
+            { question: "විද්‍යුත් තැපෑලක Bcc යන්නෙහි තේරුම සහ එහි විශේෂත්වය කුමක්ද?", answer: "Blind Carbon Copy, මෙහි යොදන ලබන්නන්ව To හෝ Cc හි සිටින අනෙක් අයට නොපෙනේ." },
+            { question: "විද්‍යුත් තැපෑලක Subject ක්ෂේත්‍රයේ ඇතුළත් කළ යුත්තේ කුමක්ද?", answer: "පණිවිඩයේ අන්තර්ගතය පිළිබඳ කෙටි මාතෘකාවක්." },
+            { question: "ඔබට ලැබෙන විද්‍යුත් තැපැල් පණිවිඩ ගබඩා වන ස්ථානය කුමක්ද?", answer: "Inbox." },
+            { question: "ඔබ විසින් යවන ලද විද්‍යුත් තැපැල් පණිවිඩ ගබඩා වන ස්ථානය කුමක්ද?", answer: "Sent." },
+            { question: "අනවශ්‍ය හෝ සැක සහිත විද්‍යුත් තැපැල් පණිවිඩ සාමාන්‍යයෙන් යොමු වන ෆෝල්ඩරය කුමක්ද?", answer: "Junk හෝ Spam." },
+            { question: "මකා දැමූ විද්‍යුත් තැපැල් පණිවිඩ තාවකාලිකව ගබඩා වන ස්ථානය කුමක්ද?", answer: "Trash." },
+            { question: "විද්‍යුත් තැපැල් ලිපින ගබඩා කර තබා ගන්නා විශේෂාංගය කුමක්ද?", answer: "Contacts හෝ Address book." },
+            { question: "විද්‍යුත් තැපැල් ලිපිනයක අනිවාර්යයෙන්ම අඩංගු විය යුතු සංකේතය කුමක්ද?", answer: "@ සංකේතය." },
+            { question: "HTML යන්නෙහි දිගු ස්වරූපය කුමක්ද?", answer: "Hyper Text Markup Language." },
+            { question: "වෙබ් පිටුවක ප්‍රධාන අන්තර්ගතය ඇතුළත් කරන්නේ කුමන HTML ටැගය තුළද?", answer: "body ටැගය තුළ." },
+            { question: "වෙබ් පිටුවක මාතෘකා තීරුවේ (title bar) දිස්වන නම සැකසීමට භාවිතා කරන HTML ටැගය කුමක්ද?", answer: "title ටැගය." },
+            { question: "HTML හි පේළියක් බිඳීමට (line break) භාවිතා කරන ටැගය කුමක්ද?", answer: "br ටැගය." },
+            { question: "HTML හි විශාලතම ශීර්ෂය (heading) දැක්වීමට භාවිතා කරන ටැගය කුමක්ද?", answer: "h1 ටැගය." },
+            { question: "HTML හි කුඩාම ශීර්ෂය (heading) දැක්වීමට භාවිතා කරන ටැගය කුමක්ද?", answer: "h6 ටැගය." },
+            { question: "HTML හි අන්තර්ගතය වෙබ් පිටුවේ මධ්‍යයට ගැනීමට භාවිතා කරන ටැගය කුමක්ද?", answer: "center ටැගය." },
+            { question: "HTML හි ඡේදයක් (paragraph) නිර්මාණය කිරීමට භාවිතා කරන ටැගය කුමක්ද?", answer: "p ටැගය." },
+            { question: "වෙබ් පිටුවක පසුබිම් වර්ණය (background color) වෙනස් කිරීමට භාවිතා කරන ටැගය කුමක්ද?", answer: "bgcolor ටැගය." },
+            { question: "වෙබ් පිටුවකට රූපයක් (image) එක් කිරීමට භාවිතා කරන ප්‍රධාන ටැගය සහ එහි අනිවාර්ය ගුණාංගය (attribute) කුමක්ද?", answer: "img src ටැගය. src යනු අනිවාර්ය ගුණාංගයයි." },
+            { question: "වෙබ් පිටුවක අධිසන්ධාන (hyperlink) නිර්මාණය කිරීමට භාවිතා කරන ටැගය කුමක්ද?", answer: "a href ටැගය." },
+            { question: "HTML හි අක්ෂර තද පැහැයෙන් (bold) දැක්වීමට භාවිතා කරන ටැගය කුමක්ද?", answer: "b ටැගය." },
+            { question: "HTML හි අක්ෂර ඇල කර (italic) දැක්වීමට භාවිතා කරන ටැගය කුමක්ද?", answer: "i ටැගය." },
+            { question: "HTML හි අක්ෂර යටින් ඉරක් ඇඳ (underline) දැක්වීමට භාවිතා කරන ටැගය කුමක්ද?", answer: "u ටැගය." },
+            { question: "HTML කේත ලිවීම සඳහා භාවිතා කළ හැකි සරල text editor මෘදුකාංගයක් නම් කරන්න.", answer: "Notepad." },
+            { question: "HTML හි ටැගයක් අවසන් කරන බව දැක්වීමට (closing tag) භාවිතා කරන සංකේතය කුමක්ද?", answer: "/ (forward slash) සංකේතය." },
+            { question: "අනුන්ගේ පරිගණක පද්ධති වලට අනවසරයෙන් ඇතුල් වීම හඳුන්වන්නේ කුමන නමකින්ද?", answer: "හැකින් (hacking)." },
+            { question: "පරිගණකයකට හානි කිරීමේ අරමුණින් නිර්මාණය කරන ලද වැඩසටහන් පොදුවේ හඳුන්වන්නේ කෙසේද?", answer: "පරිගණක වෛරස (computer virus)." },
+            { question: "පරිගණක වෛරස වලින් ආරක්ෂා වීම සඳහා ස්ථාපනය කරන මෘදුකාංග වර්ගය කුමක්ද?", answer: "ප්‍රති-වයිරස මෘදුකාංග (antivirus software)." },
+            { question: "බලපත්‍රයක් නොමැතිව මෘදුකාංග පිටපත් කර භාවිතා කිරීම හඳුන්වන්නේ කුමන නමකින්ද?", answer: "මෘදුකාංග මුහුදු කොල්ලකෑම (software piracy)." },
+            { question: "මෘදුකාංගයක් භාවිතා කිරීමේ නීති සහ කොන්දේසි ඇතුළත් ලේඛනය කුමක්ද?", answer: "බලපත්‍ර ගිවිසුම (licence agreement)." },
+            { question: "අන්තර්ජාලය හරහා අන් අයට හිරිහැර කිරීම, බිය ගැන්වීම හෝ අපහසුතාවයට පත් කිරීම හඳුන්වන්නේ කෙසේද?", answer: "සයිබර් හිරිහැර කිරීම (cyberbullying)." },
+            { question: "සයිබර් හිරිහැර කිරීම් සඳහා බහුලව භාවිතා වන සමාජ මාධ්‍ය වේදිකා කිහිපයක් නම් කරන්න.", answer: "Facebook, Instagram, Snapchat, Twitter." },
+            { question: "SMS යන්නෙහි දිගු ස්වරූපය කුමක්ද?", answer: "Short Message Service." },
+            { question: "පරිශීලකයාගේ සංවේදී තොරතුරු (මුරපද, ක්‍රෙඩිට් කාඩ්පත් අංක) සොරකම් කිරීමට යොදාගන්නා වංචනික ක්‍රමය කුමක්ද?", answer: "ෆිෂින් (phishing)." },
+            { question: "ආරක්ෂාව සඳහා භාවිතා කළ යුතු ශක්තිමත් මුරපදයක (strong password) අඩංගු විය යුතු අංග මොනවාද?", answer: "ඉංග්‍රීසි ලොකු අකුරු, කුඩා අකුරු, ඉලක්කම් සහ $, *, #, @ වැනි විශේෂ සංකේත." },
+            { question: "අන්තර්ජාලයේ සැරිසරන විට හදිසියේ මතුවන අනවශ්‍ය වෙළඳ දැන්වීම් හෝ පණිවිඩ හඳුන්වන්නේ කෙසේද?", answer: "Pop-ups." },
+            { question: "මෙහෙයුම් පද්ධතියක ආරක්ෂාව තහවුරු කිරීමට නිරතුරුවම කළ යුතු වැදගත් දෙයක් නම් කරන්න.", answer: "ස්වයංක්‍රීය යාවත්කාලීන කිරීම් ක්‍රියාත්මක කර තැබීම (turn on automatic updates)." },
+            { question: "HTML හි අක්ෂරවල වර්ණය (font color) සහ ශෛලිය (font style/face) වෙනස් කිරීමට භාවිතා කරන ටැගය කුමක්ද?", answer: "font ටැගය (උදා: font color, font face)." },
+            { question: "විද්‍යුත් තැපැල් සේවා සපයන්නන් සඳහා උදාහරණ තුනක් දෙන්න.", answer: "Gmail, Yahoo Mail, Outlook Mail." },
+            { question: "HTML හි අංක යෙදූ ලැයිස්තුවක් (ordered list) සෑදීමට භාවිතා කරන ටැගය කුමක්ද?", answer: "ol ටැගය." },
+            { question: "HTML හි බුලට් යෙදූ ලැයිස්තුවක් (unordered list) සෑදීමට භාවිතා කරන ටැගය කුමක්ද?", answer: "ul ටැගය." },
+            { question: "වෙබ් පිටුවක රූපයක් යෙදීම සඳහා භාවිතා කරන HTML ටැගය කුමක්ද?", answer: "img ටැගය." },
+            { question: "USB ධාවකයක් (USB drive) හරහා පරිගණකයකට පැතිරිය හැකි තර්ජනය කුමක්ද?", answer: "පරිගණක වෛරස." },
+            { question: "දත්ත වල ආරක්ෂාව සඳහා, ඒවා තේරුම්ගත නොහැකි ආකෘතියකට පරිවර්තනය කිරීමේ ක්‍රියාවලිය කුමක්ද?", answer: "Encrypt කිරීම." },
+            { question: "වෙබ් පිටුවක මාතෘකාවක් යෙදීම සඳහා භාවිතා නොකරන HTML ටැගය කුමක්ද?", answer: "h7 ටැගය." }
+        ];
+
+        let currentCardIndex = 0;
+        let isFlipped = false;
+
+        // DOM elements
+        const cardElement = document.getElementById('flashcard');
+        const frontElement = document.getElementById('card-front');
+        const backElement = document.getElementById('card-back');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const statusElement = document.getElementById('status');
+        const congratsMessage = document.getElementById('congrats-message');
+        const restartBtn = document.getElementById('restart-btn');
+        
+        // Sinhala texts for the UI
+        const UI_TEXT = {
+            frontLabel: "ප්‍රශ්නය:",
+            backLabel: "පිළිතුර:",
+            cardCount: (current, total) => `${current}/${total}`
+        };
+
+        // Function to update the card content
+        function renderCard() {
+            const cardData = flashcards[currentCardIndex];
+            
+            // Set the question and answer. Responsive text classes are managed by CSS now.
+            frontElement.innerHTML = `<p class="text-2xl sm:text-3xl font-bold mb-4">${UI_TEXT.frontLabel}</p><p>${cardData.question}</p>`;
+            backElement.innerHTML = `<p class="text-2xl sm:text-3xl font-bold mb-4">${UI_TEXT.backLabel}</p><p>${cardData.answer}</p>`;
+            
+            // Update status indicator
+            statusElement.textContent = UI_TEXT.cardCount(currentCardIndex + 1, flashcards.length);
+            
+            // Update button states
+            prevBtn.disabled = currentCardIndex === 0;
+            // Disable next button if it's the last card, unless we are showing congrats
+            nextBtn.disabled = currentCardIndex === flashcards.length - 1 && congratsMessage.classList.contains('show');
+        }
+
+        // Function to flip the card
+        function flipCard() {
+            if (!congratsMessage.classList.contains('show')) { // Only flip if congrats message is hidden
+                isFlipped = !isFlipped;
+                if (isFlipped) {
+                    cardElement.classList.add('is-flipped');
+                } else {
+                    cardElement.classList.remove('is-flipped');
+                }
+            }
+        }
+
+        // Function to move to the next card
+        function nextCard() {
+            if (currentCardIndex < flashcards.length - 1) {
+                // Check if card is flipped, flip it back before moving
+                if (isFlipped) {
+                    cardElement.classList.remove('is-flipped');
+                    isFlipped = false;
+                    // Wait for the flip animation to finish before showing the next card
+                    setTimeout(() => {
+                        currentCardIndex++;
+                        renderCard();
+                    }, 400); // Half of the transition time (0.8s)
+                } else {
+                    currentCardIndex++;
+                    renderCard();
+                }
+            } else if (currentCardIndex === flashcards.length - 1) {
+                // If it's the last card and next is pressed, show congratulations
+                showCongratulations();
+            }
+        }
+
+        // Function to move to the previous card
+        function prevCard() {
+            if (currentCardIndex > 0) {
+                // Check if card is flipped, flip it back before moving
+                if (isFlipped) {
+                    cardElement.classList.remove('is-flipped');
+                    isFlipped = false;
+                    // Wait for the flip animation to finish before showing the next card
+                    setTimeout(() => {
+                        currentCardIndex--;
+                        renderCard();
+                    }, 400);
+                } else {
+                    currentCardIndex--;
+                    renderCard();
+                }
+            }
+        }
+
+        function showCongratulations() {
+            // Check again if it's already showing to prevent multiple calls
+            if (congratsMessage.classList.contains('show')) return;
+            
+            void congratsMessage.offsetWidth; // Force reflow
+            congratsMessage.classList.add('show');
+            document.querySelector('.w-full.max-w-2xl').classList.add('hidden'); // Hide main content
+            nextBtn.disabled = true; // Disable next button
+
+            // Add fun fireworks effect
+            for (let i = 0; i < 15; i++) {
+                // Use a random size for fireworks
+                createFirework(Math.random() * window.innerWidth, Math.random() * window.innerHeight, Math.floor(Math.random() * 8) + 3); 
+            }
+        }
+
+        function hideCongratulations() {
+            congratsMessage.classList.remove('show');
+            // Wait for fade-out transition (0.5s) before resetting display
+            setTimeout(() => {
+                document.querySelector('.w-full.max-w-2xl').classList.remove('hidden'); // Show main content
+                nextBtn.disabled = false; // Enable for the next round
+            }, 500);
+        }
+
+        function restartApp() {
+            currentCardIndex = 0;
+            isFlipped = false;
+            cardElement.classList.remove('is-flipped');
+            hideCongratulations();
+            renderCard();
+        }
+
+        // Firework effect - added size parameter
+        function createFirework(x, y, size) {
+            const firework = document.createElement('div');
+            firework.classList.add('firework');
+            firework.style.left = `${x}px`;
+            firework.style.top = `${y}px`;
+            firework.style.width = `${size}px`;
+            firework.style.height = `${size}px`;
+            firework.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
+            document.body.appendChild(firework);
+
+            setTimeout(() => {
+                firework.remove();
+            }, 1000); // Remove after animation
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initial render
+            renderCard();
+            
+            // Card flip event
+            cardElement.addEventListener('click', flipCard);
+            
+            // Navigation events
+            nextBtn.addEventListener('click', nextCard);
+            prevBtn.addEventListener('click', prevCard);
+            restartBtn.addEventListener('click', restartApp); // Add restart button listener
+
+            // Keyboard navigation (optional, but good for usability)
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' && !congratsMessage.classList.contains('show')) {
+                    e.preventDefault(); // Prevent scrolling
+                    flipCard();
+                } else if (e.key === 'ArrowRight' && !congratsMessage.classList.contains('show')) {
+                    nextCard();
+                } else if (e.key === 'ArrowLeft' && !congratsMessage.classList.contains('show')) {
+                    prevCard();
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
