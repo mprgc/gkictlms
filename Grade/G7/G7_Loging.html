@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GK ICT LMS Login</title>
+    <!-- Include Tailwind CSS via CDN --><script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* NEW: Blur Background Image Styles */
+        body {
+            /* Use a sample URL. You can replace this with your preferred image URL. */
+            background-image: url('../../img/login_back.jpg');
+            background-size: cover; /* Cover the entire viewport */
+            background-position: center;
+            background-attachment: fixed; /* Keep image fixed when scrolling */
+            /* Add a slightly dark overlay or blur for readability of foreground elements */
+            
+            /* The blur effect is applied to the pseudo-element overlay for better browser support and control */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh; 
+            padding: 1rem;
+        }
+        
+        /* Pseudo-element to apply the blur effect and dark overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /* Re-use the background image for the blur effect */
+            background-image: inherit;
+            background-size: inherit;
+            background-position: inherit;
+            background-attachment: inherit;
+            
+            /* Apply the blur filter */
+            filter: blur(5px); /* Adjust the blur intensity (e.g., 5px, 10px) as needed */
+            
+            /* Optional: Add a subtle dark overlay for contrast */
+            background-color: rgba(0, 0, 0, 0.2); 
+            
+            z-index: -1; /* Place behind all content */
+        }
+
+
+        /* The main content container needs a slightly transparent background to see the blur */
+        #authContainer {
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+            backdrop-filter: blur(10px); /* Optional: Blur the card itself slightly */
+            z-index: 10;
+        }
+
+        /* This class is referenced by the JS for strict hiding/showing */
+        .hidden-strict {
+            display: none !important;
+        }
+
+        /* NEW: Styles for fade-in/fade-out animation */
+        .modal-overlay {
+            transition: opacity 0.3s ease-out;
+        }
+        .modal-content {
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            transform: translateY(20px); /* Initial state for slide-up effect */
+            opacity: 0;
+        }
+        .modal-show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <!-- Auth Container --><div id="authContainer" class="w-full max-w-sm rounded-xl shadow-2xl p-5 md:p-6 mb-8">
+        
+        <h2 class="text-2xl font-bold text-gray-800 text-center mb-6">GK ICT LMS Login</h2>
+
+        <!-- Tabs Container --><div class="flex p-1 bg-gray-100 rounded-lg mb-6">
+            <button data-mode="login" class="tab w-1/2 py-2 text-sm font-semibold rounded-lg transition-all duration-300" id="loginTab">
+                Login
+            </button>
+            <button data-mode="register" class="tab w-1/2 py-2 text-sm font-semibold rounded-lg transition-all duration-300" id="registerTab">
+                Register
+            </button>
+        </div>
+
+        <!-- Form and Message Container --><form id="authForm" class="space-y-3">
+
+            <!-- Full Name (Only for Register Mode) --><div id="fullNameLabel" class="space-y-1 hidden-strict">
+                <label for="authFullname" class="block text-sm font-medium text-gray-700">Full Name (සම්පූර්ණ නම)</label>
+                <input type="text" id="authFullname" placeholder="Enter your full name" 
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base" />
+            </div>
+
+            <!-- WhatsApp Number (Identifier for both) --><div id="whatsappInputWrapper" class="space-y-1">
+                <label for="authIdentifier" class="block text-sm font-medium text-gray-700">WhatsApp Number (වට්සැප් අංකය)</label>
+                <input type="tel" id="authIdentifier" placeholder="e.g., 0712345678" 
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base" />
+            </div>
+
+            <!-- Access Code Input -->
+            <div id="accessCodeLabel" class="space-y-1">
+                <label for="authAccessCode" class="block text-sm font-medium text-gray-700">Access Code</label>
+                <input type="text" id="authAccessCode" placeholder="Enter Access Code" 
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base" />
+            </div>
+
+            <!-- Registration-Specific Fields (Grade and Institute) -->
+            <div id="extraRegFields" class="grid grid-cols-2 gap-4 hidden-strict">
+                <!-- Grade (ශ්‍රේණිය) Dropdown -->
+                <div class="space-y-1">
+                    <label for="authGrade" class="block text-sm font-medium text-gray-700">Grade (ශ්‍රේණිය)</label>
+                    <select id="authGrade" 
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base appearance-none">
+                        <option value="">-Select Grade-</option>
+                        <option value="6" disabled >6 ශ්‍රේණිය</option>
+                        <option value="7" selected >7 ශ්‍රේණිය</option>
+                        <option value="8" disabled >8 ශ්‍රේණිය</option>
+                        <option value="9" disabled >9 ශ්‍රේණිය</option>
+                        <option value="10" disabled >10 ශ්‍රේණිය</option>
+                        <option value="11" disabled >11 ශ්‍රේණිය</option>
+                        <option value="A/L" disabled>A/L</option>
+                    </select>
+                </div>
+                <div class="space-y-1">
+                    <label for="authClass" class="block text-sm font-medium text-gray-700">Institute (ආයතනය)</label>
+                    <select id="authClass" 
+                            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base appearance-none">
+                        <option value="">-Select-</option>
+                        <option value="සජීවා කොස්ගම">සජීවා කොස්ගම </option>
+                        <option value="සිප්වන් කොට්ටාව">සිප්වන් කොට්ටාව </option>
+                        <option value="ඉරැස්මා පාදුක්ක">ඉරැස්මා පාදුක්ක </option>
+                        <option value="ශ්‍රී සුමන අවිස්සාවේල්ල">ශ්‍රී සුමන අවිස්සාවේල්ල </option>
+                        <option value="Online පන්ති">Online පන්ති </option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Password --><div class="space-y-1">
+                <label for="authPassword" class="block text-sm font-medium text-gray-700">Password (මුරපදය)</label>
+                <input type="password" id="authPassword" placeholder="••••••••" 
+                       class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-base" />
+            </div>
+            
+            <!-- Forgot Password Link Container --><div id="forgotPasswordLinkContainer" class="text-right -mt-2 pb-2 hidden-strict">
+                <a href="#" id="forgotPasswordBtn" class="text-xs text-blue-500 hover:text-blue-700 font-medium" onclick="event.preventDefault()">Forgot Password?</a>
+            </div>
+
+            <!-- Submit Button (Login/Register) --><button type="submit" id="authSubmit"
+                    class="w-full py-2.5 mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors duration-300 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                Register
+            </button>
+            
+            <!-- Clear Buttons Container - UPDATED --><div class="mt-2 text-center space-x-4">
+                 <button type="button" id="clearSavedBtnForm" class="text-xs text-red-500 hover:text-red-700 hidden-strict">Clear saved credentials</button>
+                 <!-- RE-ADDED Clear Version Button -->
+                 <button type="button" id="clearVersionBtn" class="text-xs  hidden-strict">Clear Version</button>
+            </div>
+
+            <!-- Message Area (Used by JS: setMsg) --><div id="authMessage" class="message text-center text-xs font-medium min-h-[20px] pt-1"></div>
+
+        </form>
+    </div>
+    
+    <!-- Footer - NEWLY ADDED -->
+    <footer id="footerCredit" class="w-full max-w-lg mt-8 text-center text-xs text-gray-200 z-10">
+        <!-- Text is made light for better contrast against the darker, blurred background -->
+    </footer>
+
+
+    <!-- Forgot Password Modal Structure --><div id="forgotPasswordModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 opacity-0 modal-overlay hidden-strict">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 modal-content">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Password Reset Help (මුරපදය යළි සකසන්න)</h3>
+            <p id="modalMessage" class="text-sm text-gray-700 mb-6">
+                Register tab එකට මාරුවී නව password එකක් පමණක් යොදා reset කරන්න. එවිට Password එක පමණක් Reset වේ.)
+            </p>
+            <div class="text-right">
+                <button id="closeModalBtn" class="px-5 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-4 focus:ring-blue-300">
+                    Got it (තේරුණා)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Version Mismatch Modal Structure -->
+    <div id="versionMismatchModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 opacity-0 modal-overlay hidden-strict">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 modal-content">
+            <h3 class="text-xl font-bold text-red-600 mb-4">Security Update (ආරක්ෂක යාවත්කාලීනය)</h3>
+            <p id="versionModalMessage" class="text-sm text-gray-700 mb-6 font-semibold">
+                ආරක්ෂක යාවත්කාලීනයක් සිදුවී ඇත. කරුණාකර 'Reset Account' ටැබ් එකට ගොස් නව Access Code එක සහ ඔබ කැමති මුරපදය යොදා නැවත පිවිසෙන්න.
+            </p>
+            <div class="text-right">
+                <button id="closeVersionModalBtn" class="px-5 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors focus:outline-none focus:ring-4 focus:ring-red-300">
+                    OK
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- JavaScript Logic --><script>
+        window.onload = function() {
+        // history entry එකක් එකතු කරන්න.
+        window.history.pushState("noBack", "noBack", window.location.href); 
+    };
+    
+    window.onpopstate = function() {
+        // Back Button එක එබූ විට Forward යවන්න
+        window.history.go(1); 
+    };
+
+
+        // Login Access Code Type here----------
+        // Developer can change this for new registrations. Old users will use their saved code unless LMS_CURRENT_VERSION changes.
+        const HARDCODED_ACCESS_CODE = "#123"; 
+
+        // Current LMS Version - Change this to force all users to use the new HARDCODED_ACCESS_CODE.
+        const LMS_CURRENT_VERSION = "Version 1.0"; 
+
+        document.getElementById('clearVersionBtn').disabled = true;
+
+        //--------------------------------------
+
+        (async function(){
+            // --- Utility Functions ---
+            function $id(id){ return document.getElementById(id); }
+            
+            function setMsg(txt, ok=false){
+              const el = $id('authMessage');
+              el.textContent = txt;
+              el.className = 'message text-center text-xs font-medium min-h-[20px] pt-1'; // Reset classes
+              if (txt) {
+                if(ok){
+                  el.classList.add('text-green-700', 'bg-green-100', 'py-1', 'px-2', 'rounded-lg');
+                } else {
+                  el.classList.add('text-red-700', 'bg-red-100', 'py-1', 'px-2', 'rounded-lg');
+                }
+              }
+            }
+
+            async function hashPassword(pass){
+              const data = new TextEncoder().encode(pass);
+              const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+              return Array.from(new Uint8Array(hashBuffer))
+                .map(b => b.toString(16).padStart(2,'0')).join('');
+            }
+            
+            // --- Constants and Elements ---
+            const KEY_USER = 'app_whatsapp_id'; 
+            const KEY_PASS = 'app_password_hash';
+            const KEY_LOGGED = 'app_logged';
+            const KEY_REGISTERED = 'alreadyRegistered';
+            
+            const KEY_FULL_NAME = 'reg_fullname';
+            const KEY_GRADE = 'reg_grade';
+            const KEY_CLASS = 'reg_class'; 
+            const KEY_ACCESS_CODE = 'app_access_code';
+            const KEY_VERSION = 'app_version'; 
+            
+           // Hardcoded Access Code Error Message
+            const ACCESS_CODE_ERROR_MSG = "Invalid Access Code (වැරදි ප්‍රවේශ කේතය)"; // Sinhala error message
+
+            const form = $id('authForm');
+            const inputIdentifier = $id('authIdentifier');
+            const whatsappInputWrapper = $id('whatsappInputWrapper'); 
+            const inputAccessCode = $id('authAccessCode');
+            const inputPass = $id('authPassword');
+            
+            const inputFullname = $id('authFullname');
+            const inputGrade = $id('authGrade'); 
+            const inputClass = $id('authClass');
+            
+            const extraRegFieldsContainer = $id('extraRegFields');
+            const fullNameLabel = $id('fullNameLabel');
+            
+            const submitBtn = $id('authSubmit');
+            const tabs = document.querySelectorAll('.tab');
+            const clearSavedBtnForm = $id('clearSavedBtnForm'); 
+            const clearVersionBtn = $id('clearVersionBtn'); 
+            
+            // Footer Element Reference
+            const footerCredit = $id('footerCredit');
+
+            // Modal Elements
+            const forgotPasswordLinkContainer = $id('forgotPasswordLinkContainer');
+            const forgotPasswordBtn = $id('forgotPasswordBtn');
+            const forgotPasswordModal = $id('forgotPasswordModal');
+            const closeModalBtn = $id('closeModalBtn');
+            const versionMismatchModal = $id('versionMismatchModal'); 
+            const closeVersionModalBtn = $id('closeVersionModalBtn'); 
+
+            let mode = "login"; 
+
+            function setMode(newMode) {
+              mode = newMode;
+              
+              tabs.forEach(x => {
+                x.classList.remove('bg-white', 'text-blue-600', 'shadow-md'); 
+                x.classList.add('bg-gray-100', 'text-gray-600');
+              });
+              
+              const activeTab = document.querySelector(`.tab[data-mode="${mode}"]`);
+              if (activeTab) {
+                activeTab.classList.add('bg-white', 'text-blue-600', 'shadow-md');
+                activeTab.classList.remove('bg-gray-100', 'text-gray-600');
+              }
+
+              const regFlag = localStorage.getItem(KEY_REGISTERED);
+              const registerTab = document.querySelector(`.tab[data-mode="register"]`);
+              
+              if (regFlag === "1") {
+                registerTab.textContent = "Reset Account";
+              } else {
+                registerTab.textContent = "Register";
+              }
+
+              submitBtn.textContent = (mode === 'login') ? 'Login' : registerTab.textContent;
+              setMsg(''); 
+              
+              if (mode === 'register') {
+                // Ensure all register fields are visible
+                whatsappInputWrapper.classList.remove('hidden-strict'); 
+                extraRegFieldsContainer.classList.remove('hidden-strict');
+                fullNameLabel.classList.remove('hidden-strict');
+                
+                forgotPasswordLinkContainer.classList.add('hidden-strict'); 
+                clearSavedBtnForm.classList.remove('hidden-strict');
+                clearVersionBtn.classList.remove('hidden-strict'); 
+
+              } else {
+                // Hide register-only fields for login
+                whatsappInputWrapper.classList.add('hidden-strict'); 
+                extraRegFieldsContainer.classList.add('hidden-strict'); 
+                fullNameLabel.classList.add('hidden-strict'); 
+                
+                forgotPasswordLinkContainer.classList.remove('hidden-strict'); 
+                clearSavedBtnForm.classList.add('hidden-strict');
+                clearVersionBtn.classList.add('hidden-strict'); 
+              }
+            }
+            
+            // Function to clear only the application version
+            function handleClearVersion() {
+              localStorage.removeItem(KEY_VERSION);
+              setMsg("LMS version information cleared. It will be re-saved upon next login/register.", true);
+            }
+            
+            function handleClearSavedData() {
+              // Clear only specific user-related data
+              localStorage.removeItem(KEY_USER); 
+              localStorage.removeItem(KEY_PASS);
+              localStorage.removeItem(KEY_LOGGED);
+              localStorage.removeItem(KEY_REGISTERED);
+              localStorage.removeItem(KEY_FULL_NAME);
+              localStorage.removeItem(KEY_GRADE);
+              localStorage.removeItem(KEY_CLASS);
+              localStorage.removeItem(KEY_ACCESS_CODE); // Cleared
+              localStorage.removeItem(KEY_VERSION); // Cleared
+              
+              inputIdentifier.value = ""; 
+              inputAccessCode.value = ""; 
+              inputPass.value = "";
+              inputFullname.value = "";
+              inputGrade.value = "";
+              inputClass.value = "";
+              
+              clearSavedBtnForm.classList.add('hidden-strict');
+              
+              setMode('register'); 
+              
+              setMsg("All saved credentials cleared.", true);
+            }
+
+            // Function to display the version mismatch modal
+            function showVersionMismatchModal() {
+                versionMismatchModal.classList.remove('hidden-strict'); 
+                setTimeout(() => {
+                    versionMismatchModal.classList.add('opacity-100', 'modal-show'); 
+                }, 10);
+            }
+
+            // Function to close the version mismatch modal
+            function closeVersionMismatchModal() {
+                versionMismatchModal.classList.remove('opacity-100', 'modal-show');
+                setTimeout(() => {
+                    versionMismatchModal.classList.add('hidden-strict');
+                    
+                    // --- VERSION MISMATCH FORCED UPDATE LOGIC ---
+                    // 1. Clear old access code and version to force new registration/reset
+                    localStorage.removeItem(KEY_ACCESS_CODE);
+                    localStorage.removeItem(KEY_VERSION);
+                    
+                    // 2. Switch to register mode (which acts as Reset Account)
+                    setMode('register'); 
+                    
+                    // 3. Inform the user what to do next
+                    setMsg('ආරක්ෂක යාවත්කාලීනය! නව Access Code සහ මුරපදය යොදා "Reset Account" හරහා නැවත ලියාපදිංචි වන්න.', false);
+                    // ---------------------------------------------
+
+                }, 300); 
+            }
+
+
+            // --- Event Listeners ---
+            tabs.forEach(t => t.addEventListener('click', ()=>{
+              setMode(t.dataset.mode);
+            }));
+
+            clearSavedBtnForm.addEventListener('click', handleClearSavedData);
+            clearVersionBtn.addEventListener('click', handleClearVersion); 
+            
+            // Forgot Password Modal Handlers with animation
+            forgotPasswordBtn.addEventListener('click', (ev) => {
+                ev.preventDefault(); 
+                forgotPasswordModal.classList.remove('hidden-strict'); 
+                setTimeout(() => {
+                    forgotPasswordModal.classList.add('opacity-100', 'modal-show'); 
+                }, 10);
+            });
+
+            closeModalBtn.addEventListener('click', () => {
+                forgotPasswordModal.classList.remove('opacity-100', 'modal-show');
+                setTimeout(() => {
+                    forgotPasswordModal.classList.add('hidden-strict');
+                }, 300); 
+            });
+
+            // Version Mismatch Modal close handler
+            closeVersionModalBtn.addEventListener('click', closeVersionMismatchModal);
+
+
+            form.addEventListener('submit', async (ev)=>{
+              ev.preventDefault();
+              submitBtn.disabled = true;
+              submitBtn.textContent = (mode === 'login') ? 'Logging in...' : 'Registering...';
+
+              const p = inputPass.value;
+              const a = inputAccessCode.value.trim(); 
+              
+              if(mode === "register"){
+                  // --- REGISTER/RESET LOGIC ---
+                  const u = inputIdentifier.value.trim(); 
+                  
+                  if(!u || !p || !a || !inputGrade.value || !inputClass.value){ 
+                    setMsg("සියලුම ක්ෂේත්‍ර (වට්සැප් අංකය, Access Code, මුරපදය, ශ්‍රේණිය සහ ආයතනය) ඇතුළත් කරන්න.");
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Register';
+                    return;
+                  }
+                  
+                  // Access Code Validation (must match the new HARDCODED_ACCESS_CODE)
+                  if (a !== HARDCODED_ACCESS_CODE) {
+                    setMsg(ACCESS_CODE_ERROR_MSG);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Register';
+                    return;
+                  }
+                  
+                  const hash = await hashPassword(p);
+                  
+                  // Save all data, including the new Access Code and current Version
+                  localStorage.setItem(KEY_USER, u);
+                  localStorage.setItem(KEY_PASS, hash);
+                  localStorage.setItem(KEY_ACCESS_CODE, a); // Save new Access Code
+                  localStorage.setItem(KEY_REGISTERED, "1");
+                  localStorage.setItem(KEY_LOGGED, "true");
+                  
+                  localStorage.setItem(KEY_FULL_NAME, inputFullname.value.trim());
+                  localStorage.setItem(KEY_GRADE, inputGrade.value.trim()); 
+                  localStorage.setItem(KEY_CLASS, inputClass.value.trim());
+                  
+                  localStorage.setItem(KEY_VERSION, LMS_CURRENT_VERSION); // Save current Version
+                 
+                  setMsg("Registration/Reset successful! Redirecting...", true);
+                  
+                  setTimeout(() => onLoginSuccess(u), 500);
+                
+              } else { 
+                  // --- LOGIN LOGIC ---
+                  
+                  if (!p || !a) {
+                    setMsg("Please enter Access Code and password.");
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Login';
+                    return;
+                  }
+
+                  const savedUser = localStorage.getItem(KEY_USER);
+                  const savedPass = localStorage.getItem(KEY_PASS);
+                  const savedAccessCode = localStorage.getItem(KEY_ACCESS_CODE);
+                  const savedVersion = localStorage.getItem(KEY_VERSION); 
+
+                  if(!savedUser){
+                    setMsg("No registered account found. Please switch to Register tab.");
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Login';
+                    return;
+                  }
+                  
+                  // Version Mismatch Check (Requirement 4)
+                  if (!savedVersion || savedVersion !== LMS_CURRENT_VERSION) {
+                    console.warn(`Version mismatch detected. Saved: ${savedVersion}, Current: ${LMS_CURRENT_VERSION}. Showing update alert.`);
+                    
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Login';
+                    showVersionMismatchModal(); // Show the version mismatch modal
+                    return; // Stop the login process
+                  }
+                  
+                  // Access Code Validation (Requirement 2 & 3: Check against the SAVED code)
+                  if (savedAccessCode !== a) {
+                    setMsg(ACCESS_CODE_ERROR_MSG);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Login';
+                    return;
+                  }
+                  
+                  // Password Validation (If all checks pass)
+                  const hash = await hashPassword(p);
+                  if(savedPass === hash){
+                    localStorage.setItem(KEY_LOGGED, "true");
+                    setMsg("Login successful! Redirecting...", true);
+                    setTimeout(() => onLoginSuccess(savedUser), 500);
+                  } else {
+                    setMsg("Invalid password.");
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Login';
+                  }
+              }
+            });
+
+            function onLoginSuccess(identifier){
+              inputPass.value = '';
+              $id('authContainer').classList.add('hidden-strict'); 
+              const REDIRECT_URL = "index_si.html"; 
+              console.log(`Login successful for ${identifier}. Redirecting to ${REDIRECT_URL}...`);
+              window.location.href = REDIRECT_URL;
+            }
+
+            function init(){
+              const savedIdentifier = localStorage.getItem(KEY_USER);
+              
+              let initialMode = 'login'; 
+              
+              
+              if(savedIdentifier){
+                inputIdentifier.value = savedIdentifier;
+                inputAccessCode.value = localStorage.getItem(KEY_ACCESS_CODE) || "";
+                inputFullname.value = localStorage.getItem(KEY_FULL_NAME) || "";
+                
+                // Handling saved Grade value
+                const savedGrade = localStorage.getItem(KEY_GRADE) || "";
+                const gradeOptions = Array.from(inputGrade.options).map(opt => opt.value);
+                if(gradeOptions.includes(savedGrade)) {
+                  inputGrade.value = savedGrade;
+                } else {
+                  inputGrade.value = ""; 
+                }
+
+                // Handling saved Institute value
+                const savedClass = localStorage.getItem(KEY_CLASS) || "";
+                const classOptions = Array.from(inputClass.options).map(opt => opt.value);
+                if(classOptions.includes(savedClass)) {
+                  inputClass.value = savedClass;
+                } else {
+                  inputClass.value = ""; 
+                }
+              } else {
+                inputIdentifier.value = "";
+                inputAccessCode.value = "";
+                inputFullname.value = "";
+                inputGrade.value = "";
+                inputClass.value = "";
+              }
+              
+              inputPass.value = ""; 
+
+              // Set Footer Content using the constant
+              if (footerCredit) {
+                  footerCredit.textContent = `Design by : Gayan Karunathilaka | GK ICT School | Software.GKICT LMS 2026 | ${LMS_CURRENT_VERSION}`;
+              }
+              
+              setMode(initialMode);
+              submitBtn.disabled = false;
+            }
+            
+            init();
+
+        })();
+
+
+
+    </script>
+
+</body>
+</html>
