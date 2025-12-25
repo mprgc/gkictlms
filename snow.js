@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const flake = new Image();
 
         /* 🔥 PUT YOUR IMAGE PATH HERE */
-        flake.src = "snow.png";   // <-- change path to match your folder
+        flake.src = "../../img/snow.png";   // <-- change path to match your folder
         /********************************/
 
         flake.className = "flake";
@@ -73,4 +73,5 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     toggleSnow();
+
 });
