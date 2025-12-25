@@ -1,9 +1,11 @@
-// --- Prevent script re-running ---
+
+// --- Prevent script from running multiple times ---
 if (!window.__snowEffectLoaded) {
 window.__snowEffectLoaded = true;
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    // Inject CSS
     const style = document.createElement("style");
     style.innerHTML = `
         .snow-container {
@@ -31,11 +33,13 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
     document.head.appendChild(style);
 
+    // Create container
     const snowContainer = document.createElement("div");
     snowContainer.className = "snow-container";
     document.body.appendChild(snowContainer);
 
-    let interval, active = false;
+    let snowInterval = null;
+    let isActive = false;
 
     function createSnow() {
         const snow = document.createElement("div");
@@ -51,40 +55,48 @@ document.addEventListener("DOMContentLoaded", () => {
         const startX = Math.random() * (window.innerWidth - 50);
         let x = startX;
         const speed = 6 + Math.random() * 4;
+        const amp = 20 + Math.random() * 15;
+        const freq = 1 + Math.random() * 1;
 
-        const amplitude = 20 + Math.random() * 15;
-        const frequency = 1 + Math.random() * 1;
-
-        snowContainer.appendChild(snow);
         snow.appendChild(flake);
+        snowContainer.appendChild(snow);
 
         let startTime = null;
-
-        function animate(time) {
-            if (!startTime) startTime = time;
-            const elapsed = (time - startTime) / 1000;
-            const y = (elapsed / speed) * (window.innerHeight + 100);
+        function animate(t) {
+            if (!startTime) startTime = t;
+            let elapsed = (t - startTime) / 1000;
+            let y = (elapsed / speed) * (window.innerHeight + 100);
 
             snow.style.transform =
-                `translate(${x + amplitude * Math.sin(elapsed * frequency * 2 * Math.PI)}px, ${y}px)`;
+                `translate(${x + amp * Math.sin(elapsed * freq * 2 * Math.PI)}px, ${y}px)`;
 
-            if (y < window.innerHeight + 100) {
-                requestAnimationFrame(animate);
-            } else {
-                snow.remove();
-            }
+            if (y < window.innerHeight + 100) requestAnimationFrame(animate);
+            else snow.remove();
         }
-
         requestAnimationFrame(animate);
     }
 
-    window.toggleSnow = function () {
-        active = !active;
-        if (active) interval = setInterval(createSnow, 200);
-        else clearInterval(interval);
-    };
+    function startSnow() {
+        if (!snowInterval) {
+            isActive = true;
+            snowInterval = setInterval(createSnow, 200);
+        }
+    }
 
-    toggleSnow();
+    function stopSnow() {
+        isActive = false;
+        clearInterval(snowInterval);
+        snowInterval = null;
+    }
+
+    // Auto control when tab is visible or hidden
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) stopSnow();   // Tab එක හැර ගියොත් – stop
+        else startSnow();                  // ආපහු එද්දි – resume
+    });
+
+    // Start once initially
+    startSnow();
 });
 
-} // --- end prevent duplicate loading
+}
