@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let x = startX;
         const speed = 6 + Math.random() * 4;
         const amp = 20 + Math.random() * 15;
-        const freq = 1 + Math.random() * 1;
+        const freq = 0.2 + Math.random() * 0;
 
         snow.appendChild(flake);
         snowContainer.appendChild(snow);
@@ -100,3 +100,4 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 }
+
