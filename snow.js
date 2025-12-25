@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-
+    // --- CSS ---
     const style = document.createElement("style");
     style.innerHTML = `
         .snow-container {
@@ -11,23 +11,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         .snow {
             position: absolute;
-            top: -50px;
-            animation: fall linear forwards;
+            top: -80px;
+            will-change: transform;
         }
         .flake {
             display: block;
-            animation: sway ease-in-out infinite;
-            transform-origin:center;
+            transform-origin: center;
+            animation: rotateFlake linear infinite;
+            will-change: transform;
         }
-        @keyframes fall {
-            0% { transform: translateY(0); opacity: 0; }
-            10% { opacity: 1; }
-            100% { transform: translateY(120vh); opacity: 0; }
-        }
-        @keyframes sway {
-            0% { transform: translateX(0px) rotate(0deg); }
-            50% { transform: translateX(25px) rotate(180deg); }
-            100% { transform: translateX(-25px) rotate(360deg); }
+        @keyframes rotateFlake {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     `;
     document.head.appendChild(style);
@@ -38,40 +33,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let interval, active = false;
 
-    function createSnow(){
+    function createSnow() {
         const snow = document.createElement("div");
         snow.className = "snow";
 
         const flake = new Image();
-
-        /* 🔥 PUT YOUR IMAGE PATH HERE */
-        flake.src = "../../img/snow.png";   // <-- change path to match your folder
-        /********************************/
-
+        flake.src = "../../img/snow.png"; // 👈 ඔබේ snowflake image path
         flake.className = "flake";
 
-        const size = 12 + Math.random()*25;
-        flake.style.width = size+"px";
+        const size = 5 + Math.random() * 20;
+        flake.style.width = size + "px";
 
-        snow.style.left = Math.random()*window.innerWidth+"px";
+        // random start X position
+        const startX = Math.random() * (window.innerWidth - 50);
+        let x = startX;
 
-        const speed = 5 + Math.random()*5;
-        snow.style.animationDuration = speed+"s";
-        flake.style.animationDuration = (2 + Math.random()*3) + "s";
+        // random fall speed
+        const speed = 6 + Math.random() * 4;
 
-        snow.appendChild(flake);
+        // smooth sway amplitude & frequency
+        const amplitude = 20 + Math.random() * 15; // pixels
+        const frequency = 0.2 + Math.random() * 0;   // oscillations per second
+
         snowContainer.appendChild(snow);
+        snow.appendChild(flake);
 
-        setTimeout(()=>snow.remove(), speed*1000+500);
+        let startTime = null;
+
+        function animate(time) {
+            if (!startTime) startTime = time;
+            const elapsed = (time - startTime) / 1000; // seconds
+
+            // vertical position
+            const y = (elapsed / speed) * (window.innerHeight + 100);
+            snow.style.transform = `translate(${x + amplitude * Math.sin(elapsed * frequency * 2 * Math.PI)}px, ${y}px)`;
+
+            if (y < window.innerHeight + 100) {
+                requestAnimationFrame(animate);
+            } else {
+                snow.remove();
+            }
+        }
+
+        requestAnimationFrame(animate);
     }
 
-    window.toggleSnow = function(){
+    window.toggleSnow = function () {
         active = !active;
-        if(active){
-            interval = setInterval(createSnow, 200);
-        } else clearInterval(interval);
+        if (active) interval = setInterval(createSnow, 200);
+        else clearInterval(interval);
     };
 
+    // auto start
     toggleSnow();
-
 });
