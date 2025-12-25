@@ -1,5 +1,9 @@
+// --- Prevent script re-running ---
+if (!window.__snowEffectLoaded) {
+window.__snowEffectLoaded = true;
+
 document.addEventListener("DOMContentLoaded", () => {
-    // --- CSS ---
+
     const style = document.createElement("style");
     style.innerHTML = `
         .snow-container {
@@ -38,22 +42,18 @@ document.addEventListener("DOMContentLoaded", () => {
         snow.className = "snow";
 
         const flake = new Image();
-        flake.src = "../../img/snow.png"; // 👈 ඔබේ snowflake image path
+        flake.src = "../../img/snow.png"; 
         flake.className = "flake";
 
         const size = 5 + Math.random() * 20;
         flake.style.width = size + "px";
 
-        // random start X position
         const startX = Math.random() * (window.innerWidth - 50);
         let x = startX;
-
-        // random fall speed
         const speed = 6 + Math.random() * 4;
 
-        // smooth sway amplitude & frequency
-        const amplitude = 20 + Math.random() * 15; // pixels
-        const frequency = 0.2 + Math.random() * 0;   // oscillations per second
+        const amplitude = 20 + Math.random() * 15;
+        const frequency = 1 + Math.random() * 1;
 
         snowContainer.appendChild(snow);
         snow.appendChild(flake);
@@ -62,11 +62,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function animate(time) {
             if (!startTime) startTime = time;
-            const elapsed = (time - startTime) / 1000; // seconds
-
-            // vertical position
+            const elapsed = (time - startTime) / 1000;
             const y = (elapsed / speed) * (window.innerHeight + 100);
-            snow.style.transform = `translate(${x + amplitude * Math.sin(elapsed * frequency * 2 * Math.PI)}px, ${y}px)`;
+
+            snow.style.transform =
+                `translate(${x + amplitude * Math.sin(elapsed * frequency * 2 * Math.PI)}px, ${y}px)`;
 
             if (y < window.innerHeight + 100) {
                 requestAnimationFrame(animate);
@@ -84,6 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         else clearInterval(interval);
     };
 
-    // auto start
     toggleSnow();
 });
+
+} // --- end prevent duplicate loading
