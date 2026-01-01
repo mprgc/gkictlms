@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ළමා අධ්‍යාපන පියස - E-Learning App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .lesson-btn:disabled {
+            background-color: #d1d5db;
+            cursor: not-allowed;
+            opacity: 0.6;
+            transform: none !important;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-5xl mx-auto">
+        <!-- Header Section -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-blue-800 mb-2">6 ශ්‍රේණියේ වීඩියෝ පාඩම් (Video Lessons)</h1>
+            <p class="text-gray-600">ඔබට අවශ්‍ය පාඩම තෝරාගෙන ඉගෙනීම ආරම්භ කරන්න</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Sidebar: Lesson Selection -->
+            <div class="lg:col-span-1 space-y-4">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">සියලුම පාඩම්</h2>
+                <div id="lesson-list" class="space-y-3">
+                    <!-- Buttons will be injected here by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Main Content: Video Player -->
+            <div class="lg:col-span-2">
+                <div id="video-placeholder" class="bg-white p-6 rounded-2xl shadow-lg text-center h-full flex flex-row items-center justify-center border-2 border-dashed border-blue-200">
+                    <div>
+                        <svg class="w-16 h-16 text-blue-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-gray-500 font-medium">නැරඹීමට අවශ්‍ය පාඩම මත ක්ලික් කරන්න</p>
+                    </div>
+                </div>
+
+                <div id="player-section" class="hidden">
+                    <div class="bg-white p-4 rounded-2xl shadow-lg">
+                        <h3 id="current-lesson-title" class="text-2xl font-bold text-blue-700 mb-4 text-center">පාඩමේ මාතෘකාව</h3>
+                        <div class="video-container">
+                            <iframe id="youtube-player" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="mt-6 p-4 bg-blue-50 rounded-xl">
+                            <p class="text-blue-800 text-sm font-semibold">උපදෙස්:</p>
+                            <p class="text-gray-600 text-sm"> <b> මෙම පාඩම් ස්වයං අධ්‍යනය කිරීම ඔබේ යුතුකමයි. ඕනෑම වෙලාවක නැවත නැවතත් ඔබට මෙම පාඩම් නැරබිය හැකිය. </b> පාසලට අවශ්‍ය දැනුම මෙම වීඩියෝව නිවැරදිව මුල සිට අගට නැරබීම තුලින් ලබාගත හැකිය. නැවත නැවතත් අධ්‍යනය කලද නොතේරුන යමක් වෙතොත් ගයාන් සර්ව අමතන්න.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        /**
+         * මෙහි ඇති 'isEnabled' අගය true හෝ false කිරීමෙන් බොත්තම් පාලනය කළ හැක.
+         * 'videoId' යනු YouTube වීඩියෝවේ අගට ඇති කේතයයි.
+         */
+        const lessons = [
+            { id: 1, title: "01, 02, 03 Unit වලට අදාළ වීඩියෝව", videoId: "IA2x2zz1M96RGnbW", isEnabled: true },
+            { id: 2, title: "04, 05 Unit වලට අදාළ වීඩියෝව", videoId: "vLnPwxZdW4Y", isEnabled: false    },
+            { id: 3, title: "06, 07 Unit වලට අදාළ වීඩියෝව", videoId: "XqZsoesa55w", isEnabled: false }, // මෙය අක්‍රීයයි
+            { id: 4, title: "08, 09 Unit වලට අදාළ වීඩියෝව", videoId: "788099", isEnabled: false  },
+            { id: 5, title: "10, 11 Unit වලට අදාළ වීඩියෝව", videoId: "9WpOC6u7v7w", isEnabled: false }  // මෙය අක්‍රීයයි
+        ];
+
+        function loadLessons() {
+            const listContainer = document.getElementById('lesson-list');
+            
+            lessons.forEach(lesson => {
+                const button = document.createElement('button');
+                button.className = `lesson-btn w-full text-left p-4 rounded-xl transition-all duration-200 shadow-sm border font-medium ${lesson.isEnabled ? 'bg-white hover:bg-blue-50 hover:border-blue-300 text-gray-700' : 'bg-gray-100 text-gray-400'}`;
+                button.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-xs font-bold">${lesson.id}</span>
+                        ${lesson.title}
+                        ${!lesson.isEnabled ? '<span class="ml-auto text-[10px] bg-gray-200 px-2 py-1 rounded">Locked</span>' : ''}
+                    </div>
+                `;
+                
+                if (!lesson.isEnabled) {
+                    button.disabled = true;
+                } else {
+                    button.onclick = () => playVideo(lesson);
+                }
+                
+                listContainer.appendChild(button);
+            });
+        }
+
+        function playVideo(lesson) {
+            const placeholder = document.getElementById('video-placeholder');
+            const playerSection = document.getElementById('player-section');
+            const iframe = document.getElementById('youtube-player');
+            const titleDisplay = document.getElementById('current-lesson-title');
+
+            placeholder.classList.add('hidden');
+            playerSection.classList.remove('hidden');
+            
+            // YouTube embed URL
+            iframe.src = `https://www.youtube.com/embed/${lesson.videoId}?autoplay=1`;
+            titleDisplay.innerText = lesson.title;
+
+            // සිනිඳු ලෙස scroll කිරීම
+            if(window.innerWidth < 1024) {
+                playerSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // පිටුව පූරණය වූ පසු ක්‍රියාත්මක වේ
+        window.onload = loadLessons;
+    </script>
+</body>
+</html>
