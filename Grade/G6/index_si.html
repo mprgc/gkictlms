@@ -60,6 +60,14 @@
     .cta1 {margin-top:8px;padding:8px 12px;border-radius:10px;background:#6200ee;color:white;display:inline-block}
     .cta2 {margin-top:8px;padding:8px 12px;border-radius:10px;background:#1976d2;color:white;display:inline-block}
     .cta3 {margin-top:8px;padding:8px 12px;border-radius:10px;background:#B00020;color:white;display:inline-block}
+    .cta4 { margin-top: 8px; padding: 8px 12px; border-radius: 10px;background: #fd8a16;  color: white; display: inline-block; animation: pulse 1.2s infinite;}
+
+    @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.07); }
+    100% { transform: scale(1); }
+    }
+
 
     /* ====== Sections ====== */
     .section{margin-top:18px}
@@ -164,10 +172,16 @@
         </div>
               <!-- IMAGE SLIDER END -->
 
-
+              
           <div style="height:16px"></div>
 
           <div class="cards-grid">
+
+          <div class="card">
+            <h3>📚 නව මොඩියුලර් ක්‍රමය ගැන හරියට දැනගන්න  </h3>
+              <p class="small">Education Reform 2026</p>
+              <a class="cta4" href="https://www.youtube.com/embed/FfbPIwxkW0g?si=4S_Z-IAOYE_PG6Hk">Watch Video</a>
+          </div>
 
           <div class="card">
             <h3>📑 විභාග පිවිසුම (Exam Portal)</h3>
@@ -760,12 +774,13 @@ body {
       });
     });
   </script>
-  <script src="../../snow.js"></script>
+
+
+   <script src="../../snow.js"></script>
    <script src="../../sliderJS.js"></script>
    <!--script src="loading.js"></script-->
 </body>
 </html>
-
 
 
 
