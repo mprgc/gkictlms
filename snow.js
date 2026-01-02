@@ -1,10 +1,5 @@
-// prevent running twice
-if (!window.__snowEffectLoaded) {
-window.__snowEffectLoaded = true;
-
 document.addEventListener("DOMContentLoaded", () => {
-
-    // inject css
+    // --- CSS ---
     const style = document.createElement("style");
     style.innerHTML = `
         .snow-container {
@@ -36,69 +31,59 @@ document.addEventListener("DOMContentLoaded", () => {
     snowContainer.className = "snow-container";
     document.body.appendChild(snowContainer);
 
-    let snowInterval = null;
+    let interval, active = true;
 
     function createSnow() {
         const snow = document.createElement("div");
         snow.className = "snow";
 
         const flake = new Image();
-        flake.src = "../../img/snow.png";
+        flake.src = "../../img/snow.png"; // 👈 ඔබේ snowflake image path
         flake.className = "flake";
 
         const size = 5 + Math.random() * 20;
         flake.style.width = size + "px";
 
+        // random start X position
         const startX = Math.random() * (window.innerWidth - 50);
         let x = startX;
-        const speed = 6 + Math.random() * 4;
-        const amp = 20 + Math.random() * 15;
-        const freq = 0.2 + Math.random() * 0.5;
 
-        snow.appendChild(flake);
+        // random fall speed
+        const speed = 6 + Math.random() * 4;
+
+        // smooth sway amplitude & frequency
+        const amplitude = 20 + Math.random() * 15; // pixels
+        const frequency = 0.2 + Math.random() * 0;   // oscillations per second
+
         snowContainer.appendChild(snow);
+        snow.appendChild(flake);
 
         let startTime = null;
-        function animate(t) {
-            if (!startTime) startTime = t;
-            let elapsed = (t - startTime) / 1000;
-            let y = (elapsed / speed) * (window.innerHeight + 100);
-            snow.style.transform = `translate(${x + amp * Math.sin(elapsed * freq * 2 * Math.PI)}px, ${y}px)`;
-            if (y < window.innerHeight + 100) requestAnimationFrame(animate);
-            else snow.remove();
+
+        function animate(time) {
+            if (!startTime) startTime = time;
+            const elapsed = (time - startTime) / 1000; // seconds
+
+            // vertical position
+            const y = (elapsed / speed) * (window.innerHeight + 100);
+            snow.style.transform = `translate(${x + amplitude * Math.sin(elapsed * frequency * 2 * Math.PI)}px, ${y}px)`;
+
+            if (y < window.innerHeight + 100) {
+                requestAnimationFrame(animate);
+            } else {
+                snow.remove();
+            }
         }
+
         requestAnimationFrame(animate);
     }
 
-    function startSnow() {
-        if (!snowInterval) snowInterval = setInterval(createSnow, 200);
-    }
+    window.toggleSnow = function () {
+        active = !active;
+        if (active) interval = setInterval(createSnow, 200);
+        else clearInterval(interval);
+    };
 
-    function stopSnow() {
-        clearInterval(snowInterval);
-        snowInterval = null;
-    }
-
-    // ---- Page Visibility — handle tab switch ----
-    let leftTime = null;
-
-    document.addEventListener("visibilitychange", () => {
-        if (document.hidden) {
-            stopSnow();
-            leftTime = Date.now();    // record leaving time
-        } else {
-            // if away more than 2 seconds => FULL refresh
-            if (leftTime && Date.now() - leftTime > 2000) {
-                location.reload();
-            } else {
-                startSnow();
-            }
-        }
-    });
-
-    startSnow();
+    // auto start
+    toggleSnow();
 });
-
-}
-
-
