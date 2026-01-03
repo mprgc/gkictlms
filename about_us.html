@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>අප ගැන | GK ICT LMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/dist/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;700&display=swap');
+
+         /* --- CUSTOM CSS FOR FOOTER --- */
+        .simple-footer {
+            background-color: #1F2937; /* Dark Gray */
+            color: #FFFFFF;
+            padding: 1.5rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -2px rgba(0, 0, 0, 0.06); 
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+        }
+
+        .footer-content {
+            max-width: 56rem; 
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .footer-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text-main {
+            font-size: 0.875rem;
+            color: #9CA3AF; 
+            margin-bottom: 0.25rem;
+        }
+        
+        .footer-text-secondary {
+            font-size: 0.75rem;
+            color: #6B7280; 
+        }
+
+        body {
+            font-family: 'Noto Sans Sinhala', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        }
+
+        .social-btn {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Continuous Pulse Animation for the Timetable Button */
+        @keyframes pulse-animation {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 15px rgba(59, 130, 246, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+            }
+        }
+
+        .timetable-btn {
+            background: linear-gradient(45deg, #10b981, #3b82f6);
+            animation: pulse-animation 2s infinite; /* Always playing */
+            transition: all 0.3s ease;
+        }
+        
+        .timetable-btn:hover {
+            animation-play-state: paused; /* Pause animation on hover if desired */
+            transform: scale(1.08);
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.5);
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Animation class for numbers */
+        .stat-card {
+            transition: transform 0.5s ease;
+        }
+        .stat-card:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient text-white py-20 px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="mb-6 flex justify-center">
+                <div class="w-20 h-20 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-lg border border-white/30 overflow-hidden p-1">
+                    <img src="LMS_Logo.png" alt="LMS Logo" class="w-full h-full object-contain rounded-xl">
+                </div>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold mb-6">අප ගැන දැනගන්න</h1>
+            <p class="text-lg opacity-90 leading-relaxed max-w-2xl mx-auto">
+                ශ්‍රී ලාංකීය දරුවන්ගේ තොරතුරු තාක්ෂණ දැනුම ඉහළ නැංවීම සඳහා කැපවුණු ගයාන් සර් විසින්ම නිර්මාණය කරන ලද ඉගෙනුම් කළමනාකරණ පද්ධතිය (LMS).
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-16 pb-24">
+        <div class="grid md:grid-cols-2 gap-12 items-center mb-20">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-800 mb-6">අපගේ අරමුණ</h2>
+                <p class="text-gray-600 mb-4 leading-relaxed">
+                    GKICT LMS හරහා මම බලාපොරොත්තු වන්නේ මගේ උපකාරක පන්තිවලට සම්භන්ධවන සිසුන්ව නවීන තාක්ෂණය භාවිතා කරමින් ඉතා සරල මට්ටමේ සිට සංකීර්ණ මට්ටම දක්වා තොරතුරු තාක්ෂණ විෂය නිර්දේශය සහ ඒ ආශ්‍රිත සමාජයීය දැනුම දරුවන්ට සමීප කරවීමයි.
+                </p>
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <div class="bg-blue-100 p-1 rounded-full mr-3 mt-1">
+                            <i class="fas fa-check text-blue-600 text-xs"></i>
+                        </div>
+                        <span class="text-gray-700 font-medium">6 ශ්‍රේණියේ සිට 11 ශ්‍රේණිය දක්වා සම්පූර්ණ විෂය ආවරණය.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="bg-blue-100 p-1 rounded-full mr-3 mt-1">
+                            <i class="fas fa-check text-blue-600 text-xs"></i>
+                        </div>
+                        <span class="text-gray-700 font-medium">ප්‍රායෝගික ක්‍රියාකාරකම් සහ වීඩියෝ පාඩම් මාලා මඟින් පාසල් විෂය නිර්දේශයට/ මොඩියුල්වලට අවශ්‍ය දැනුම ලබාදීම .</span>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="bg-blue-100 p-1 rounded-full mr-3 mt-1">
+                            <i class="fas fa-check text-blue-600 text-xs"></i>
+                        </div>
+                        <span class="text-gray-700 font-medium">ඕනෑම වේලාවක ඕනෑම තැනක සිට ඉගෙනීමේ හැකියාව.</span>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="bg-blue-100 p-1 rounded-full mr-3 mt-1">
+                            <i class="fas fa-check text-blue-600 text-xs"></i>
+                        </div>
+                        <span class="text-gray-700 font-medium">පසුගිය පාඩම් නැවත Video සහ Audio ලෙස නැරබීමට හැකිය. (Unlimited access to study lessons)</span>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="bg-blue-100 p-1 rounded-full mr-3 mt-1">
+                            <i class="fas fa-check text-blue-600 text-xs"></i>
+                        </div>
+                        <span class="text-gray-700 font-medium">තනිව පාඩම්වලට අදාල MCQ ප්‍රශ්ණ තමාට හුරුවනතුරු සිදුකිරීමට හැකිය. (MCQ that can be taken an unlimited times)</span>
+                    </li> 
+                    <li class="flex items-start">
+                        <div class="bg-blue-100 p-1 rounded-full mr-3 mt-1">
+                            <i class="fas fa-check text-blue-600 text-xs"></i>
+                        </div>
+                        <span class="text-gray-700 font-medium">පැවරුම් (Assignment) හරහා දරුවන්ව විෂය නිර්දේශය ස්වයංව ගැබුරටම අධ්‍යනය කිරීමට අවස්ථාව සලසා දීම.</span>
+                    </li> 
+                    <li class="flex items-start">
+                        <div class="bg-blue-100 p-1 rounded-full mr-3 mt-1">
+                            <i class="fas fa-check text-blue-600 text-xs"></i>
+                        </div>
+                        <span class="text-gray-700 font-medium">Ai භාවිතයෙන් පාසල් වැඩ පහසු කරගෙන එම දැනුමෙන් ඔබේ දරුවා පරිපුර්ණ කරවීමට පුහුණු කරවීම. ඇතුළු තවත් බොහෝ දේවල් සමඟින්...</span>
+                    </li> 
+                </ul>
+            </div>
+            
+            <div class="video-container">
+                <iframe 
+                    src="https://www.youtube.com/embed/FfbPIwxkW0g?si=eD1qwjRbAoUWizj8" 
+                    title="GK ICT Intro Video" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+        <!-- Stats Section with Animation -->
+        <div id="stats-section" class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-20">
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 stat-card">
+                <div class="text-4xl font-bold text-blue-600 mb-2"><span class="counter" data-target="180">0</span>+</div>
+                <div class="text-gray-500 font-medium">සිසුන්</div>
+            </div>
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 stat-card">
+                <div class="text-4xl font-bold text-blue-600 mb-2"><span class="counter" data-target="100">0</span>+</div>
+                <div class="text-gray-500 font-medium">වීඩියෝ පාඩම්</div>
+            </div>
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 stat-card">
+                <div class="text-4xl font-bold text-blue-600 mb-2"><span class="counter" data-target="100">0</span>+</div>
+                <div class="text-gray-500 font-medium">ප්‍රශ්න පත්‍ර</div>
+            </div>
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 stat-card">
+                <div class="text-4xl font-bold text-blue-600 mb-2">24/7</div>
+                <div class="text-gray-500 font-medium">සහයෝගය</div>
+            </div>
+        </div>
+
+        <!-- Social Media Link Buttons -->
+        <div class="text-center bg-white p-10 rounded-3xl shadow-sm border border-gray-100 mb-12">
+            <h3 class="text-2xl font-bold text-gray-800 mb-8">අපගේ සමාජ මාධ්‍ය ජාල සමඟ එක්වන්න. </h3>
+            <p class="text-gray-600"> ICT දැනුම ගවේෂණය කිරීමට කැමැත්තක් දක්වන ඔබ සඳහාම නිර්මාණය කල අපගේ සමාජ මාධ්‍ය ජාල සමඟ එක්ව ඔබේ දැනුම තවත් පුළුල් කරගන්න </p>
+            <br>
+            <div class="flex flex-wrap justify-center gap-4 mb-10">
+                <a href="https://www.youtube.com/@gkictschool" target="_blank" class="social-btn bg-red-600 text-white px-8 py-4 rounded-2xl flex items-center space-x-3 font-bold">
+                    <i class="fab fa-youtube text-2xl"></i>
+                    <span>YouTube</span>
+                </a>
+                <a href="https://www.facebook.com/gkictschool/" target="_blank" class="social-btn bg-blue-700 text-white px-8 py-4 rounded-2xl flex items-center space-x-3 font-bold">
+                    <i class="fab fa-facebook-f text-2xl"></i>
+                    <span>Facebook</span>
+                </a>
+                <a href="https://sites.google.com/view/gayan-karunathilaka-ict-class/home?" target="_blank" class="social-btn bg-black text-white px-8 py-4 rounded-2xl flex items-center space-x-3 font-bold">
+                    <i class="fas fa-globe text-2xl"></i>
+                    <span>Web Site</span>
+                </a>
+                <a href="#" class="social-btn bg-green-500 text-white px-8 py-4 rounded-2xl flex items-center space-x-3 font-bold">
+                    <i class="fab fa-whatsapp text-2xl"></i>
+                    <span>WhatsApp Channel</span>
+                </a>
+            </div>
+
+            <!-- New Animated Timetable Link Button -->
+            <div class="mt-8 pt-8 border-t border-gray-100">
+                <a href="https://mprgc.github.io/gkictclass/" class="timetable-btn inline-flex items-center space-x-3 text-white px-10 py-5 rounded-2xl font-bold text-lg shadow-lg">
+                    <i class="fas fa-calendar-alt text-2xl"></i>
+                    <span>2026 වසරට ICT පන්තිවල කාලසටහන නරඹන්න</span>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="simple-footer">
+        <div class="footer-content">
+            <h4 class="footer-title">GK ICT School LMS</h4>
+            <p class="footer-text-main">
+                © 2026 සියලුම හිමිකම් ඇවිරිණි. | අධ්‍යාපනයට නව පියවරක්
+            </p>
+            <p class="footer-text-secondary">
+                Design by : Gayan Karunathilaka | GK ICT School | Software.GKICT LMS
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Counter Animation Logic
+        function startCounterAnimation() {
+            const counters = document.querySelectorAll('.counter');
+            const speed = 200; // Animation speed control
+
+            counters.forEach(counter => {
+                const updateCount = () => {
+                    const target = +counter.getAttribute('data-target');
+                    const count = +counter.innerText;
+                    const inc = target / speed;
+
+                    if (count < target) {
+                        counter.innerText = Math.ceil(count + inc);
+                        setTimeout(updateCount, 8);
+                    } else {
+                        counter.innerText = target;
+                    }
+                };
+                updateCount();
+            });
+        }
+
+        // Trigger animation when the section enters the viewport
+        const observerOptions = {
+            threshold: 0.3 // Start when section is visible
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    startCounterAnimation();
+                    observer.unobserve(entry.target); // Run only once
+                }
+            });
+        }, observerOptions);
+
+        const statsSection = document.getElementById('stats-section');
+        if (statsSection) {
+            observer.observe(statsSection);
+        }
+    </script>
+</body>
+</html>
