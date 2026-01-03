@@ -12,6 +12,48 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
+
+        /* --- CUSTOM CSS FOR FOOTER --- */
+        .simple-footer {
+            /* bg-gray-800, text-white, p-6, mt-10, shadow-inner, rounded-t-xl equivalents */
+            background-color: #1F2937; /* Dark Gray */
+            color: #FFFFFF;
+            padding: 1.5rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -2px rgba(0, 0, 0, 0.06); /* Shadow on top */
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+        }
+
+        .footer-content {
+            /* max-w-4xl, mx-auto, text-center equivalents */
+            max-width: 56rem; /* Tailwind max-w-4xl equivalent */
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .footer-title {
+            /* text-lg, font-bold, mb-2 equivalents */
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text-main {
+            /* text-sm, text-gray-400, mb-1 equivalents */
+            font-size: 0.875rem;
+            color: #9CA3AF; /* Light Gray */
+            margin-bottom: 0.25rem;
+        }
+        
+        .footer-text-secondary {
+            /* text-xs, text-gray-500 equivalents */
+            font-size: 0.75rem;
+            color: #6B7280; /* Medium Gray */
+        }
+
+
         body {
             font-family: 'Noto Sans Sinhala', sans-serif;
             background-color: #f3f4f6;
@@ -53,7 +95,7 @@
             
             <!-- Search Bar -->
             <div class="relative max-w-xl mx-auto">
-                <input type="text" id="searchInput" placeholder="මෘදුකාංගය සොයන්න (උදා: Zoom, Office...)" 
+                <input type="text" id="searchInput" placeholder="මෘදුකාංගය සොයන්න (උදා: Tux Typing, Office...)" 
                     class="w-full py-3 px-6 rounded-full text-gray-800 focus:outline-none focus:ring-4 focus:ring-blue-300 shadow-lg text-lg">
                 <button class="absolute right-2 top-1.5 bg-blue-600 text-white p-2 rounded-full h-9 w-9 flex items-center justify-center hover:bg-blue-700 transition">
                     <i class="fa-solid fa-search"></i>
@@ -138,44 +180,78 @@
 
     <script>
         // Software Data Array - Updated with arrays for multiple categories
+        // EXE , WEB, APK
         const softwareData = [
             {
                 id: 1,
-                name: "Zoom Cloud Meetings",
+                name: "Tux Paint",
                 category: ["EXE"], // Common application for all grades
                 type: "EXE", // PC installer
-                desc: "ඔන්ලයින් පන්ති සහ සම්මන්ත්‍රණ සඳහා.",
-                icon: "fa-video",
+                desc: "පරිගණකයේ චිත්‍ර ඇදීම සඳහා",
+                icon: "fa-paintbrush",
                 color: "text-blue-500",
                 bg: "bg-blue-100",
-                link: "https://zoom.us/download"
+                link: "https://tuxpaint.org/download/"
             },
             {
                 id: 2,
-                name: "Google Chrome",
-                category: ["EXE"], // Common application for all grades
-                type: "EXE",
-                desc: "වේගවත්ම අන්තර්ජාල බ්‍රව්සරය.",
-                icon: "fa-chrome",
-                color: "text-red-500",
-                bg: "bg-red-100",
-                link: "https://www.google.com/chrome/"
+                name: "Tux Paint - APK",
+                category: ["APK"], // Common application for all grades
+                type: "APK", // PC installer
+                desc: "ජංගම දුරකතනයේ චිත්‍ර ඇදීම සඳහා",
+                icon: "fa-paintbrush",
+                color: "text-green-500",
+                bg: "bg-green-100",
+                link: "https://play.google.com/store/search?q=tux+paint&c=apps&hl=en"
             },
             {
                 id: 3,
-                name: "Microsoft Office 2016",
-                category: ["EXE"], // O/L specific
+                name: "Tux Typing",
+                category: ["EXE"], // Common application for all grades
                 type: "EXE",
-                desc: "Word, Excel සහ PowerPoint (O/L සඳහා).",
-                icon: "fa-file-word",
-                color: "text-orange-600",
-                bg: "bg-orange-100",
-                link: "https://www.microsoft.com/en-us/microsoft-365"
+                desc: "පරිගණක යතුරු පුහුණුව සඳහා",
+                icon: "fa-keyboard",
+                color: "text-red-500",
+                bg: "bg-red-100",
+                link: "https://tux-typing.en.softonic.com/"
             },
             {
                 id: 4,
+                name: "Microsoft Office 365",
+                category: ["WEB"], // O/L specific
+                type: "WEB",
+                desc: "Online ලිපිලේඛන නිර්මාණයට",
+                icon: "fa-file-word",
+                color: "text-orange-600",
+                bg: "bg-orange-100",
+                link: "https://www.microsoft.com/en-us/microsoft-365/microsoft-office"
+            },
+            {
+                id: 5,
+                name: "Libre Office",
+                category: ["EXE"], // O/L specific
+                type: "EXE",
+                desc: "ලිපිලේඛන නිර්මාණයට",
+                icon: "fa-file-word",
+                color: "text-blue-600",
+                bg: "bg-blue-100",
+                link: "https://www.libreoffice.org/download/download-libreoffice/"
+            },
+            {
+                id: 6,
+                name: "Typesy - Touch Typing - APK",
+                category: ["APK"], // Common application for all grades
+                type: "APK", // PC installer
+                desc: "ජංගම දුරකතනයේ යතුරු පුහුණුව සඳහා",
+                icon: "fa-keyboard",
+                color: "text-green-500",
+                bg: "bg-green-100",
+                link: "https://play.google.com/store/apps/details?id=com.ereflect.typesy&hl=en"
+            },            
+            {
+                id: 7,
                 name: "Adobe Reader",
-                category: ["EXE", "7", "8", "9", "ol"], // Needed for all specific grades
+                category: ["EXE"], // Needed for all specific grades
                 type: "EXE",
                 desc: "PDF ලිපි ලේඛන කියවීම සඳහා.",
                 icon: "fa-file-pdf",
@@ -184,7 +260,7 @@
                 link: "https://get.adobe.com/reader/"
             },
             {
-                id: 5,
+                id: 8,
                 name: "VLC Media Player",
                 category: ["EXE"], // Needed for all specific grades
                 type: "EXE",
@@ -195,7 +271,7 @@
                 link: "https://www.videolan.org/vlc/"
             },
             {
-                id: 6,
+                id: 9,
                 name: "7-Zip Archiver",
                 category: ["EXE"], // Needed for all specific grades
                 type: "EXE",
@@ -206,18 +282,85 @@
                 link: "https://www.7-zip.org/"
             },
             {
-                id: 7,
-                name: "Sinhala Unicode",
+                id: 10,
+                name: "Sinhala Tamil IME",
                 category: ["EXE"], // Needed for all specific grades
                 type: "EXE",
                 desc: "සිංහල ටයිප් කිරීම පුරුදු වීමට.",
                 icon: "fa-language",
                 color: "text-purple-600",
                 bg: "bg-purple-100",
-                link: "https://www.lankasri.org/"
+                link: "https://www.gurulk.com/download-sinhala-tamil-language-kit-ime.php"
+            },
+
+            {
+                id: 11,
+                name: "Helakuru (හෙලකුරු)",
+                category: ["EXE"], // Needed for all specific grades
+                type: "EXE",
+                desc: "සිංහල යතුරුලියනය පුරුදු වීමට.",
+                icon: "fa-language",
+                color: "text-orange-600",
+                bg: "bg-orange-100",
+                link: "https://www.helakuru.lk/"
+            },  
+            {
+                id: 12,
+                name: "Helakuru (හෙලකුරු) - APK",
+                category: ["APK"], // Needed for all specific grades
+                type: "APK",
+                desc: "ජංගම දුරකතනයේ සිංහල යතුරුලියනය කිරීමට",
+                icon: "fa-language",
+                color: "text-green-600",
+                bg: "bg-green-100",
+                link: "https://play.google.com/store/search?q=helakuru&c=apps&hl=en"
             },
             {
-                id: 8,
+                id: 13,
+                name: "QR & Barcode Scanner - APK",
+                category: ["APK"], // Common application for all grades
+                type: "APK", // PC installer
+                desc: "QR සහ Barcode වලට පිවිසීම සඳහා",
+                icon: "fa-qrcode",
+                color: "text-blue-500",
+                bg: "bg-blue-100",
+                link: "https://play.google.com/store/apps/details?id=com.gamma.scan&hl=en"
+            },
+            {
+                id: 14,
+                name: "Audacity",
+                category: ["EXE"], // Needed for all specific grades
+                type: "EXE",
+                desc: "ශ්‍රව්‍ය ගොනු සංස්කරණය සඳහා",
+                icon: "fa-headset",
+                color: "text-orange-500",
+                bg: "bg-orange-100",
+                link: "https://www.audacityteam.org/download/"
+            },
+            {
+                id: 15,
+                name: "Audio Editor & Music Editor - APK",
+                category: ["APK"], // Common application for all grades
+                type: "APK", // PC installer
+                desc: "ශ්‍රව්‍ය ගොනු සංස්කරණය සඳහා",
+                icon: "fa-headset",
+                color: "text-green-500",
+                bg: "bg-green-100",
+                link: "https://play.google.com/store/apps/details?id=audioeditor.musiceditor.soundeditor.songeditor"
+            },
+                        {
+                id: 16,
+                name: "Dolby On Rocoder - APK",
+                category: ["APK"], // Common application for all grades
+                type: "APK", // PC installer
+                desc: "ශ්‍රව්‍ය ගොනු ජංගම දුරකතනයේ පටිගත කිරීම සඳහා",
+                icon: "fa-record-vinyl",
+                color: "text-red-500",
+                bg: "bg-red-100",
+                link: "https://play.google.com/store/search?q=dolby+on&c=apps"
+            }                          
+          /*  {
+                id: ,
                 name: "Scratch 3.0",
                 category: ["EXE"], // Multi-category as requested
                 type: "EXE",
@@ -228,7 +371,7 @@
                 link: "https://scratch.mit.edu/download"
             },
              {
-                id: 9,
+                id: ,
                 name: "WhatsApp Web",
                 category: ["WEB"], // Common application for all grades
                 type: "WEB", // ADDED: Web Site Type
@@ -239,18 +382,7 @@
                 link: "https://web.whatsapp.com/"
             },
             {
-                id: 10,
-                name: "Past Papers App",
-                category: ["APK"], // O/L specific
-                type: "APK",
-                desc: "පසුගිය විභාග ප්‍රශ්න පත්‍ර (Mobile App).",
-                icon: "fa-mobile-screen",
-                color: "text-blue-600",
-                bg: "bg-blue-100",
-                link: "#"
-            },
-            {
-                id: 11,
+                id: ,
                 name: "Punarudaya Dictionary",
                 category: ["WEB"], // O/L specific
                 type: "WEB", // ADDED: Web Site Type
@@ -259,18 +391,8 @@
                 color: "text-purple-600",
                 bg: "bg-purple-100",
                 link: "https://www.punarudaya.com/"
-            },
-            {
-                id: 12,
-                name: "Geogebra Classic",
-                category: ["WEB"],
-                type: "WEB", // ADDED: Web Site Type
-                desc: "ජ්‍යාමිතික සහ ගණිතමය දර්ශන සඳහා.",
-                icon: "fa-chart-pie",
-                color: "text-red-500",
-                bg: "bg-red-100",
-                link: "https://www.geogebra.org/classic"
-            }
+            },*/
+
         ];
 
         const grid = document.getElementById('softwareGrid');
@@ -470,5 +592,23 @@
         });
 
     </script>
+    <script src="../../snow.js"></script>
+
+
+         <!-- SIMPLE FOOTER WITH CUSTOM CSS CLASSES -->
+    <footer class="simple-footer">
+        <div class="footer-content">
+            <h4 class="footer-title">GK ICT School LMS</h4>
+            <p class="footer-text-main">
+                © 2026 සියලුම හිමිකම් ඇවිරිණි. | අධ්‍යාපනයට නව පියවරක්
+            </p>
+            <p class="footer-text-secondary">
+                Design by : Gayan Karunathilaka | GK ICT School | Software.GKICT LMS
+            </p>
+        </div>
+    </footer>
+    <!-- End SIMPLE FOOTER --> 
+
+      
 </body>
 </html>
