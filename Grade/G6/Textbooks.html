@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6 ශ්‍රේණියේ පාඩම් වලට අදාල Text Books</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- CUSTOM CSS FOR FOOTER (වෙනස් කර නැත) --- */
+        .simple-footer {
+            background-color: #1F2937; /* Dark Gray */
+            color: #FFFFFF;
+            padding: 1.5rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -2px rgba(0, 0, 0, 0.06); 
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+        }
+
+        .footer-content {
+            max-width: 56rem; 
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .footer-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text-main {
+            font-size: 0.875rem;
+            color: #9CA3AF; 
+            margin-bottom: 0.25rem;
+        }
+        
+        .footer-text-secondary {
+            font-size: 0.75rem;
+            color: #6B7280; 
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Indigo theme background gradient */
+            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+            min-height: 100vh;
+        }
+
+        .card-container {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(79, 70, 229, 0.2);
+        }
+
+        .medium-btn:disabled {
+            background-color: #f3f4f6;
+            color: #9ca3af;
+            cursor: not-allowed;
+            border-color: #e5e7eb;
+        }
+
+        .term-header {
+            border-left: 5px solid #4f46e5; /* Indigo color */
+            padding-left: 15px;
+            margin-top: 2rem;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-5xl mx-auto">
+        <!-- Header Section -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-indigo-800 mb-2">6 ශ්‍රේණියේ Modiuler වලට අදාල Books</h1>
+            <p class="text-indigo-600 font-medium italic"> ඔබට අවශ්‍ය ICT මොඩියුලර් මාධ්‍යය (Medium) අනුව තෝරාගන්න</p>
+        </header>
+
+        <!-- Instruction Card -->
+        <div class="card-container p-6 rounded-2xl shadow-xl mb-8 border-l-8 border-indigo-600">
+            <h3 class="text-xl font-bold text-indigo-800 mb-2">වැදගත් උපදෙස්:</h3>
+            <p class="text-gray-700 leading-relaxed">
+                ICT මොඩියුලර්  <b>සිංහල මාධ්‍ය</b> සහ <b>English Medium</b> වලින් තෝරාගන්න.ඔබට අවශ්‍යනම් Download කරගැනීමට හැකිය. ගැටළු සඳහා ගයාන් සර්ව සම්බන්ධ කරගන්න.
+            </p>
+        </div>
+
+        <!-- Term 1 Section -->
+        <div class="term-header">
+            <h2 class="text-2xl font-bold text-gray-800 italic">පළමු වාරය (First Term Modiule)</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="term1-list">
+            <!-- JavaScript Injection -->
+        </div>
+
+        <!-- Term 2 Section -->
+        <div class="term-header">
+            <h2 class="text-2xl font-bold text-gray-800 italic">දෙවන වාරය (Second Term Modiule)</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="term2-list">
+            <!-- JavaScript Injection -->
+        </div>
+
+        <!-- Term 3 Section -->
+        <div class="term-header">
+            <h2 class="text-2xl font-bold text-gray-800 italic">තෙවන වාරය (Third Term Modiule)</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="term3-list">
+            <!-- JavaScript Injection -->
+        </div>
+    </div>
+
+    <script>
+        const lessons = [
+            // Term 1
+            { id: 1, term: 1, title: "ICT මොඩියුලර් අංක : 01, 02 ", sinhala: { url: "https://drive.google.com/file/d/1KRKPepQHFqQ0UoDf1zhFIivCHmLvSrpc/view?usp=sharing", isEnabled: true }, english: { url: "G6_L1_Q_EN.html", isEnabled: false } },
+            { id: 2, term: 1, title: "ICT වැඩිදුර ඉගෙනුම් මොඩියුලය (Further Learning Module)", sinhala: { url: "https://drive.google.com/file/d/1DE8uhIrIUa8-jmr_nYDKWGcgdxVkAPuL/view?usp=sharing", isEnabled: true }, english: { url: "#", isEnabled: false } },
+
+            
+            // Term 2
+            { id: 1, term: 2, title: "ICT මොඩියුලර් අංක : 03, 04", sinhala: { url: "G6_L1_Q_SI.html", isEnabled: false }, english: { url: "G6_L1_Q_EN.html", isEnabled: false } },
+            
+            // Term 3
+            { id: 1, term: 3, title: "ICT මොඩියුලර් අංක : 05, 06", sinhala: { url: "#", isEnabled: false }, english: { url: "#", isEnabled: false } }
+        ];
+
+        function createCard(lesson) {
+            const card = document.createElement('div');
+            card.className = "bg-white p-6 rounded-2xl shadow-lg border border-indigo-100 flex flex-col h-full";
+            
+            card.innerHTML = `
+                <div class="flex items-center mb-4">
+                    <span class="bg-indigo-600 text-white w-10 h-10 rounded-lg flex items-center justify-center mr-4 font-bold shadow-md">${lesson.id}</span>
+                    <h3 class="text-lg font-bold text-gray-800">${lesson.title}</h3>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3 mt-auto">
+                    <button 
+                        onclick="window.open('${lesson.sinhala.url}', '_blank')" 
+                        ${!lesson.sinhala.isEnabled ? 'disabled' : ''}
+                        class="medium-btn py-3 px-2 rounded-xl border-2 border-indigo-200 text-sm font-bold transition-all duration-300 ${lesson.sinhala.isEnabled ? 'bg-indigo-50 text-indigo-700 hover:bg-indigo-600 hover:text-white hover:border-indigo-600' : ''}"
+                    >
+                        සිංහල මාධ්‍ය
+                    </button>
+                    
+                    <button 
+                        onclick="window.open('${lesson.english.url}', '_blank')" 
+                        ${!lesson.english.isEnabled ? 'disabled' : ''}
+                        class="medium-btn py-3 px-2 rounded-xl border-2 border-indigo-200 text-sm font-bold transition-all duration-300 ${lesson.english.isEnabled ? 'bg-indigo-50 text-indigo-700 hover:bg-indigo-600 hover:text-white hover:border-indigo-600' : ''}"
+                    >
+                        English Medium
+                    </button>
+                </div>
+            `;
+            return card;
+        }
+
+        function loadLessons() {
+            const term1Container = document.getElementById('term1-list');
+            const term2Container = document.getElementById('term2-list');
+            const term3Container = document.getElementById('term3-list');
+            
+            lessons.forEach(lesson => {
+                const card = createCard(lesson);
+                if (lesson.term === 1) {
+                    term1Container.appendChild(card);
+                } else if (lesson.term === 2) {
+                    term2Container.appendChild(card);
+                } else if (lesson.term === 3) {
+                    term3Container.appendChild(card);
+                }
+            });
+        }
+
+        window.onload = loadLessons;
+    </script>
+
+    <!-- FOOTER (වෙනස් කර නැත) -->
+    <footer class="simple-footer">
+        <div class="footer-content">
+            <h4 class="footer-title">GK ICT School LMS</h4>
+            <p class="footer-text-main">
+                © 2026 සියලුම හිමිකම් ඇවිරිණි. | අධ්‍යාපනයට නව පියවරක්
+            </p>
+            <p class="footer-text-secondary">
+                Design by : Gayan Karunathilaka | GK ICT School | Software.GKICT LMS
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>
