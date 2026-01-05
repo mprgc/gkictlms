@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>6 ශ්‍රේණියේ වීඩියෝ පාඩම්</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+
+        /* --- CUSTOM CSS FOR FOOTER --- */
+        .simple-footer {
+            background-color: #1F2937; /* Dark Gray */
+            color: #FFFFFF;
+            padding: 1.5rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -2px rgba(0, 0, 0, 0.06); 
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+        }
+
+        .footer-content {
+            max-width: 56rem; 
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .footer-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text-main {
+            font-size: 0.875rem;
+            color: #9CA3AF; 
+            margin-bottom: 0.25rem;
+        }
+        
+        .footer-text-secondary {
+            font-size: 0.75rem;
+            color: #6B7280; 
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            /* රතු තේමාවට ගැලපෙන Background Gradient එකක් */
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            min-height: 100vh;
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .lesson-btn:disabled {
+            background-color: #d1d5db;
+            cursor: not-allowed;
+            opacity: 0.6;
+            transform: none !important;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-5xl mx-auto">
+        <!-- Header Section -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-red-700 mb-2">6 ශ්‍රේණියේ වීඩියෝ පාඩම් (Video Lessons)</h1>
+            <p class="text-gray-600 font-medium">ඔබට අවශ්‍ය පාඩම තෝරාගෙන ඉගෙනීම ආරම්භ කරන්න</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Sidebar: Lesson Selection -->
+            <div class="lg:col-span-1 space-y-4">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">සියලුම පාඩම්</h2>
+                <div id="lesson-list" class="space-y-3">
+                    <!-- Buttons will be injected here by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Main Content: Video Player -->
+            <div class="lg:col-span-2">
+                <div id="video-placeholder" class="bg-white p-6 rounded-2xl shadow-lg text-center h-full flex flex-row items-center justify-center border-2 border-dashed border-red-200">
+                    <div>
+                        <svg class="w-16 h-16 text-red-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-gray-500 font-medium">නැරඹීමට අවශ්‍ය පාඩම මත ක්ලික් කරන්න</p>
+                    </div>
+                </div>
+
+                <div id="player-section" class="hidden">
+                    <div class="bg-white p-4 rounded-2xl shadow-lg">
+                        <h3 id="current-lesson-title" class="text-2xl font-bold text-red-700 mb-4 text-center">පාඩමේ මාතෘකාව</h3>
+                        <div class="video-container">
+                            <iframe id="youtube-player" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                        <div class="mt-6 p-4 bg-red-50 rounded-xl border-l-4 border-red-500">
+                            <p class="text-red-800 text-sm font-semibold">උපදෙස්:</p>
+                            <p class="text-gray-600 text-sm"> <b> මෙම පාඩම් ස්වයං අධ්‍යනය කිරීම ඔබේ යුතුකමයි. ඕනෑම වෙලාවක නැවත නැවතත් ඔබට මෙම පාඩම් නැරබිය හැකිය. </b> පාසලට අවශ්‍ය දැනුම මෙම වීඩියෝව නිවැරදිව මුල සිට අගට නැරබීම තුලින් ලබාගත හැකිය. නැවත නැවතත් අධ්‍යනය කලද නොතේරුන යමක් වෙතොත් ගයාන් සර්ව අමතන්න.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const lessons = [
+            { id: 1, title: "01, 02, 03 Unit වලට අදාළ වීඩියෝව", videoId: "76509lV9FZo", isEnabled: true },
+            { id: 2, title: "04, 05 Unit වලට අදාළ වීඩියෝව", videoId: "vLnPwxZdW4Y", isEnabled: false },
+            { id: 3, title: "06, 07 Unit වලට අදාළ වීඩියෝව", videoId: "XqZsoesa55w", isEnabled: false },
+            { id: 4, title: "08, 09 Unit වලට අදාළ වීඩියෝව", videoId: "788099", isEnabled: false },
+            { id: 5, title: "10, 11 Unit වලට අදාළ වීඩියෝව", videoId: "9WpOC6u7v7w", isEnabled: false },
+            { id: 6, title: "12, 13 Unit වලට අදාළ වීඩියෝව", videoId: "9WpOC6u7v7w", isEnabled: false },
+            { id: 7, title: "14, 15 Unit වලට අදාළ වීඩියෝව", videoId: "9WpOC6u7v7w", isEnabled: false }
+        ];
+
+        function loadLessons() {
+            const listContainer = document.getElementById('lesson-list');
+            
+            lessons.forEach(lesson => {
+                const button = document.createElement('button');
+                // රතු පැහැති hover සහ border වර්ණ යොදා ඇත
+                button.className = `lesson-btn w-full text-left p-4 rounded-xl transition-all duration-200 shadow-sm border font-medium ${lesson.isEnabled ? 'bg-white hover:bg-red-50 hover:border-red-300 text-gray-700' : 'bg-gray-100 text-gray-400'}`;
+                button.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="bg-red-100 text-red-600 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-xs font-bold">${lesson.id}</span>
+                        ${lesson.title}
+                        ${!lesson.isEnabled ? '<span class="ml-auto text-[10px] bg-gray-200 px-2 py-1 rounded text-gray-500">Locked</span>' : ''}
+                    </div>
+                `;
+                
+                if (!lesson.isEnabled) {
+                    button.disabled = true;
+                } else {
+                    button.onclick = () => playVideo(lesson);
+                }
+                
+                listContainer.appendChild(button);
+            });
+        }
+
+        function playVideo(lesson) {
+            const placeholder = document.getElementById('video-placeholder');
+            const playerSection = document.getElementById('player-section');
+            const iframe = document.getElementById('youtube-player');
+            const titleDisplay = document.getElementById('current-lesson-title');
+
+            placeholder.classList.add('hidden');
+            playerSection.classList.remove('hidden');
+            
+            iframe.src = `https://www.youtube.com/embed/${lesson.videoId}?autoplay=1`;
+            titleDisplay.innerText = lesson.title;
+
+            if(window.innerWidth < 1024) {
+                playerSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        window.onload = loadLessons;
+    </script>
+
+    <!-- FOOTER (වෙනස් කර නැත) -->
+    <footer class="simple-footer">
+        <div class="footer-content">
+            <h4 class="footer-title">GK ICT School LMS</h4>
+            <p class="footer-text-main">
+                © 2026 සියලුම හිමිකම් ඇවිරිණි. | අධ්‍යාපනයට නව පියවරක්
+            </p>
+            <p class="footer-text-secondary">
+                Design by : Gayan Karunathilaka | GK ICT School | Software.GKICT LMS
+            </p>
+        </div>
+    </footer>
+
+    
+
+</body>
+</html>
