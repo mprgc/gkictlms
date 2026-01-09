@@ -1,0 +1,785 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" type="image/png" href="../../LMS Icon.png">
+  <title>GK ICT School LMS</title>
+  <meta name="description" content="GK ICT School LMS template — Grades 6-11, Sinhala & English. Modern blue + white responsive layout." />
+  <link rel="stylesheet" href="../../sliderstyle.css">
+  <style>
+    /* ====== Reset & base ====== */
+    :root{
+      --blue:#1976D2; /* primary */
+      --light-blue:#BBDEFB;
+      --muted:#6b7280;
+      --bg:#ffffff;
+      --card-radius:14px;
+      --gap:16px;
+      --maxw:1100px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:#0f172a;-webkit-font-smoothing:antialiased}
+    a{color:var(--blue);text-decoration:none}
+
+    /* ====== Layout ====== */
+    .app{display:flex;min-height:100vh}
+    /* sidebar */
+    .sidebar{width:260px;background:#f8fbff;border-right:1px solid #e6eefb;padding:20px;display:flex;flex-direction:column;gap:18px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--blue),#0b63b7);display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
+    .brand h1{font-size:18px;margin:0}
+    .brand p{margin:0;font-size:12px;color:var(--muted)}
+    .nav{display:flex;flex-direction:column;gap:6px}
+    .nav a{padding:10px 12px;border-radius:10px;color:#08304b;font-weight:600}
+    .nav a:hover{background:linear-gradient(90deg,rgba(25,118,210,0.08),rgba(25,118,210,0.04))}
+    .grades{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+    .grade-btn{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:transparent;border:1px solid transparent}
+    .grade-btn:hover{background:rgba(25,118,210,0.04)}
+
+    .main{flex:1;padding:28px;max-width:var(--maxw);margin:0 auto}
+
+    /* ====== Header ====== */
+    .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .header-left h2{margin:0;font-size:20px}
+    .header-left p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+    .header-right{display:flex;gap:10px;align-items:center}
+    .search{padding:8px 12px;border-radius:10px;border:1px solid #e6eefb;background:white}
+
+    /* ====== Hero ====== */
+    .hero{display:grid;grid-template-columns:1fr 320px;gap:20px;margin-bottom:20px}
+    .hero-card{background:linear-gradient(180deg,rgba(25,118,210,0.08),rgba(187,222,251,0.04));padding:22px;border-radius:14px}
+    .cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .card{background:white;border-radius:12px;padding:18px;box-shadow:0 6px 18px rgba(10,30,60,0.04);display:flex;flex-direction:column;gap:8px}
+    .card h3{margin:0}
+    .card p{margin:0;color:var(--muted);font-size:13px}
+    .card .cta{margin-top:8px;padding:8px 12px;border-radius:10px;background:var(--blue);color:white;display:inline-block}
+
+    .cta1 {margin-top:8px;padding:8px 12px;border-radius:10px;background:#6200ee;color:white;display:inline-block}
+    .cta2 {margin-top:8px;padding:8px 12px;border-radius:10px;background:#1976d2;color:white;display:inline-block}
+    .cta3 {margin-top:8px;padding:8px 12px;border-radius:10px;background:#B00020;color:white;display:inline-block}
+    .cta4 { margin-top: 8px; padding: 8px 12px; border-radius: 10px;background: #fd8a16;  color: white; display: inline-block; animation: pulse 1.2s infinite;}
+
+    @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.07); }
+    100% { transform: scale(1); }
+    }
+
+
+    /* ====== Sections ====== */
+    .section{margin-top:18px}
+    .section h3{margin:0 0 12px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+
+    /* content blocks */
+    .content-block{background:white;padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(10,30,60,0.04)}
+    .block-title{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+    .block-title img{width:36px;height:36px}
+    .list{display:flex;flex-direction:column;gap:8px}
+    .list a{padding:10px;border-radius:8px;border:1px dashed #e6eefb}
+
+    /* Video grid */
+    .video-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .video-thumb{background:#000;height:140px;border-radius:10px;overflow:hidden;display:flex;align-items:center;justify-content:center;color:white}
+
+    /* Responsive */
+    @media (max-width:1000px){
+      .hero{grid-template-columns:1fr}
+      .cards-grid{grid-template-columns:repeat(2,1fr)}
+      .grid{grid-template-columns:repeat(2,1fr)}
+      .video-grid{grid-template-columns:1fr}
+      .sidebar{display:none}
+      .app{flex-direction:column}
+      .main{padding:18px}
+    }
+    @media (max-width:520px){
+      .cards-grid{grid-template-columns:1fr}
+      .grid{grid-template-columns:1fr}
+    }
+
+    /* small helpers */
+    .tag{background:var(--light-blue);color:#0767f7;padding:6px 8px;border-radius:8px;font-weight:600;font-size:12px}
+    .small{font-size:13px;color:var(--muted)}
+    .lang-toggle{display:flex;gap:8px}
+    .lang-toggle button{padding:8px 12px;border-radius:10px;border:1px solid rgba(255,30,60,0.06);background: #dfdfdf;}
+
+    /* Floating help */
+    .help{position:fixed;right:18px;bottom:18px;background: #19d231;color:white;padding:12px;border-radius:999px;box-shadow:0 8px 20px rgba(25,118,210,0.18)}
+  </style>
+</head>
+<body>
+
+    <main class="main" id="main">
+      <header class="header">
+        <div class="header-left">
+          <h2 id="page-title">GK ICT School LMS</h2>
+          <p id="page-sub">ගයාන් කරුණාතිලක ICT පාසල</p>
+        </div>
+        <div class="header-right">
+          <div class="lang-toggle">
+
+            <a>
+             <button style="cursor: pointer; background: #12a948; color: white;">Active</button> 
+            </a>
+
+            <a href="G6_Loging.html">
+             <button style="cursor: pointer;">Logout</button> 
+            </a>
+            
+          </div>
+        </div>
+      </header>
+
+      <section class="hero" id="home">
+        <div class="hero-card">
+          <!--h1>GK ICT School LMS 🎓</h1>
+          <p class="small">Modern learning portal for Grade 6–11 ICT. Use this template to prepare your Google Site — paste content from sections into Google Sites pages.</p-->
+
+
+              <!-- IMAGE SLIDER START -->
+        <div class="slider">
+          <div class="slides fade">
+           <img src="../../img/SLIDER1.jpg" style="width:100%">
+          </div>
+
+         <div class="slides fade">
+           <img src="../../img/SLIDER2.jpg" style="width:100%">
+         </div>
+
+            <div class="slides fade">
+              <img src="../../img/SLIDER3.jpg" style="width:100%">
+         </div>
+
+         <div class="slides fade">
+            <img src="../../img/SLIDER4.jpg" style="width:100%">
+        </div>
+
+         <div class="slides fade">
+            <img src="../../img/SLIDER_E.jpg" style="width:100%">
+        </div>
+
+         <!-- Dots -->
+         <div class="dots">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </div>
+              <!-- IMAGE SLIDER END -->
+
+              
+          <div style="height:16px"></div>
+
+          <div class="cards-grid">
+
+          <div class="card">
+            <h3>📚 නව මොඩියුලර් ක්‍රමය ගැන හරියට දැනගන්න  </h3>
+              <p class="small">Education Reform 2026</p>
+              <a class="cta4" href="https://www.youtube.com/embed/JspluyCJvOE?si=r-tYP-xFgLzsAtqG">Watch Video  ▶︎ </a>
+          </div>
+
+          <div class="card">
+            <h3>📑 විභාග පිවිසුම (Exam Portal)</h3>
+              <p class="small">Login to online Examination Potal 💯.</p>
+              <a class="cta3" href="../../exam_login.html">Login to View Exams</a>
+          </div>
+          
+          <div class="card">
+              <h3>📦 මෘදුකාංග බාගත කරගැනීමට </h3>
+              <p class="small">Easily download the software you need..</p>
+              <a class="cta1" href="Apps.html">Open</a>
+          </div>
+
+
+          <div class="card">
+              <h3> 📋 පැවරුම් වැඩ </h3>
+              <p class="small">Printable assignments + submission forms (Google Forms)</p>
+              <a class="cta2" href="#assignments">Open</a>
+          </div>
+
+          </div>
+
+
+        <!--aside style="padding:12px;background:linear-gradient(180deg,#e9eb51ad,white);border-radius:12px">
+          <h4 style="margin:0">🔔 Announcements</h4>
+          <p class="small">New quiz uploaded: Quiz 1 — Computer Basics</p>
+          <p class="small">Grade 10: Term test papers added</p>
+          <div style="height:8px"></div>
+          <a class="tag" href="#quizzes">See Quizzes</a>
+        </aside-->
+
+<!-- නිවේදන කොටස (Announcements Section) -->
+<style >
+  .bg-yellow-50 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(254 252 232 / var(--tw-bg-opacity, 1));
+}
+
+
+.border-yellow-500 {
+    --tw-border-opacity: 1;
+    border-color: rgb(234 179 8 / var(--tw-border-opacity, 1));
+}
+
+.border-l-4 {
+    border-left-width: 4px;
+}
+
+
+.rounded-lg {
+    border-radius: 0.5rem;
+}
+</style>
+        <div class="mb-10 p-4 bg-yellow-50 border-l-4 border-yellow-500 rounded-lg shadow-inner">
+            <h2 class="text-xl font-bold text-yellow-800 flex items-center mb-2">
+                <span class="mr-2">🔔</span>  නිවේදන...
+            </h2>
+            <ul class="list-disc list-inside text-gray-700 space-y-1 text-sm">
+                <li><b>නව මොඩියුලර් අධ්‍යාපන ක්‍රමය </b> ගැන සවිස්තරාත්මකව දැනගන්න ඉහත "Watch Video" බොත්තම ඔබන්න.</li>                
+                <li>පාසල් පෙළ පොතේ නව සංස්කරණය PDF ලෙස දැන් Download කිරීම සඳහා ඇත. ඒ සඳහා <b> "පාසල් පෙළ පොත (Text Books)" </b> වලට පිවිසෙන්න.</li>
+            </ul>
+        </div>
+
+
+
+      </section>
+
+      <hr>
+
+      <section id="grades" class="section">
+        <h3>📚 <u> ශ්‍රේණිය | Grade </u></h3>
+
+        <div style="
+          display:grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap:14px;
+           padding-bottom:10px;
+        ">
+
+        <!-- Grade 6 #ff6b6b -->
+      <a  style="
+            height:100px;
+           background:#aaaaaa;
+           display:flex; justify-content:center; align-items:center;
+           border-radius:12px; color:white; text-decoration:none;
+           font-size:20px; font-weight:bold; text-align:center;">
+          🔒6 ශ්‍රේණිය
+        </a>
+
+        <!-- Grade 7  #4dabf7-->
+      <a  style="
+        height:100px;
+        background: #aaaaaa;
+        display:flex; justify-content:center; align-items:center;
+        border-radius:12px; color:white; text-decoration:none;
+        font-size:20px; font-weight:bold; text-align:center; ">
+        🔒7 ශ්‍රේණිය
+      </a>
+
+     <!-- Grade 8 #51cf66 -->
+      <a href="Study_Source.html" style="
+        height:100px;
+        background:#51cf66;
+        display:flex; justify-content:center; align-items:center;
+        border-radius:12px; color:white; text-decoration:none;
+        font-size:20px; font-weight:bold; text-align:center;">
+        8 ශ්‍රේණිය
+      </a>
+
+    <!-- Grade 9 #845ef7 -->
+      <a  style="
+        height:100px;
+        background:#aaaaaa;
+        display:flex; justify-content:center; align-items:center;
+        border-radius:12px; color:white; text-decoration:none;
+        font-size:20px; font-weight:bold; text-align:center;">
+        🔒9 ශ්‍රේණිය
+      </a>
+
+    <!-- Grade 10 #ffa94d -->
+     <a  style="
+        height:100px;
+        background:#aaaaaa;
+        display:flex; justify-content:center; align-items:center;
+        border-radius:12px; color:white; text-decoration:none;
+        font-size:20px; font-weight:bold; text-align:center;">
+       🔒10 ශ්‍රේණිය
+     </a>
+
+    <!-- Grade 11 #20c997 -->
+     <a  style="
+        height:100px;
+        background:#aaaaaa;
+        display:flex; justify-content:center; align-items:center;
+        border-radius:12px; color:white; text-decoration:none;
+        font-size:20px; font-weight:bold; text-align:center; ">
+       🔒11 ශ්‍රේණිය
+     </a>
+
+  </div>
+</section>
+
+
+
+<hr>
+
+
+
+      <!-- Sections -->
+      <section id="past-papers" class="section">
+        <h3>  📝 <u>පසුගිය විභාග පත්‍ර | Past Papers  </u></h3>
+        <div class="grid">
+          <!-- Example card for a PDF -->
+          <div class="content-block">
+            <div class="block-title"><img src="../../img/copy_200px.png" alt="pdf icon"/><div><strong>GCE O/L Exam Papers</strong><div class="small">PDF • GCE O/L</div></div></div>
+            <p class="small"> Google Drive සබැඳි මඟින් මෙහි ඇතුළත් ප්‍රශ්න පත්‍ර Download කරගන්න.</p>
+            <div class="list">
+              <!-- Replace # with Google Drive preview link or hosted URL -->
+              <a href="https://drive.google.com/file/d/1BRC0srQdh9JgS3ZaF-DV1ZF0E4Ogxx0Z/view?usp=sharing" >🔵 (2024-2025) GCE O/L ප්‍රශ්ණ පත්‍රය.pdf 🆕</a>
+              <a href="https://drive.google.com/file/d/1vAbQdqPigYKhVC-fq31U86sI8wYxihOa/view?usp=sharing" target="_blank">🔵 (2022-2023) වයඹ පළාත් පුනරීක්ෂණ ප්‍රශ්ණ පත්‍රය.pdf </a>
+              <a href="https://drive.google.com/file/d/16j3acUF-Mntn9y8JwGCovF6pFaxoB0JA/view?usp=sharing" target="_blank">🔵 2020 - තෙවන වාර පරීක්ෂණය - වයඹ පළාත.pdf</a>
+              <a href="https://drive.google.com/file/d/1u667aQhiEwN05bQ8RdWzUeTgwRw2noLW/view?usp=sharing" target="_blank">🔵 (2022-2023) - ශිෂ්‍ය සම්මන්ත්‍රණ ප්‍රශ්ණ පත්‍ර මාලාව.pdf</a>
+            </div>
+          </div>
+
+          <div class="content-block">
+            <div class="block-title"><img src="../../img/school_96px.png" alt="pdf icon"/><div><strong>පාසල් වාර විභාග  </strong><div class="small">All grades</div></div></div>
+            <p class="small">Organise by year & term for faster access.</p>
+            <div class="list">
+              <a href="https://drive.google.com/file/d/1PI5VWeJOiBGbPWl4ODZIhlQUTcUAN5q9/view?usp=sharing">2024-තෙවන වාර පරීක්ෂණය- වයඹ පළාත- 8 ශ්‍රේණිය.pdf</a>
+              <a href="https://drive.google.com/file/d/1Org_uEMfLnne1IC5EJrrVZh3eNlUbSQz/view?usp=sharing">🔵 2024-තෙවන වාර පරීක්ෂණය- වයඹ පළාත- 9 ශ්‍රේණිය.pdf</a>
+            </div>
+          </div>
+
+          <div class="content-block">
+            <div class="block-title"><img src="../../img/exam_80px.png" alt="pdf icon"/><div><strong>ආදර්ශ ප්‍රශ්ණ පත්‍ර </strong><div class="small">වේගවත් ප්‍රවේශය සඳහා වර්ෂය සහ වාරය අනුව සංවිධානය වෙන්න.</div></div></div>
+            <div class="list">
+              <a href="https://drive.google.com/file/d/11nm_hBWNADJPU140nFIqr0gLfm86jEso/view?usp=sharing">🔵 2019-දෙවන වාර පරීක්ෂණය- උතුරු මැද පළාත.pdf</a>
+              <a href="https://drive.google.com/file/d/1MKTkI4VtbW0R40szK8TADlEGdF8dfs3p/view?usp=sharing">🔵 ICT කාර්ය පත්‍රිකා සංග්‍රහය - 11 ශ්‍රේණිය.pdf</a>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align:right; margin-top:12px;">
+           <a href="Study_Source.html#pastpaper" style="padding:6px 14px; background:#f2f2f2; order-radius:8px; text-decoration:none; color:#333; font-size:13px;"> See More ➡️
+           </a>
+        </div>
+
+      </section>
+
+      <hr>
+
+      <section id="assignments" class="section">
+        <h3>📜 <u> පැවරුම් වැඩ | Assignments </u></h3>
+        <div class="grid">
+          
+
+          <div class="content-block">
+            <div class="block-title"><img src="../../img/memo_96px.png" alt="assign icon"/><div><strong>Assignment 01 — විද්‍යුත් සමර්පණ </strong><div class="small">Grade 7 | Due: 2025-11-30</div></div></div>
+            <p class="small"> Instructions: ඔබ විසින් නිර්මාණය කරන ලද විද්‍යුත්  සමර්පණය පන්ති කාමරයට ඉදිරිපත් කළ යුතුය.</p>
+            <div style="display:flex;gap:8px;margin-top:12px">
+              <a class="cta" href="https://drive.google.com/file/d/1q33hr1KwJed7lHvvwSFgSj3oBfK2oXhM/view?usp=sharing">Download PDF</a> |
+              <a class="cta" href="https://forms.gle/5QdMg7esbx9WipN99">Submit Assignment</a>
+            </div>
+          </div>
+
+          <div class="content-block">
+            <div class="block-title"><img src="../../img/memo_96px.png" alt="assign icon"/><div><strong>Assignment 02 —  අන්තර්ජාලය සහ Ai භාවිතය</strong><div class="small">Grade 6 • Due: 2025-11-30</div></div></div>
+            <p class="small"> Instructions:ඔබට ලබාදුන් පොතේ ඇති QR කේතය ස්කෑන් කර ලබා ගන්නා තොරතුරු සහ අන්තර්ජාලය භාවිතයෙන් නිවැරදි පිළිතුරු ලබාගෙන කුඩා පොත් පින්චයක් සකසන්න.</p>
+            <div style="display:flex;gap:8px;margin-top:12px">
+              <a class="cta" href="https://drive.google.com/file/d/1otMHpkWH3M8Dm3L5eTTx2o_WPRvcb36v/view?usp=sharing">Download PDF</a> |
+              <a class="cta" href="https://forms.gle/PsJzFZbQcWzjMawB6">Submit Assignment</a>
+            </div>
+          </div>
+
+
+
+        </div>
+
+        <div style="text-align:right; margin-top:12px;">
+           <a href="Study_Source.html#assignment"  style="padding:6px 14px; background:#f2f2f2; order-radius:8px; text-decoration:none; color:#333; font-size:13px;"> See More ➡️
+           </a>
+        </div>
+
+      </section>
+
+      <hr>
+
+      <section id="quizzes" class="section">
+        <h3>❓ <u> ප්‍රශ්නාවලිය | Quizzes</u></h3>
+        <div class="grid">
+          <div class="content-block">
+            <div class="block-title"><img src="../../img/test_passed_80px.png" alt="quiz icon"/><div><strong>Quiz 01 — Computer Basics</strong><div class="small">Ai Quiz | Grade 6 | 15 Questions</div></div></div>
+            <p class="small">Use sections to time-limit and separate topics.</p>
+            <div class="list">
+              <a href="Q/L1_Q.html">🔵 Start Quiz — Internet Basics (Sinhala)</a>
+              <a href="Q/Q/L2_Q.html">🔵 Start Quiz — Email Basics (English)</a>
+            </div>
+          </div>
+
+          <div class="content-block">
+            <div class="block-title"><img src="../../img/test_passed_80px.png" alt="quiz icon"/><div><strong>Quiz 02 — Hardware & Software</strong><div class="small">Ai Quiz | Grade 7 | 15 Question</div></div></div>
+            <p class="small">Use sections to time-limit and separate topics.</p>
+            <div class="list">
+              <a href="Q/G7_L6_Q15.html">🔵 Start Quiz — Internet</a>
+              <a href="../../G7/Q/G7_L6_Q15.html">🔵 Start Quiz — Email</a>
+            </div>
+          </div>
+
+          <!--div class="content-block">
+            <div class="block-title"><img src="img/test_passed_80px.png" alt="quiz icon"/><div><strong>Quiz Results</strong><div class="small">Connect Google Forms → Responses → Sheet</div></div></div>
+            <p class="small">Use Google Sheets to track submissions and grades.</p>
+          </div-->
+        </div>
+
+        <div style="text-align:right; margin-top:12px;">
+           <a href="Study_Source.html#quizzes" style="padding:6px 14px; background:#f2f2f2; order-radius:8px; text-decoration:none; color:#333; font-size:13px;"> See More ➡️
+           </a>
+        </div>
+
+      </section>
+
+      <hr>
+
+      <section id="notes" class="section">
+        <h3> 📚<u> පන්ති සටහන් | Lecture Notes </u></h3>
+        <div class="grid">
+          <div class="content-block">
+            <div class="block-title"><img src="../../img/workstation_200px.png" alt="notes icon"/><div><strong>01. ICT යනු (Computer Basics)</strong><div class="small">Grade 10 | Summary notes | PDF </div></div></div>
+            <div class="list">
+              <a href="https://drive.google.com/file/d/1dV1owyPrgvEq-P0dKiDbBZipKdV_s1iW/view?usp=sharing">🔵 Unit1-තොරතුරු හා සන්නිවේදන තාක්ෂණය හැඳින්වීම.pdf</a>
+              <a href="https://drive.google.com/file/d/16BxatHweUqPALOVjfPutYy_o8PHVmJvm/view?usp=sharing">🔵 Windows පරිගණකවල නිතර භාවිතා වන Shortcut</a>
+            </div>
+          </div>
+
+          <div class="content-block">
+            <div class="block-title"><img src="../../img/microsoft_word_2019_96px.png" alt="notes icon"/><div><strong>02. වදන් සැකසීම (Word Processing)</strong><div class="small">Grade 10 | Practical Sheet | PDF</div></div></div>
+            <div class="list">
+              <a href="https://drive.google.com/file/d/1kpeD21zpqlgSp7G1F-6Ut5n4fiv-9Vkq/view?usp=sharing">🔵 Word-Basics.pdf</a>
+              <a href="https://drive.google.com/file/d/1PG5Bx3FCpj_epq6x6wjrLGIF52uYNfFE/view?usp=sharing">🔵 Word-Practicle Exercises.pdf</a>
+            </div>
+          </div>
+
+          <div class="content-block">
+            <div class="block-title"><img src="../../img/microsoft_excel_2019_96px.png" alt="notes icon"/><div><strong>03. විද්‍යුත් පැතුරුම්පත් (Spreadsheets)</strong><div class="small">Grade 10 | Practical Sheet | PDF</div></div></div>
+            <div class="list">
+              <a href="https://drive.google.com/file/d/1I7CpWd8UMSB2Rld06wX5hsFOYiRyAW48/view?usp=sharing">🔵 Excel-Basics.pdf</a>
+              <a href="https://drive.google.com/file/d/14OSJ3JeT1HMZBbic7gnCmAB7svCNPNas/view?usp=sharing">🔵 Spreadsheets-Practicle Exercises.pdf</a>
+            </div>
+          </div>
+
+          <div class="content-block">
+            <div class="block-title"><img src="../../img/microsoft_powerpoint_2019_96px.png" alt="notes icon"/><div><strong>04. විද්‍යුත් සමර්පණ (Presentation)</strong><div class="small">Grade 10 | Practical Sheet | PDF</div></div></div>
+            <div class="list">
+              <a href="https://drive.google.com/file/d/1wpSeINFRHiJhaKI5HkiM2UbuygEwsbjs/view?usp=sharing">🔵 PowerPoint-Basics.pdf</a>
+              <a href="https://drive.google.com/file/d/1KD3QJXv6g0z7Hqfvj3yZi5bOy9CCqs9X/view?usp=sharing">🔵 PowerPoint-Practicle Exercises.pdf</a>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="text-align:right; margin-top:12px;">
+           <a href="Study_Source.html#extra_note" style="padding:6px 14px; background:#f2f2f2; order-radius:8px; text-decoration:none; color:#333; font-size:13px;"> See More ➡️
+           </a>
+        </div>
+
+      </section>
+
+      <hr>
+
+      <!-- NEW SECTION: CLASSES WITH CLICKABLE AUDIO LINKS -->
+<section id="classes" class="section">
+  <h3>🎧 <u>ශ්‍රව්‍ය පාඩම් | Audio Lessons </u></h3>
+
+  <div class="grid">
+
+    <!-- CLASS CARD 1 -->
+    <a href="https://drive.google.com/file/d/1AdXWRmG-hnNcIdhpxKiY9qYu1z7kB9q_/view?usp=sharing" 
+       style="text-decoration:none; color:inherit;">
+
+      <div class="content-block" style="padding:0; overflow:hidden">
+
+        <img src="../../img/Thumbnail/01.png" alt="Class Thumbnail" 
+          style="width:100%; height:160px; object-fit:cover;">
+
+        <div style="padding:14px">
+
+          <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:6px;">
+            <div style="display:flex; align-items:center; gap:6px;">🗓️ <span class="small">Grade 09</span></div>
+            <div style="display:flex; align-items:center; gap:6px;">⏱️ <span class="small">19 min</span></div>
+            <div style="display:flex; align-items:center; gap:6px;">📘 <span class="small">ICT</span></div>
+            <div style="display:flex; align-items:center; gap:6px;">🌐 <span class="small">Sinhala</span></div>
+          </div>
+
+          <strong style="font-size:15px;">01. O/L වලට මම මොන විෂයද තෝරාගන්නේ..?</strong>
+        </div>
+      </div>
+
+    </a>
+
+    <!-- CLASS CARD 2 -->
+    <a href="https://drive.google.com/file/d/15MGcSnrQxJZcH0ujhqitiF2lCKjuOVWx/view?usp=sharing" 
+       style="text-decoration:none; color:inherit;">
+
+      <div class="content-block" style="padding:0; overflow:hidden">
+
+        <img src="../../img/Thumbnail/02.png" alt="Class Thumbnail" 
+          style="width:100%; height:160px; object-fit:cover;">
+
+        <div style="padding:14px">
+
+          <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:6px;">
+            <div style="display:flex; align-items:center; gap:6px;">🗓️ <span class="small">Grade All</span></div>
+            <div style="display:flex; align-items:center; gap:6px;">⏱️ <span class="small">12 min</span></div>
+            <div style="display:flex; align-items:center; gap:6px;">📘 <span class="small">ICT</span></div>
+            <div style="display:flex; align-items:center; gap:6px;">🌐 <span class="small">Sinhala</span></div>
+          </div>
+
+          <strong style="font-size:15px;">02. පරිගණකයක් තෝරන නිවැරදිම මගපෙන්වීම </strong>
+        </div>
+      </div>
+
+    </a>
+
+  </div>
+
+        <div style="text-align:right; margin-top:12px;">
+           <a href="Study_Source.html#audio" style="padding:6px 14px; background:#f2f2f2; order-radius:8px; text-decoration:none; color:#333; font-size:13px;"> See More ➡️
+           </a>
+        </div>
+
+
+</section>
+
+
+      <hr>
+
+      <section id="videos" class="section" >
+        <h3>🎞️<u>  වීඩියෝ පාඩම් | Video Lessons</u></h3>
+                <div class="content-block">
+          <div class="video-grid">
+            <!-- Replace iframe src with a YouTube embed or playlist embed -->
+
+            <div>
+             <iframe src="https://www.youtube.com/embed/o6tIBJVDoJY?si=54WBAPdm7D0lYIIK" width="100%" height="70%" class="video-thumb" allowfullscreen> </iframe>
+              <div style="margin-top:8px"><strong>ඔබගේ පරිගණකයට නිවැරදිව සරලව අලුත්ම Windows 11 instrall කරමු </strong><div class="small">Tutorial</div></div>
+            </div>
+            <div>
+              <iframe src="https://www.youtube.com/embed/aPx_ju0C1m8" width="100%" height="70" class="video-thumb" allowfullscreen> </iframe>
+              <div style="margin-top:8px"><strong>නිවැරදිව Microsoft 365, Libre Office ලබා ගන්නා ආකාරය </strong><div class="small">Tutorial</div></div>
+            </div>
+            <div>
+              <iframe src="https://www.youtube.com/embed/YMNkA67KFqA" width="100%" height="70%" class="video-thumb" allowfullscreen> </iframe>
+              <div style="margin-top:8px"><strong>නිවැරදිව Scratch 2.0 / 3.0 install කරමු</strong><div class="small">Tutorial</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align:right; margin-top:12px;">
+           <a href="Study_Source.html#video" style="padding:6px 14px; background:#f2f2f2; order-radius:8px; text-decoration:none; color:#333; font-size:13px;"> See More ➡️
+           </a>
+        </div>
+    
+      </section>
+
+      <hr>
+
+      <section id="resources" class="section">
+        <h3>🔗 <u>External Resources / බාහිර සම්පත්</u></h3>
+        <div class="grid">
+          <div class="content-block">
+            <div class="block-title"><img src="../../img/programming_96px.png" alt="link icon"/><div><strong>Coding for Kids</strong><div class="small">Scratch • Code.org</div></div></div>
+            <div class="list">
+              <a href="https://scratch.mit.edu" target="_blank">Scratch</a>
+              <a href="https://code.org" target="_blank">Code.org</a>
+              <a href="https://replit.com" target="_blank">Replit</a>
+            </div>
+          </div>
+
+          <div class="content-block">
+            <div class="block-title"><img src="../../img/internet_128px.png" alt="link icon"/><div><strong>National &amp; Reference</strong><div class="small">e-Thaksalawa & BBC</div></div></div>
+            <div class="list">
+              <a href="https://e-thaksalawa.moe.gov.lk/lcms/">e-thaksalawa link</a>
+              <a href="https://elearning.lk/">Learning.lk</a>
+            </div>
+          </div>
+
+          <div class="content-block">
+            <div class="block-title"><img src="../../img/text_box_80px.png" alt="link icon"/><div><strong>Typing & Tools</strong><div class="small">Online typing tests & editors</div></div></div>
+            <div class="list">
+              <a href="https://www.typingtest.com/">TypingTest.com</a>
+              <a href="https://www.online-image-editor.com/">Online Image Editor</a>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align:right; margin-top:12px;">
+           <a href="../../soft_download.html" style="padding:6px 14px; background:#f2f2f2; order-radius:8px; text-decoration:none; color:#333; font-size:13px;"> See More ➡️
+           </a>
+        </div>
+</div>
+      </section>
+
+    </main>
+
+    <!--button class="help" title="Contact Gayan Sir" onclick="openContact()">💬 -->
+
+
+  </div>
+<br><br><br><br>
+
+<style>
+/* Bottom Navigation Bar */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background: white;
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+  box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.12);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 9999;
+  padding-bottom: 5px;
+}
+
+/* Navigation Item */
+.nav-item {
+  flex: 1;
+  text-align: center;
+  color: #555;
+  text-decoration: none;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px; /* space between icon and label */
+}
+
+.nav-item i {
+  font-size: 24px;
+  display: block;
+  margin-bottom: 3px;
+}
+
+/* Icon Images */
+.nav-item .nav-icon img {
+  width: 26px;
+  height: 26px;
+  display: block;
+}
+
+/* Label */
+.nav-label {
+  margin-top: -2px;
+}
+
+/* Floating Center Button */
+.center-btn {
+  position: absolute;
+  top: -28px;
+  width: 70px;
+  height: 70px;
+  background: #1976d2;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  border: 5px solid white;
+}
+
+.center-btn i {
+  font-size: 32px;
+  color: white;
+}
+
+/* Avoid WhatsApp Bar Overlap */
+body {
+  padding-bottom: 100px;
+}
+
+
+</style>
+
+<!-- Navigation Bar -->
+<div class="bottom-nav">
+
+<a href="../../Pomodoro.html" class="nav-item">
+    <div class="nav-icon">
+        <img src="../../img/time_200px.png" alt="Class">
+    </div>
+    <div class="nav-label">Study</div>
+</a>
+
+<a href="https://gemini.google.com/app" class="nav-item">
+    <div class="nav-icon">
+        <img src="../../img/gemini_icon-logo_brandlogos.net_aacx5.png" alt="Class">
+    </div>
+    <div class="nav-label">Gemini</div>
+</a>
+
+<a href="#class" class="nav-item"> </a>
+
+  <!-- Center Floating Button -->
+ <a href="#home" class="center-btn">
+  <img src="../../img/home_96px.png" alt="Home" style="width:40px; height:40px;">
+</a>
+
+<a href="../../Shop/shop.html" class="nav-item">
+    <div class="nav-icon">
+        <img src="../../img/shopping_cart_96px.png" alt="Class">
+    </div>
+    <div class="nav-label">Shop</div>
+</a>
+
+<a href="../../about_us.html" class="nav-item">
+    <div class="nav-icon">
+        <img src="../../img/help_96px.png" alt="Class">
+    </div>
+    <div class="nav-label">About Us</div>
+</a>
+
+</div>
+
+
+
+  <script>
+    /* ====== Simple behavior ====== */
+    function goToGrade(n){
+      // Navigate: scroll to home and open a simple alert to show instructions
+      window.location.hash = '#home';
+      alert('Open Grade ' + n + ' pages in Google Sites and create two subpages: Sinhala Medium & English Medium.\nUse the content blocks from this template for each page.');
+    }
+
+    // Smooth scrolling for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', function(e){
+        const target = document.querySelector(this.getAttribute('href'));
+        if(target){ e.preventDefault(); target.scrollIntoView({behavior:'smooth'}); }
+      });
+    });
+  </script>
+
+
+   <script src="../../snow.js"></script>
+   <script src="../../sliderJS.js"></script>
+   <!--script src="loading.js"></script-->
+</body>
+</html>
+
+
+
+
+
+
