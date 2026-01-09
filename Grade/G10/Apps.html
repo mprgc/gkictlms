@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>අධ්‍යාපනික මෘදුකාංග එකතුව - Student Software Hub</title>
+    <!-- Google Fonts for Sinhala -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Sinhala:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+
+        /* --- CUSTOM CSS FOR FOOTER --- */
+        .simple-footer {
+            /* bg-gray-800, text-white, p-6, mt-10, shadow-inner, rounded-t-xl equivalents */
+            background-color: #1F2937; /* Dark Gray */
+            color: #FFFFFF;
+            padding: 1.5rem;
+            margin-top: 2.5rem;
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -2px rgba(0, 0, 0, 0.06); /* Shadow on top */
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+        }
+
+        .footer-content {
+            /* max-w-4xl, mx-auto, text-center equivalents */
+            max-width: 56rem; /* Tailwind max-w-4xl equivalent */
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .footer-title {
+            /* text-lg, font-bold, mb-2 equivalents */
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text-main {
+            /* text-sm, text-gray-400, mb-1 equivalents */
+            font-size: 0.875rem;
+            color: #9CA3AF; /* Light Gray */
+            margin-bottom: 0.25rem;
+        }
+        
+        .footer-text-secondary {
+            /* text-xs, text-gray-500 equivalents */
+            font-size: 0.75rem;
+            color: #6B7280; /* Medium Gray */
+        }
+
+
+        body {
+            font-family: 'Noto Sans Sinhala', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .soft-card {
+            transition: all 0.3s ease;
+        }
+        .soft-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2563eb;
+        }
+        /* Class to disable body scrolling when modal is open */
+        .modal-open {
+            overflow: hidden !important;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col">
+
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-12">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-5xl font-bold mb-4">GK ICT School LMS</h2>
+            <p class="text-lg md:text-xl text-blue-100 mb-6">ඔබට අවශ්‍ය අධ්‍යාපනික මෘදුකාංග පහසුවෙන් බාගත කරගන්න.</p>
+            
+            <!-- Search Bar -->
+            <div class="relative max-w-xl mx-auto">
+                <input type="text" id="searchInput" placeholder="මෘදුකාංගය සොයන්න (උදා: Tux Typing, Office...)" 
+                    class="w-full py-3 px-6 rounded-full text-gray-800 focus:outline-none focus:ring-4 focus:ring-blue-300 shadow-lg text-lg">
+                <button class="absolute right-2 top-1.5 bg-blue-600 text-white p-2 rounded-full h-9 w-9 flex items-center justify-center hover:bg-blue-700 transition">
+                    <i class="fa-solid fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Software Grid Section -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
+            <h2 class="text-2xl font-bold text-gray-800 border-l-4 border-blue-600 pl-3">10 ශ්‍රේණිය අධ්‍යාපනික මෘදුකාංග එකතුව</h2>
+            <div class="flex items-center gap-2">
+                <label for="categoryFilter" class="text-gray-600 font-medium">වර්ගය:</label>
+                <select id="categoryFilter" class="bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="all">සියල්ල පෙන්වන්න</option>
+                    <option value="EXE">EXE</option>
+                    <option value="APK">APK</option>
+                    <option value="WEB">WEB</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="softwareGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Cards will be injected here via JavaScript -->
+        </div>
+
+        <!-- No Results Message -->
+        <div id="noResults" class="hidden text-center py-12">
+            <i class="fa-regular fa-face-frown text-6xl text-gray-300 mb-4"></i>
+            <p class="text-xl text-gray-500">කණගාටුයි, ඔබ සොයන මෘදුකාංගය හමු නොවීය.</p>
+        </div>
+    </main>
+
+    <!-- Modal for Download -->
+    <div id="downloadModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4 transition-opacity duration-300">
+        <!-- UPDATED: max-w-sm and p-4 for smaller size -->
+        <div id="modalContent" class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-4 transform transition-all duration-300 ease-out opacity-0 scale-90">
+            <div class="text-center">
+                <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 mb-4">
+                    <i class="fa-solid fa-cloud-arrow-down text-3xl text-blue-600"></i>
+                </div>
+                <!-- UPDATED: Title size reduced to text-lg -->
+                <h3 class="text-lg font-bold text-gray-900 mb-2">බාගත කිරීම අරඹන්නද?</h3>
+                <p id="modalSoftwareName" class="text-gray-500 text-sm mb-6">ඔබ තෝරාගත් මෘදුකාංගය: <span>-</span></p>
+                
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 text-left">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fa-solid fa-triangle-exclamation text-yellow-500"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-yellow-700">
+                                මෙය බාහිර වෙබ් අඩවියකට යොමු කෙරේ (Official Site).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NOTE: The button container uses flex and gap-3, making it mobile-friendly -->
+                <div class="flex flex-wrap justify-center gap-3">
+                    <!-- UPDATED: Smaller button size (px-4 py-2, text-sm) -->
+                    <button onclick="closeModal()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg font-semibold transition text-sm">
+                        අවලංගු කරන්න
+                    </button>
+                    
+                    <!-- UPDATED: Smaller button size (px-4 py-2, text-sm) -->
+                    <button id="copyLinkBtn" class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg font-semibold transition flex items-center justify-center gap-2 text-sm">
+                        <i class="fa-solid fa-copy"></i> සබැඳිය පිටපත් කරන්න
+                    </button>
+
+                    <!-- UPDATED: Smaller button size (px-4 py-2, text-sm) -->
+                    <a id="confirmDownloadBtn" href="#" target="_blank" onclick="closeModal()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition flex items-center justify-center gap-2 text-sm">
+                        <!-- Default text for the button, overwritten by JS -->
+                        <i class="fa-solid fa-download"></i> බාගත කරන්න
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Software Data Array - Updated with arrays for multiple categories
+        // EXE , WEB, APK
+        const softwareData = [
+            {
+                id: 1,
+                name: "Tux Paint",
+                category: ["EXE"], // Common application for all grades
+                type: "EXE", // PC installer
+                desc: "පරිගණකයේ චිත්‍ර ඇදීම සඳහා",
+                icon: "fa-paintbrush",
+                color: "text-blue-500",
+                bg: "bg-blue-100",
+                link: "https://tuxpaint.org/download/"
+            },
+            {
+                id: 2,
+                name: "Tux Paint - APK",
+                category: ["APK"], // Common application for all grades
+                type: "APK", // PC installer
+                desc: "ජංගම දුරකතනයේ චිත්‍ර ඇදීම සඳහා",
+                icon: "fa-paintbrush",
+                color: "text-green-500",
+                bg: "bg-green-100",
+                link: "https://play.google.com/store/search?q=tux+paint&c=apps&hl=en"
+            },
+            {
+                id: 3,
+                name: "Tux Typing",
+                category: ["EXE"], // Common application for all grades
+                type: "EXE",
+                desc: "පරිගණක යතුරු පුහුණුව සඳහා",
+                icon: "fa-keyboard",
+                color: "text-red-500",
+                bg: "bg-red-100",
+                link: "https://tux-typing.en.softonic.com/"
+            },
+            {
+                id: 4,
+                name: "Microsoft Office 365",
+                category: ["WEB"], // O/L specific
+                type: "WEB",
+                desc: "Online ලිපිලේඛන නිර්මාණයට",
+                icon: "fa-file-word",
+                color: "text-orange-600",
+                bg: "bg-orange-100",
+                link: "https://www.microsoft.com/en-us/microsoft-365/microsoft-office"
+            },
+            {
+                id: 5,
+                name: "Libre Office",
+                category: ["EXE"], // O/L specific
+                type: "EXE",
+                desc: "ලිපිලේඛන නිර්මාණයට",
+                icon: "fa-file-word",
+                color: "text-blue-600",
+                bg: "bg-blue-100",
+                link: "https://www.libreoffice.org/download/download-libreoffice/"
+            },
+            {
+                id: 6,
+                name: "Typesy - Touch Typing - APK",
+                category: ["APK"], // Common application for all grades
+                type: "APK", // PC installer
+                desc: "ජංගම දුරකතනයේ යතුරු පුහුණුව සඳහා",
+                icon: "fa-keyboard",
+                color: "text-green-500",
+                bg: "bg-green-100",
+                link: "https://play.google.com/store/apps/details?id=com.ereflect.typesy&hl=en"
+            },            
+            {
+                id: 7,
+                name: "Adobe Reader",
+                category: ["EXE"], // Needed for all specific grades
+                type: "EXE",
+                desc: "PDF ලිපි ලේඛන කියවීම සඳහා.",
+                icon: "fa-file-pdf",
+                color: "text-red-600",
+                bg: "bg-red-100",
+                link: "https://get.adobe.com/reader/"
+            },
+            {
+                id: 8,
+                name: "VLC Media Player",
+                category: ["EXE"], // Needed for all specific grades
+                type: "EXE",
+                desc: "වීඩියෝ පාඩම් නැරඹීම සඳහා.",
+                icon: "fa-circle-play",
+                color: "text-orange-500",
+                bg: "bg-orange-100",
+                link: "https://www.videolan.org/vlc/"
+            },
+            {
+                id: 9,
+                name: "7-Zip Archiver",
+                category: ["EXE"], // Needed for all specific grades
+                type: "EXE",
+                desc: "ගොනු හිර කිරීම සහ ලිහීම සඳහා.",
+                icon: "fa-file-zipper",
+                color: "text-green-600",
+                bg: "bg-green-100",
+                link: "https://www.7-zip.org/"
+            },
+            {
+                id: 10,
+                name: "Sinhala Tamil IME",
+                category: ["EXE"], // Needed for all specific grades
+                type: "EXE",
+                desc: "සිංහල ටයිප් කිරීම පුරුදු වීමට.",
+                icon: "fa-language",
+                color: "text-purple-600",
+                bg: "bg-purple-100",
+                link: "https://www.gurulk.com/download-sinhala-tamil-language-kit-ime.php"
+            },
+
+            {
+                id: 11,
+                name: "Helakuru (හෙලකුරු)",
+                category: ["EXE"], // Needed for all specific grades
+                type: "EXE",
+                desc: "සිංහල යතුරුලියනය පුරුදු වීමට.",
+                icon: "fa-language",
+                color: "text-orange-600",
+                bg: "bg-orange-100",
+                link: "https://www.helakuru.lk/"
+            },  
+            {
+                id: 12,
+                name: "Helakuru (හෙලකුරු) - APK",
+                category: ["APK"], // Needed for all specific grades
+                type: "APK",
+                desc: "ජංගම දුරකතනයේ සිංහල යතුරුලියනය කිරීමට",
+                icon: "fa-language",
+                color: "text-green-600",
+                bg: "bg-green-100",
+                link: "https://play.google.com/store/search?q=helakuru&c=apps&hl=en"
+            },
+            {
+                id: 13,
+                name: "QR & Barcode Scanner - APK",
+                category: ["APK"], // Common application for all grades
+                type: "APK", // PC installer
+                desc: "QR සහ Barcode වලට පිවිසීම සඳහා",
+                icon: "fa-qrcode",
+                color: "text-blue-500",
+                bg: "bg-blue-100",
+                link: "https://play.google.com/store/apps/details?id=com.gamma.scan&hl=en"
+            },
+            {
+                id: 14,
+                name: "Audacity",
+                category: ["EXE"], // Needed for all specific grades
+                type: "EXE",
+                desc: "ශ්‍රව්‍ය ගොනු සංස්කරණය සඳහා",
+                icon: "fa-headset",
+                color: "text-orange-500",
+                bg: "bg-orange-100",
+                link: "https://www.audacityteam.org/download/"
+            },
+            {
+                id: 15,
+                name: "Audio Editor & Music Editor - APK",
+                category: ["APK"], // Common application for all grades
+                type: "APK", // PC installer
+                desc: "ශ්‍රව්‍ය ගොනු සංස්කරණය සඳහා",
+                icon: "fa-headset",
+                color: "text-green-500",
+                bg: "bg-green-100",
+                link: "https://play.google.com/store/apps/details?id=audioeditor.musiceditor.soundeditor.songeditor"
+            },
+                        {
+                id: 16,
+                name: "Dolby On Rocoder - APK",
+                category: ["APK"], // Common application for all grades
+                type: "APK", // PC installer
+                desc: "ශ්‍රව්‍ය ගොනු ජංගම දුරකතනයේ පටිගත කිරීම සඳහා",
+                icon: "fa-record-vinyl",
+                color: "text-red-500",
+                bg: "bg-red-100",
+                link: "https://play.google.com/store/search?q=dolby+on&c=apps"
+            }                          
+          /*  {
+                id: ,
+                name: "Scratch 3.0",
+                category: ["EXE"], // Multi-category as requested
+                type: "EXE",
+                desc: "ක්‍රමලේඛන මූලිකාංග ඉගෙන ගැනීමට (6-9 ශ්‍රේණි).",
+                icon: "fa-cat",
+                color: "text-yellow-600",
+                bg: "bg-yellow-100",
+                link: "https://scratch.mit.edu/download"
+            },
+             {
+                id: ,
+                name: "WhatsApp Web",
+                category: ["WEB"], // Common application for all grades
+                type: "WEB", // ADDED: Web Site Type
+                desc: "බ්‍රව්සරය හරහා WhatsApp භාවිතා කිරීමට.",
+                icon: "fa-whatsapp",
+                color: "text-green-500",
+                bg: "bg-green-100",
+                link: "https://web.whatsapp.com/"
+            },
+            {
+                id: ,
+                name: "Punarudaya Dictionary",
+                category: ["WEB"], // O/L specific
+                type: "WEB", // ADDED: Web Site Type
+                desc: "සිංහල - ඉංග්‍රීසි ඔන්ලයින් ශබ්දකෝෂය.",
+                icon: "fa-book-open-reader",
+                color: "text-purple-600",
+                bg: "bg-purple-100",
+                link: "https://www.punarudaya.com/"
+            },*/
+
+        ];
+
+        const grid = document.getElementById('softwareGrid');
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const noResults = document.getElementById('noResults');
+        const modal = document.getElementById('downloadModal');
+        const modalContent = document.getElementById('modalContent'); // Get the inner div for animation
+        const modalTitle = document.getElementById('modalSoftwareName');
+        const confirmBtn = document.getElementById('confirmDownloadBtn');
+        const copyBtn = document.getElementById('copyLinkBtn'); // Get the copy button
+
+        // Initial Render
+        renderCards(softwareData);
+
+        // Function to generate HTML for cards
+        function renderCards(data) {
+            grid.innerHTML = '';
+            
+            if (data.length === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+                data.forEach(app => {
+                    // --- Type Badge Logic ---
+                    let typeBadgeColor = 'bg-blue-100 text-blue-700';
+                    let typeIconClass = 'fa-desktop';
+                    let typeIconPrefix = 'fa-solid';
+                    let downloadText = 'බාගත කරන්න';
+
+                    if (app.type === 'APK') {
+                        typeBadgeColor = 'bg-green-100 text-green-700';
+                        typeIconClass = 'fa-android';
+                        typeIconPrefix = 'fa-brands';
+                    } else if (app.type === 'WEB') {
+                        typeBadgeColor = 'bg-purple-100 text-purple-700'; // NEW COLOR
+                        typeIconClass = 'fa-globe'; // NEW ICON
+                        typeIconPrefix = 'fa-solid';
+                        downloadText = 'වෙබ් අඩවියට යන්න'; // NEW TEXT
+                    }
+                    
+                    // --- Main Icon Logic ---
+                    // Determine Font Awesome icon type (brands vs solid) for the MAIN ICON
+                    const isBrandIcon = ['fa-chrome', 'fa-whatsapp', 'fa-android'].includes(app.icon);
+                    const iconType = isBrandIcon ? 'brands' : 'solid';
+                    const iconClass = app.icon; // e.g., fa-video
+
+                    const card = document.createElement('div');
+                    card.className = 'soft-card bg-white rounded-xl p-5 shadow-md border border-gray-100 flex flex-col items-center text-center h-full relative overflow-hidden group';
+                    card.innerHTML = `
+                        <div class="absolute top-2 right-2 flex gap-1">
+                             <!-- Icon rendering for Type Badge -->
+                             <span class="${typeBadgeColor} px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
+                                <i class="${typeIconPrefix} ${typeIconClass}"></i> ${app.type}
+                            </span>
+                        </div>
+                        
+                        <div class="h-16 w-16 rounded-full ${app.bg} flex items-center justify-center mb-3 mt-6">
+                            <!-- Main Icon -->
+                            <i class="fa-${iconType} ${iconClass} ${app.color} text-3xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800 mb-1 leading-tight">${app.name}</h3>
+                        <p class="text-gray-500 text-sm mb-4 flex-grow px-2">${app.desc}</p>
+                        <!-- UPDATED: Card button remains a standard size for better visibility -->
+                        <button onclick="openModal('${app.name}', '${app.link}', '${app.type}')" class="w-full py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition flex items-center justify-center gap-2 text-sm">
+                            <i class="fa-solid fa-download"></i> ${downloadText}
+                        </button>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+        }
+
+        // Search and Filter Logic
+        function filterApps() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const category = categoryFilter.value;
+
+            const filtered = softwareData.filter(app => {
+                const matchesSearch = app.name.toLowerCase().includes(searchTerm) || app.desc.toLowerCase().includes(searchTerm);
+                
+                let matchesCategory = false;
+                
+                if (category === 'all') {
+                    matchesCategory = true;
+                } else {
+                    matchesCategory = app.category.includes(category) || app.category.includes('all');
+                }
+                
+                return matchesSearch && matchesCategory;
+            });
+
+            renderCards(filtered);
+        }
+
+        searchInput.addEventListener('input', filterApps);
+        categoryFilter.addEventListener('change', filterApps);
+
+        // Function to copy text to clipboard using the execCommand fallback
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed'; // Avoid scrolling to bottom
+            textarea.style.opacity = '0'; // Hide the textarea
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                const successful = document.execCommand('copy');
+                return successful;
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                return false;
+            } finally {
+                document.body.removeChild(textarea);
+            }
+        }
+
+        // Modal Logic
+        function openModal(name, link, type) {
+            modalTitle.innerHTML = `ඔබ තෝරාගත් මෘදුකාංගය: <span class="font-bold text-gray-800">${name}</span>`;
+            confirmBtn.href = link;
+            
+            // Reset copy button style and text
+            copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> සබැඳිය පිටපත් කරන්න';
+            copyBtn.classList.remove('bg-green-500', 'hover:bg-green-600', 'bg-red-500', 'hover:bg-red-600');
+            copyBtn.classList.add('bg-gray-500', 'hover:bg-gray-600');
+            
+            // NEW LOGIC: Change button text and icon based on type, and manage colors
+            if (type === 'WEB') {
+                confirmBtn.innerHTML = '<i class="fa-solid fa-globe"></i> වෙබ් අඩවියට යන්න';
+                confirmBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                confirmBtn.classList.add('bg-purple-600', 'hover:bg-purple-700'); // Purple for WEB
+            } else {
+                confirmBtn.innerHTML = '<i class="fa-solid fa-download"></i> බාගත කරන්න';
+                confirmBtn.classList.remove('bg-purple-600', 'hover:bg-purple-700');
+                confirmBtn.classList.add('bg-blue-600', 'hover:bg-blue-700'); // Blue for Download/APK
+            }
+
+            // NEW: Set up the Copy button action
+            copyBtn.onclick = function() {
+                const success = copyToClipboard(link);
+                
+                // Clear any existing timeout before setting new feedback
+                clearTimeout(copyBtn.timeoutId);
+
+                if (success) {
+                    copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> පිටපත් කළා!';
+                    copyBtn.classList.remove('bg-gray-500', 'hover:bg-gray-600');
+                    copyBtn.classList.add('bg-green-500', 'hover:bg-green-600');
+                    
+                    // Revert button text after a delay
+                    copyBtn.timeoutId = setTimeout(() => {
+                        copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> සබැඳිය පිටපත් කරන්න';
+                        copyBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
+                        copyBtn.classList.add('bg-gray-500', 'hover:bg-gray-600');
+                    }, 2000);
+                } else {
+                    copyBtn.innerHTML = '<i class="fa-solid fa-xmark"></i> අසාර්ථකයි';
+                    copyBtn.classList.remove('bg-gray-500', 'hover:bg-gray-600');
+                    copyBtn.classList.add('bg-red-500', 'hover:bg-red-600');
+                    
+                    copyBtn.timeoutId = setTimeout(() => {
+                        copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> සබැඳිය පිටපත් කරන්න';
+                        copyBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
+                        copyBtn.classList.add('bg-gray-500', 'hover:bg-gray-600');
+                    }, 2000);
+                }
+            };
+
+            // 1. Show the backdrop and disable body scrolling
+            modal.classList.remove('hidden');
+            document.body.classList.add('modal-open');
+
+            // 2. Trigger the smooth animation (Scale up and Fade in)
+            setTimeout(() => {
+                modalContent.classList.remove('opacity-0', 'scale-90');
+                modalContent.classList.add('opacity-100', 'scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            // 1. Reverse the animation (Scale down and Fade out)
+            modalContent.classList.remove('opacity-100', 'scale-100');
+            modalContent.classList.add('opacity-0', 'scale-90');
+            
+            // 2. Hide the modal completely after the transition duration (300ms defined in CSS)
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+            }, 300); // Wait for the transition to complete
+        }
+
+        // Close modal when clicking outside
+        modal.addEventListener('click', (e) => {
+            // Ensure the click target is the backdrop itself, not the content
+            if (e.target === modal) closeModal();
+        });
+
+    </script>
+    <script src="../../snow.js"></script>
+
+
+         <!-- SIMPLE FOOTER WITH CUSTOM CSS CLASSES -->
+    <footer class="simple-footer">
+        <div class="footer-content">
+            <h4 class="footer-title">GK ICT School LMS</h4>
+            <p class="footer-text-main">
+                © 2026 සියලුම හිමිකම් ඇවිරිණි. | අධ්‍යාපනයට නව පියවරක්
+            </p>
+            <p class="footer-text-secondary">
+                Design by : Gayan Karunathilaka | GK ICT School | Software.GKICT LMS
+            </p>
+        </div>
+    </footer>
+    <!-- End SIMPLE FOOTER --> 
+
+      
+</body>
+</html>
